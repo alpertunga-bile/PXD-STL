@@ -48,7 +48,11 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 IF(BUILD_TEST_EXECUTABLE)
     set(TEST_PROJECT_NAME pxd-stl-test)
 
-    add_executable(${TEST_PROJECT_NAME} main.cpp ${SOURCE_FILES})
+    set(TEST_FILES
+        sources/test/array_tests.hpp
+    )
+
+    add_executable(${TEST_PROJECT_NAME} main.cpp ${SOURCE_FILES} ${TEST_FILES})
 
     target_precompile_headers(
         ${PROJECT_NAME} PRIVATE
