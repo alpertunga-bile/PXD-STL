@@ -65,10 +65,10 @@ public:
     byte_size = 0;
   }
 
-  void copy_to(Array<T> &to, int start, int end) {
-    PXD_ASSERT(end > start);
+  void copy_to(Array<T> &to) {
+    PXD_ASSERT(to.get_length() == length);
 
-    for (int i = start; i < end; i++) {
+    for (int i = 0; i < length; i++) {
       to[i] = arr_ptr[i];
     }
   }
