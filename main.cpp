@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "includes/array.hpp"
+#include "sources/array.hpp"
 
 void print_array(const char *name, pxd::Array<int> &arr) {
   printf("---------------------------------------------------------------------"

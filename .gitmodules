@@ -1,0 +1,3 @@
+[submodule "third-party/SIMDString"]
+	path = third-party/SIMDString
+	url = https://github.com/RobloxResearch/SIMDString.git

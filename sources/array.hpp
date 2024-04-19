@@ -1,9 +1,11 @@
 #pragma once
 
+#include "assert.hpp"
+
 #define ARRAY_SIZE(arr) get_array_size(arr)
 
-template <typename T, size_t N> inline int get_array_size(T (&)[N] array) {
-  return N;
+template <typename T> inline int get_array_size(T *array) {
+  return sizeof(array) / sizeof(T);
 }
 
 namespace pxd {
@@ -19,8 +21,7 @@ public:
   Array(const Array<T> &other) = delete;            // copy constructor
   Array(Array<T> &&other) = delete;                 // move constructor
   Array &operator=(const Array<T> &other) = delete; // copy assignment
-
-  ~Array() // deconstructor
+  ~Array()                                          // deconstructor
   {
     if (arr_ptr == nullptr) {
       return;
@@ -29,19 +30,15 @@ public:
     delete[] arr_ptr;
   }
 
-  decltype(auto) operator==(Array<T> &other) {
-    return other.arr_ptr == arr_ptr;
-  }
+  bool operator==(Array<T> &other) { return other.arr_ptr == arr_ptr; }
+  bool operator!=(Array<T> &other) { return other.arr_ptr != arr_ptr; }
 
   decltype(auto) operator[](int index) {
-    if (index < 0) {
-      if ((index * -1) > length) {
-        throw "Negative Index Out of Bound";
-      }
+    assert(index < length);
 
+    if (index < 0) {
+      assert((index * -1) <= length);
       return arr_ptr[length - (index * -1)];
-    } else if (index >= length) {
-      throw "Index Out of Bound";
     }
 
     return arr_ptr[index];
@@ -75,12 +72,19 @@ public:
   }
 
   void copy_to(Array<T> &to, int start, int end) {
+    assert(to.get_length() == length);
+    assert(end > start);
+
     for (int i = start; i < end; i++) {
       to[i] = arr_ptr[i];
     }
   }
 
   void expand(Array<T> &given_array) {
+    if (given_array.get_length() == 0) {
+      return;
+    }
+
     int old_length = length;
     int new_size = length + given_array.get_length();
 
@@ -98,6 +102,7 @@ public:
   inline float get_gbyte_size() {
     return ((float)byte_size) / (1024.f * 1024.f);
   }
+  inline size_t get_data_size() { return sizeof(T); }
 
 private:
   void allocate(int size) {
@@ -107,6 +112,8 @@ private:
   }
 
   void allocate(T *given_array, int size) {
+    assert(given_array != nullptr);
+
     arr_ptr = new T[size];
     length = size;
     byte_size = size * sizeof(T);
@@ -114,6 +121,10 @@ private:
   }
 
   void copy(T *from, T *to, int start, int end) {
+    assert(from != nullptr);
+    assert(to != nullptr);
+    assert(end > start);
+
     for (int i = start; i < end; i++) {
       to[i] = from[i];
     }

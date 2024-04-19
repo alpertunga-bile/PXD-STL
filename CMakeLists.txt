@@ -7,28 +7,48 @@ enable_testing()
 ################################################################################
 ## GLOBAL DEFINITIONS
 
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
 
 list(APPEND CMAKE_CXX_COMPILER_LAUNCHER "ccache")
 
 set(HEADER_FILES
-    includes/array.hpp
+    sources/array.hpp
+
+    third-party/SIMDString/SIMDString.h
 )
 
 set(SOURCE_FILES
-    main.cpp
-
+    third-party/SIMDString/SIMDString.cpp
     ${HEADER_FILES}
 )
 
 include_directories(
-    includes
+    sources
 )
 
-add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+add_library(${PROJECT_NAME} ${SOURCE_FILES})
 
 target_precompile_headers(
     ${PROJECT_NAME} PRIVATE
+    <cstdio>
+    <cstdlib>
+    ${HEADER_FILES}
+)
+
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
+
+# ------------------------------------------------------------------------------------------------------
+# -- Test Executable
+
+set(TEST_PROJECT_NAME pxd-stl-test)
+set(CMAKE_BUILD_TYPE Debug)
+
+add_executable(${TEST_PROJECT_NAME} main.cpp ${SOURCE_FILES})
+
+target_precompile_headers(
+    ${PROJECT_NAME} PRIVATE
+    <cstdio>
+    <cstdlib>
     ${HEADER_FILES}
 )
 
