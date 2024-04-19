@@ -20,17 +20,18 @@ inline void assert_func(bool expression, const char *filename, int line,
     return;
   }
 
-  printf(
-      "Assertion is FAILED at:\n    Filename: %s\n    Line : %d\n    Function: "
-      "[%s]\n",
-      filename, line, function_name);
+  printf("Assertion is FAILED at:\n    Filename : %s\n    Line     : %d\n    "
+         "Function : "
+         "[%s]\n",
+         filename, line, function_name);
   exit(EXIT_FAILURE);
 }
 
 inline void todo_func(const char *message, const char *filename, int line,
                       const char *function_name) {
-  printf("TODO message:\n    Message: %s\n    Filename: %s\n    Line : %d\n    "
-         "Function: "
+  printf("TODO message:\n    Message : %s\n    Filename : %s\n    Line     : "
+         "%d\n    "
+         "Function : "
          "[%s]\n",
          message, filename, line, function_name);
   exit(EXIT_FAILURE);
