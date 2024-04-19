@@ -28,15 +28,15 @@ int main() {
   pxd::Array<int> arr(temp, ARRAY_SIZE(temp));
 
   pxd::Array<int> t(10);
-  arr.copy_to(t);
+  arr.copy_to(t, 0, arr.get_length());
+
+  t.expand(arr);
 
   if (t == arr) {
     printf("True\n");
   } else {
     printf("False\n");
   }
-
-  t.resize(5);
 
   print_array("temp", t);
 

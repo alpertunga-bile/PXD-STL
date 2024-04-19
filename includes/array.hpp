@@ -13,7 +13,7 @@ public:
   Array(int size) { allocate(size); }
   Array(T *given_array, int size) {
     allocate(size);
-    copy(given_array, arr_ptr, size);
+    copy(given_array, arr_ptr, 0, size);
   }
 
   Array(const Array<T> &other) = delete;            // copy constructor
@@ -49,7 +49,7 @@ public:
 
   void resize(int new_size) {
     T *temp_array = new T[length];
-    copy(arr_ptr, temp_array, length);
+    copy(arr_ptr, temp_array, 0, length);
 
     release();
     allocate(temp_array, new_size);
@@ -68,14 +68,26 @@ public:
     }
 
     delete[] arr_ptr;
+
+    arr_ptr = nullptr;
     length = 0;
     byte_size = 0;
   }
 
-  void copy_to(Array<T> &to) {
-    int i = 0;
-    for (i = 0; i < length; i++) {
+  void copy_to(Array<T> &to, int start, int end) {
+    for (int i = start; i < end; i++) {
       to[i] = arr_ptr[i];
+    }
+  }
+
+  void expand(Array<T> &given_array) {
+    int old_length = length;
+    int new_size = length + given_array.get_length();
+
+    resize(new_size);
+
+    for (int i = old_length; i < new_size; i++) {
+      arr_ptr[i] = given_array[i - old_length];
     }
   }
 
@@ -98,12 +110,11 @@ private:
     arr_ptr = new T[size];
     length = size;
     byte_size = size * sizeof(T);
-    copy(given_array, arr_ptr, size);
+    copy(given_array, arr_ptr, 0, size);
   }
 
-  void copy(T *from, T *to, int size) {
-    int i = 0;
-    for (i = 0; i < size; i++) {
+  void copy(T *from, T *to, int start, int end) {
+    for (int i = start; i < end; i++) {
       to[i] = from[i];
     }
   }
