@@ -1,12 +1,6 @@
 #pragma once
 
-#include "assert.hpp"
-
-#define ARRAY_SIZE(arr) get_array_size(arr)
-
-template <typename T> inline int get_array_size(T *array) {
-  return sizeof(array) / sizeof(T);
-}
+#include "checks.hpp"
 
 namespace pxd {
 template <typename T> class Array {
@@ -34,10 +28,10 @@ public:
   bool operator!=(Array<T> &other) { return other.arr_ptr != arr_ptr; }
 
   decltype(auto) operator[](int index) {
-    assert(index < length);
+    PXD_ASSERT(index < length);
 
     if (index < 0) {
-      assert((index * -1) <= length);
+      PXD_ASSERT((index * -1) <= length);
       return arr_ptr[length - (index * -1)];
     }
 
@@ -54,7 +48,7 @@ public:
     delete[] temp_array;
   }
 
-  void recreate(T *given_array, int size) {
+  void reallocate(T *given_array, int size) {
     release();
     allocate(given_array, size);
   }
@@ -72,8 +66,7 @@ public:
   }
 
   void copy_to(Array<T> &to, int start, int end) {
-    assert(to.get_length() == length);
-    assert(end > start);
+    PXD_ASSERT(end > start);
 
     for (int i = start; i < end; i++) {
       to[i] = arr_ptr[i];
@@ -112,7 +105,7 @@ private:
   }
 
   void allocate(T *given_array, int size) {
-    assert(given_array != nullptr);
+    PXD_ASSERT(given_array != nullptr);
 
     arr_ptr = new T[size];
     length = size;
@@ -121,9 +114,9 @@ private:
   }
 
   void copy(T *from, T *to, int start, int end) {
-    assert(from != nullptr);
-    assert(to != nullptr);
-    assert(end > start);
+    PXD_ASSERT(from != nullptr);
+    PXD_ASSERT(to != nullptr);
+    PXD_ASSERT(end > start);
 
     for (int i = start; i < end; i++) {
       to[i] = from[i];

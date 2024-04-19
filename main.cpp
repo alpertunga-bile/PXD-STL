@@ -25,7 +25,7 @@ int main() {
     temp[i] = i;
   }
 
-  pxd::Array<int> arr(temp, ARRAY_SIZE(temp));
+  pxd::Array<int> arr(temp, S);
 
   pxd::Array<int> t(10);
   arr.copy_to(t, 0, arr.get_length());
@@ -40,7 +40,7 @@ int main() {
 
   print_array("temp", t);
 
-  int last_value = arr[9];
+  int last_value = arr[8];
   std::cout << last_value << "\n";
 
   return 0;
