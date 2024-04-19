@@ -88,8 +88,19 @@ public:
     }
   }
 
-  inline int get_length() { return length; }
+  void expand(T *given_array, int size) {
+    int old_length = length;
+    int new_size = length + size;
+
+    resize(new_size);
+
+    for (int i = old_length; i < new_size; i++) {
+      arr_ptr[i] = given_array[i - old_length];
+    }
+  }
+
   inline T *get_ptr() { return arr_ptr; }
+  inline int get_length() { return length; }
   inline size_t get_byte_size() { return byte_size; }
   inline float get_mbyte_size() { return ((float)byte_size) / 1024.f; }
   inline float get_gbyte_size() {
