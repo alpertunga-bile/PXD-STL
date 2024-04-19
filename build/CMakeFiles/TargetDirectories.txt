@@ -1,9 +1,0 @@
-C:/Users/alper.bile/Projects/pxd-stl/build/CMakeFiles/Experimental.dir
-C:/Users/alper.bile/Projects/pxd-stl/build/CMakeFiles/Nightly.dir
-C:/Users/alper.bile/Projects/pxd-stl/build/CMakeFiles/Continuous.dir
-C:/Users/alper.bile/Projects/pxd-stl/build/CMakeFiles/NightlyMemoryCheck.dir
-C:/Users/alper.bile/Projects/pxd-stl/build/CMakeFiles/pxd-stl.dir
-C:/Users/alper.bile/Projects/pxd-stl/build/CMakeFiles/PACKAGE.dir
-C:/Users/alper.bile/Projects/pxd-stl/build/CMakeFiles/RUN_TESTS.dir
-C:/Users/alper.bile/Projects/pxd-stl/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/alper.bile/Projects/pxd-stl/build/CMakeFiles/ZERO_CHECK.dir
