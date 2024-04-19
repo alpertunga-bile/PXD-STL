@@ -10,17 +10,9 @@ namespace pxd {
 template <typename T> class Array {
 public:
   Array() = delete; // default constructor
-  Array(int size) {
-    arr_ptr = new T[size];
-    length = size;
-    byte_size = size * sizeof(T);
-  }
-
+  Array(int size) { allocate(size); }
   Array(T *given_array, int size) {
-    arr_ptr = new T[size];
-    length = size;
-    byte_size = size * sizeof(T);
-
+    allocate(size);
     copy(given_array, arr_ptr, size);
   }
 
