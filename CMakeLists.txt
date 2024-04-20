@@ -63,8 +63,9 @@ IF(BUILD_TEST_EXECUTABLE)
         <cstdio>
         <cstdlib>
         <string>
-        <map>
+        <unordered_map>
         ${HEADER_FILES}
+        ${TEST_FILES}
     )
 
     target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
