@@ -1,8 +1,13 @@
 #include <iostream>
 
-#include "sources/array.hpp"
+#include "sources/test/test_manager.hpp"
 
-void print_array(const char *name, pxd::Array<int> &arr) {
+#include "sources/test/array_tests.hpp"
+
+/*
+void
+print_array(const char* name, pxd::Array<int>& arr)
+{
   printf("---------------------------------------------------------------------"
          "-------\n");
   printf("%s array :\n", name);
@@ -15,10 +20,20 @@ void print_array(const char *name, pxd::Array<int> &arr) {
   printf("---------------------------------------------------------------------"
          "-------\n");
 }
+*/
 
-#define S 10
+int
+main()
+{
+  pxd::TestManager test_manager;
 
-int main() {
+  pxd::ArrayTests array_tests;
+
+  test_manager.add_test("Array Tests", array_tests);
+
+  test_manager.print_results();
+
+  /*
   int temp[S];
 
   for (int i = 0; i < S; i++) {
@@ -28,7 +43,7 @@ int main() {
   pxd::Array<int> arr(temp, S);
 
   pxd::Array<int> t(10);
-  arr.copy_to(t, 0, arr.get_length());
+  arr.copy_to(t);
 
   t.expand(arr);
 
@@ -42,6 +57,7 @@ int main() {
 
   int last_value = arr[8];
   std::cout << last_value << "\n";
+  */
 
   return 0;
 }
