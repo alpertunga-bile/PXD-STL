@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../checks.hpp"
-#include <map>
 #include <string>
+#include <unordered_map>
 
 namespace pxd {
 class ITest
@@ -10,6 +10,6 @@ class ITest
 public:
   virtual void start_test() { PXD_ASSERT(false); };
 
-  std::map<std::string, bool> test_results;
+  std::unordered_map<std::string, bool> test_results;
 };
 }
