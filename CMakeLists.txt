@@ -9,8 +9,6 @@ enable_testing()
 
 option(BUILD_TEST_EXECUTABLE "Build test executable" ON)
 
-list(APPEND CMAKE_CXX_COMPILER_LAUNCHER "ccache")
-
 set(HEADER_FILES
     sources/array.hpp
     sources/checks.hpp
@@ -31,6 +29,8 @@ include_directories(
 # ------------------------------------------------------------------------------------------------------
 # -- Project Static Library 
 
+set(CMAKE_BUILD_TYPE "Release")
+
 add_library(${PROJECT_NAME} ${SOURCE_FILES})
 
 target_precompile_headers(
@@ -47,6 +47,8 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 
 IF(BUILD_TEST_EXECUTABLE)
     set(TEST_PROJECT_NAME pxd-stl-test)
+
+    set(CMAKE_BUILD_TYPE "Debug")
 
     set(TEST_FILES
         sources/test/array_tests.hpp
