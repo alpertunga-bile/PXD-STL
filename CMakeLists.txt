@@ -52,6 +52,8 @@ IF(BUILD_TEST_EXECUTABLE)
 
     set(TEST_FILES
         sources/test/array_tests.hpp
+        sources/test/i_test.hpp
+        sources/test/test_manager.hpp
     )
 
     add_executable(${TEST_PROJECT_NAME} main.cpp ${SOURCE_FILES} ${TEST_FILES})
@@ -60,6 +62,8 @@ IF(BUILD_TEST_EXECUTABLE)
         ${PROJECT_NAME} PRIVATE
         <cstdio>
         <cstdlib>
+        <string>
+        <map>
         ${HEADER_FILES}
     )
 
