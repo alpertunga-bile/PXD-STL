@@ -17,8 +17,9 @@ set(HEADER_FILES
     third-party/SIMDString/SIMDString.h
 )
 
-set(SOURCE_FILES
+set(LIB_SOURCE_FILES
     third-party/SIMDString/SIMDString.cpp
+
     ${HEADER_FILES}
 )
 
@@ -36,7 +37,7 @@ set(COMMON_STD_HEADERS
 
 set(CMAKE_BUILD_TYPE "Release")
 
-add_library(${PROJECT_NAME} ${SOURCE_FILES})
+add_library(${PROJECT_NAME} ${LIB_SOURCE_FILES})
 
 target_precompile_headers(
     ${PROJECT_NAME} PRIVATE
@@ -54,21 +55,28 @@ IF(BUILD_TEST_EXECUTABLE)
 
     set(CMAKE_BUILD_TYPE "Debug")
 
-    set(TEST_FILES
+    set(TEST_HEADER_FILES
         sources/test/array_tests.hpp
         sources/test/i_test.hpp
         sources/test/test_manager.hpp
+        sources/test/test_utils.hpp
     )
 
-    add_executable(${TEST_PROJECT_NAME} main.cpp ${SOURCE_FILES} ${TEST_FILES})
+    set(TEST_SOURCE_FILES
+        ${TEST_HEADER_FILES}
+        ${LIB_SOURCE_FILES}
+    )
+
+    add_executable(${TEST_PROJECT_NAME} main.cpp ${TEST_SOURCE_FILES})
 
     target_precompile_headers(
         ${PROJECT_NAME} PRIVATE
         ${COMMON_STD_HEADERS}
         <string>
         <unordered_map>
+        <format>
+        ${TEST_HEADER_FILES}
         ${HEADER_FILES}
-        ${TEST_FILES}
     )
 
     set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
