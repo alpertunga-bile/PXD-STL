@@ -26,6 +26,11 @@ include_directories(
     sources
 )
 
+set(COMMON_STD_HEADERS
+    <iostream>
+    <cstdlib>
+)
+
 # ------------------------------------------------------------------------------------------------------
 # -- Project Static Library 
 
@@ -35,8 +40,7 @@ add_library(${PROJECT_NAME} ${SOURCE_FILES})
 
 target_precompile_headers(
     ${PROJECT_NAME} PRIVATE
-    <cstdio>
-    <cstdlib>
+    ${COMMON_STD_HEADERS}
     ${HEADER_FILES}
 )
 
@@ -60,8 +64,7 @@ IF(BUILD_TEST_EXECUTABLE)
 
     target_precompile_headers(
         ${PROJECT_NAME} PRIVATE
-        <cstdio>
-        <cstdlib>
+        ${COMMON_STD_HEADERS}
         <string>
         <unordered_map>
         ${HEADER_FILES}
