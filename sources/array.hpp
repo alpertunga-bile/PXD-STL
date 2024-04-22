@@ -15,10 +15,26 @@ public:
     copy(given_array, arr_ptr, 0, size);
   }
 
-  Array(const Array<T>& other) { from(other); } // copy constructor
-  Array(Array<T>&& other) { from(other); }      // move constructor
+  Array(const Array<T>& other)
+  {
+    if (!IS_VALID(arr_ptr)) {
+      allocate(other.get_length());
+    }
+
+    from(other);
+  } // copy constructor
+  Array(Array<T>&& other)
+  {
+    if (!IS_VALID(arr_ptr)) {
+      allocate(other.get_length());
+    }
+    from(other);
+  } // move constructor
   Array& operator=(const Array<T>& other)
   {
+    if (!IS_VALID(arr_ptr)) {
+      allocate(other.get_length());
+    }
     from(other);
 
     *this;
@@ -36,6 +52,18 @@ public:
   bool operator!=(Array<T>& other) { return other.get_ptr() != arr_ptr; }
 
   decltype(auto) operator[](int index)
+  {
+    PXD_ASSERT(index < length);
+
+    if (index < 0) {
+      PXD_ASSERT(length + index >= 0);
+      return arr_ptr[length + index];
+    }
+
+    return arr_ptr[index];
+  }
+
+  decltype(auto) operator[](int index) const
   {
     PXD_ASSERT(index < length);
 
@@ -156,25 +184,25 @@ private:
     }
   }
 
-  void from(const Array<T>& from)
+  void from(const Array<T>& given_array)
   {
-    if (length != from.get_length()) {
-      resize(from.get_length());
+    if (length != given_array.get_length()) {
+      resize(given_array.get_length());
     }
 
     for (int i = 0; i < length; i++) {
-      arr_ptr[i] = from[i];
+      arr_ptr[i] = given_array[i];
     }
   }
 
-  void from(Array<T>&& from)
+  void from(Array<T>&& given_array)
   {
-    if (length != from.get_length()) {
-      resize(from.get_length());
+    if (length != given_array.get_length()) {
+      resize(given_array.get_length());
     }
 
     for (int i = 0; i < length; i++) {
-      arr_ptr[i] = from[i];
+      arr_ptr[i] = given_array[i];
     }
   }
 

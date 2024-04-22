@@ -18,25 +18,29 @@ Standard library under the PixelDancer package.
 
 ```
 ---------------------------------------------------------------
-Test Name : Array Tests
-  init with array test           -> Passed
-  copy_to test                   -> Passed
-  bool compare test              -> Passed
-  expand test                    -> Passed
-  resize test                    -> Passed
-  index test                     -> Passed
----------------------------------------------------------------
 Test Name : Linked Link Tests
-  normal array init              -> Passed
-  negative indexing              -> Passed
-  reverse array init             -> Passed
-  reverse                        -> Passed
-  indexing                       -> Passed
+  remove_between                 -> Passed
   assign constructor             -> Passed
+  remove_end                     -> Passed
   move constructor               -> Passed
   copy constructor               -> Passed
   remove_head                    -> Passed
-  remove_end                     -> Passed
-  remove_between                 -> Passed
+  indexing                       -> Passed
+  negative indexing              -> Passed
+  reverse array init             -> Passed
+  reverse                        -> Passed
+  normal array init              -> Passed
+---------------------------------------------------------------
+Test Name : Array Tests
+  assign constructor             -> Passed
+  resize test                    -> Passed
+  copy constructor               -> Passed
+  index                          -> Passed
+  expand                         -> Passed
+  bool compare                   -> Passed
+  copy_to                        -> Passed
+  move constructor               -> Passed
+  negative index                 -> Passed
+  init with array                -> Passed
 ---------------------------------------------------------------
 ```
