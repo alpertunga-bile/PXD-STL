@@ -5,11 +5,10 @@
 #include <unordered_map>
 
 namespace pxd {
-class ITest
-{
+class ITest {
 public:
-  virtual void start_test() { PXD_ASSERT(false); };
+  virtual void start_test() { PXD_ASSERT_MSG(false, "Not implemented"); };
 
   std::unordered_map<std::string, bool> test_results;
 };
-}
+} // namespace pxd
