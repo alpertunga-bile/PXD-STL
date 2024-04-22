@@ -90,6 +90,31 @@ public:
     end = nullptr;
   }
 
+  void reverse() {
+    if (is_empty() && length == 1) {
+      return;
+    }
+
+    Node *temp_head = end;
+    Node *temp_end = head;
+
+    Node *current_node = get_node_at(-2);
+    temp_head->next = current_node;
+
+    for (int index = 3; index < length; index++) {
+      Node *next_node = get_node_at(-1 * index);
+      current_node->next = next_node;
+      current_node = next_node;
+    }
+
+    current_node->next = temp_end;
+
+    head = temp_head;
+    end = temp_end;
+
+    end->next = nullptr;
+  }
+
   // for left values
   void add(T &new_value, bool add_back = true) {
     Node *new_node = new Node();
@@ -158,6 +183,25 @@ private:
     }
 
     length++;
+  }
+
+  Node *get_node_at(int index) {
+    PXD_ASSERT(index < length);
+
+    int calc_index = index;
+
+    if (index < 0) {
+      PXD_ASSERT(length + index >= 0);
+      calc_index = length + index;
+    }
+
+    Node *current_node = head;
+
+    for (int i = 0; i < calc_index; i++) {
+      current_node = current_node->next;
+    }
+
+    return current_node;
   }
 
 private:

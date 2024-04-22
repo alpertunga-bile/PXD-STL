@@ -18,6 +18,7 @@ public:
     start_normal_array_init_test(temp);
     start_reverse_array_init_test(temp);
     start_index_test(temp);
+    start_reverse_test(temp);
 
     delete[] temp_arr;
     delete[] temp;
@@ -43,6 +44,14 @@ private:
     LinkedList<int> ll(arr, N);
 
     test_results["indexing"] = ll[3] == arr[3] && ll[-1] == arr[N - 1];
+  }
+
+  void start_reverse_test(int *arr) {
+    LinkedList<int> ll(arr, N);
+    ll.reverse();
+    ll.to_array(temp_arr);
+
+    test_results["reverse"] = check_reverse_arrays(arr, temp_arr, N);
   }
 
 private:
