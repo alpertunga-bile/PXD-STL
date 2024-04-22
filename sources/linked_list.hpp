@@ -11,6 +11,9 @@ private:
   };
 
 public:
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Constructors & Deconstructor
+
   LinkedList() {
     head = nullptr;
     end = nullptr;
@@ -29,14 +32,7 @@ public:
   ~LinkedList() { release(); }
 
   T &operator[](int index) {
-    PXD_ASSERT(index < length);
-
-    int calc_index = index;
-
-    if (index < 0) {
-      PXD_ASSERT(length + index >= 0);
-      calc_index = length + index;
-    }
+    int calc_index = get_calc_index(index);
 
     Node *current_node = head;
 
@@ -46,6 +42,9 @@ public:
 
     return current_node->value;
   }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Class Functionalities
 
   void release() {
     if (head == nullptr) {
@@ -62,23 +61,6 @@ public:
 
     head = nullptr;
     end = nullptr;
-  }
-
-  void from_array(T *node_list, int size, bool is_reverse = false) {
-    head = nullptr;
-    end = nullptr;
-    length = 0;
-
-    for (int i = 0; i < size; i++) {
-      Node *new_node = new Node();
-      new_node->value = node_list[i];
-
-      if (is_reverse) {
-        add_to_front(new_node);
-      } else {
-        add_to_back(new_node);
-      }
-    }
   }
 
   void reverse() {
@@ -117,6 +99,9 @@ public:
     */
   }
 
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Element Functions
+
   // for left values
   void add(T &new_value, bool add_back = true) {
     Node *new_node = new Node();
@@ -140,6 +125,40 @@ public:
       add_to_front(new_node);
     }
   }
+
+  void remove(int index) {
+    int calc_index = get_calc_index(index);
+
+    if (calc_index == 0) {
+      Node *new_head = head->next;
+      delete head;
+      head = new_head;
+    } else if (calc_index == length - 1) {
+      Node *new_end = get_node_at(-2);
+      delete end;
+      end = new_end;
+      end->next = nullptr;
+    } else {
+      Node *current_node = head;
+      const int to_reach = index - 1;
+
+      for (int i = 1; i < to_reach; i++) {
+        current_node = current_node->next;
+      }
+
+      Node *prev_node = current_node;
+      Node *node_to_delete = prev_node->next;
+      Node *new_neighbor = node_to_delete->next;
+
+      prev_node->next = new_neighbor;
+      delete node_to_delete;
+    }
+
+    length--;
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Conversions
 
   void to_array(T *array) {
     if (is_empty()) {
@@ -170,6 +189,26 @@ public:
       index++;
     } while (index != length);
   }
+
+  void from_array(T *node_list, int size, bool is_reverse = false) {
+    head = nullptr;
+    end = nullptr;
+    length = 0;
+
+    for (int i = 0; i < size; i++) {
+      Node *new_node = new Node();
+      new_node->value = node_list[i];
+
+      if (is_reverse) {
+        add_to_front(new_node);
+      } else {
+        add_to_back(new_node);
+      }
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Variable Inline Functions
 
   inline int get_length() { return length; }
   inline bool is_empty() {
@@ -216,14 +255,7 @@ private:
   }
 
   Node *get_node_at(int index) {
-    PXD_ASSERT(index < length);
-
-    int calc_index = index;
-
-    if (index < 0) {
-      PXD_ASSERT(length + index >= 0);
-      calc_index = length + index;
-    }
+    int calc_index = get_calc_index(index);
 
     Node *current_node = head;
 
@@ -282,6 +314,19 @@ private:
     }
 
     end = this_current_node;
+  }
+
+  inline int get_calc_index(int index) {
+    PXD_ASSERT(index < length);
+
+    int calc_index = index;
+
+    if (index < 0) {
+      PXD_ASSERT(length + index >= 0);
+      calc_index = length + index;
+    }
+
+    return calc_index;
   }
 
 private:
