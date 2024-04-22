@@ -23,6 +23,7 @@ public:
 
     from(other);
   } // copy constructor
+
   Array(Array<T>&& other)
   {
     if (!IS_VALID(arr_ptr)) {
@@ -30,6 +31,7 @@ public:
     }
     from(other);
   } // move constructor
+
   Array& operator=(const Array<T>& other)
   {
     if (!IS_VALID(arr_ptr)) {
@@ -38,7 +40,8 @@ public:
     from(other);
 
     *this;
-  }        // copy assignment
+  } // copy assignment
+
   ~Array() // deconstructor
   {
     if (arr_ptr == nullptr) {
