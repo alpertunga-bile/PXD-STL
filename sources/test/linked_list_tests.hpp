@@ -22,6 +22,7 @@ public:
     start_copy_ctor_test(temp);
     start_move_ctor_test(temp);
     start_assign_ctor_test(temp);
+    start_remove_test(temp);
 
     delete[] temp_arr;
     delete[] temp;
@@ -46,7 +47,8 @@ private:
   void start_index_test(int *arr) {
     LinkedList<int> ll(arr, N);
 
-    test_results["indexing"] = ll[3] == arr[3] && ll[-1] == arr[N - 1];
+    test_results["indexing"] = ll[3] == arr[3];
+    test_results["negative indexing"] = ll[-1] == arr[N - 1];
   }
 
   void start_reverse_test(int *arr) {
@@ -102,6 +104,28 @@ private:
         check_arrays<int>(temp_new_arr, temp_arr, N);
 
     delete[] temp_new_arr;
+  }
+
+  void start_remove_test(int *arr) {
+    LinkedList<int> ll(arr, N);
+    LinkedList<int> ell(ll);
+    LinkedList<int> mll(ll);
+
+    ll.remove(0);
+
+    ll.to_array(temp_arr);
+
+    test_results["remove_head"] = check_arrays<int>(temp_arr, 0, arr, 1, N - 1);
+
+    ell.remove(-1);
+    ell.to_array(temp_arr);
+
+    test_results["remove_end"] = check_arrays<int>(temp_arr, 0, arr, 0, N - 1);
+
+    mll.remove(5);
+    mll.to_array(temp_arr);
+    test_results["remove_between"] =
+        !check_arrays<int>(temp_arr, 0, arr, 0, N - 1);
   }
 
 private:
