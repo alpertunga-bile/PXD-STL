@@ -3,18 +3,22 @@
 #include "checks.hpp"
 
 namespace pxd {
-template <typename T> class Array {
+template<typename T>
+class Array
+{
 public:
   Array() = delete; // default constructor
   Array(int size) { allocate(size); }
-  Array(T *given_array, int size) {
+  Array(T* given_array, int size)
+  {
     allocate(size);
     copy(given_array, arr_ptr, 0, size);
   }
 
-  Array(const Array<T> &other) { from(other); } // copy constructor
-  Array(Array<T> &&other) { from(other); }      // move constructor
-  Array &operator=(const Array<T> &other) {
+  Array(const Array<T>& other) { from(other); } // copy constructor
+  Array(Array<T>&& other) { from(other); }      // move constructor
+  Array& operator=(const Array<T>& other)
+  {
     from(other);
 
     *this;
@@ -28,14 +32,11 @@ public:
     delete[] arr_ptr;
   }
 
-  bool operator==(Array<T> &other) {
-    return other.get_ptr() == arr_ptr && other.get_length() == length;
-  }
-  bool operator!=(Array<T> &other) {
-    return other.get_ptr() != arr_ptr && other.get_length() != length;
-  }
+  bool operator==(Array<T>& other) { return other.get_ptr() == arr_ptr; }
+  bool operator!=(Array<T>& other) { return other.get_ptr() != arr_ptr; }
 
-  decltype(auto) operator[](int index) {
+  decltype(auto) operator[](int index)
+  {
     PXD_ASSERT(index < length);
 
     if (index < 0) {
@@ -46,8 +47,9 @@ public:
     return arr_ptr[index];
   }
 
-  void resize(int new_size) {
-    T *temp_array = new T[length];
+  void resize(int new_size)
+  {
+    T* temp_array = new T[length];
     copy(arr_ptr, temp_array, 0, length);
 
     release();
@@ -56,12 +58,14 @@ public:
     delete[] temp_array;
   }
 
-  void reallocate(T *given_array, int size) {
+  void reallocate(T* given_array, int size)
+  {
     release();
     allocate(given_array, size);
   }
 
-  void release() {
+  void release()
+  {
     if (arr_ptr == nullptr) {
       return;
     }
@@ -73,7 +77,8 @@ public:
     byte_size = 0;
   }
 
-  void copy_to(Array<T> &to) {
+  void copy_to(Array<T>& to)
+  {
     if (to.get_length() != length) {
       to.resize(length);
     }
@@ -83,7 +88,8 @@ public:
     }
   }
 
-  void expand(Array<T> &given_array) {
+  void expand(Array<T>& given_array)
+  {
     if (given_array.get_length() == 0) {
       return;
     }
@@ -98,7 +104,8 @@ public:
     }
   }
 
-  void expand(T *given_array, int size) {
+  void expand(T* given_array, int size)
+  {
     int old_length = length;
     int new_size = length + size;
 
@@ -109,24 +116,27 @@ public:
     }
   }
 
-  inline T *get_ptr() { return arr_ptr; }
+  inline T* get_ptr() { return arr_ptr; }
   inline int get_length() { return length; }
   inline int get_length() const { return length; }
   inline size_t get_byte_size() { return byte_size; }
   inline float get_mbyte_size() { return ((float)byte_size) / 1024.f; }
-  inline float get_gbyte_size() {
+  inline float get_gbyte_size()
+  {
     return ((float)byte_size) / (1024.f * 1024.f);
   }
   inline size_t get_data_size() { return sizeof(T); }
 
 private:
-  void allocate(int size) {
+  void allocate(int size)
+  {
     arr_ptr = new T[size];
     length = size;
     byte_size = size * sizeof(T);
   }
 
-  void allocate(T *given_array, int size) {
+  void allocate(T* given_array, int size)
+  {
     PXD_ASSERT(given_array != nullptr);
 
     arr_ptr = new T[size];
@@ -135,7 +145,8 @@ private:
     copy(given_array, arr_ptr, 0, size);
   }
 
-  void copy(T *from, T *to, int start, int end) {
+  void copy(T* from, T* to, int start, int end)
+  {
     PXD_ASSERT(from != nullptr);
     PXD_ASSERT(to != nullptr);
     PXD_ASSERT(end > start);
@@ -145,7 +156,8 @@ private:
     }
   }
 
-  void from(const Array<T> &from) {
+  void from(const Array<T>& from)
+  {
     if (length != from.get_length()) {
       resize(from.get_length());
     }
@@ -155,7 +167,8 @@ private:
     }
   }
 
-  void from(Array<T> &&from) {
+  void from(Array<T>&& from)
+  {
     if (length != from.get_length()) {
       resize(from.get_length());
     }
@@ -166,7 +179,7 @@ private:
   }
 
 private:
-  T *arr_ptr = nullptr;
+  T* arr_ptr = nullptr;
   int length = 0;
   size_t byte_size = 0;
 };
