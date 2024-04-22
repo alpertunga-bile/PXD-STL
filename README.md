@@ -28,11 +28,15 @@ Test Name : Array Tests
 ---------------------------------------------------------------
 Test Name : Linked Link Tests
   normal array init              -> Passed
+  negative indexing              -> Passed
   reverse array init             -> Passed
-  indexing                       -> Passed
   reverse                        -> Passed
-  copy constructor               -> Passed
-  move constructor               -> Passed
+  indexing                       -> Passed
   assign constructor             -> Passed
+  move constructor               -> Passed
+  copy constructor               -> Passed
+  remove_head                    -> Passed
+  remove_end                     -> Passed
+  remove_between                 -> Passed
 ---------------------------------------------------------------
 ```
