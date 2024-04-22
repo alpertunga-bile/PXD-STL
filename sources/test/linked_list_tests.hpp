@@ -111,18 +111,18 @@ private:
     LinkedList<int> ell(ll);
     LinkedList<int> mll(ll);
 
-    ll.remove(0);
+    ll.remove_at(0);
 
     ll.to_array(temp_arr);
 
     test_results["remove_head"] = check_arrays<int>(temp_arr, 0, arr, 1, N - 1);
 
-    ell.remove(-1);
+    ell.remove_at(-1);
     ell.to_array(temp_arr);
 
     test_results["remove_end"] = check_arrays<int>(temp_arr, 0, arr, 0, N - 1);
 
-    mll.remove(5);
+    mll.remove_at(5);
     mll.to_array(temp_arr);
     test_results["remove_between"] =
         !check_arrays<int>(temp_arr, 0, arr, 0, N - 1);

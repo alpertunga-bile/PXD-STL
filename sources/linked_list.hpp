@@ -43,6 +43,22 @@ public:
     return current_node->value;
   }
 
+  // actually; head, end and length will be same and inner nodes may be
+  // different if the user tries hard enough but whatever
+  bool operator==(LinkedList<T> &other) {
+    return head == other.get_head_node() && end == other.get_end_node() &&
+                   length == other.get_length()
+               ? true
+               : false;
+  }
+
+  bool operator!=(LinkedList<T> &other) {
+    return head != other.get_head_node() && end != other.get_end_node() &&
+                   length != other.get_length()
+               ? true
+               : false;
+  }
+
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Class Functionalities
 
@@ -126,7 +142,7 @@ public:
     }
   }
 
-  void remove(int index) {
+  void remove_at(int index) {
     int calc_index = get_calc_index(index);
 
     if (calc_index == 0) {
