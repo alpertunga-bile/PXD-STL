@@ -75,6 +75,7 @@ IF(BUILD_TEST_EXECUTABLE)
         <string>
         <unordered_map>
         <format>
+        <utility>
         ${TEST_HEADER_FILES}
         ${HEADER_FILES}
     )
