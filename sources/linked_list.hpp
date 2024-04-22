@@ -19,15 +19,13 @@ public:
   LinkedList(T *node_list, int size, bool is_reverse = false) {
     from_array(node_list, size, is_reverse);
   }
-
   LinkedList(const LinkedList<T> &other) { from_linked_list(other); }
-  LinkedList(LinkedList<T> &&other) = delete;
+  LinkedList(LinkedList<T> &&other) { from_linked_list(other); }
   LinkedList &operator=(const LinkedList<T> &other) {
     from_linked_list(other);
 
     return *this;
   }
-
   ~LinkedList() { release(); }
 
   T &operator[](int index) {
@@ -237,6 +235,31 @@ private:
   }
 
   void from_linked_list(const LinkedList<T> &other) {
+    release();
+
+    Node *this_current_node = new Node();
+    Node *other_current_node = other.get_head_node();
+
+    this_current_node->value = other_current_node->value;
+    head = this_current_node;
+    other_current_node = other_current_node->next;
+
+    length = other.get_length();
+
+    for (int i = 1; i < length; i++) {
+      Node *new_node = new Node();
+      new_node->value = other_current_node->value;
+
+      this_current_node->next = new_node;
+
+      this_current_node = new_node;
+      other_current_node = other_current_node->next;
+    }
+
+    end = this_current_node;
+  }
+
+  void from_linked_list(LinkedList<T> &&other) {
     release();
 
     Node *this_current_node = new Node();

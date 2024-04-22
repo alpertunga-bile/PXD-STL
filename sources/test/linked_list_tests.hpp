@@ -19,6 +19,8 @@ public:
     start_reverse_array_init_test(temp);
     start_index_test(temp);
     start_reverse_test(temp);
+    start_copy_ctor_test(temp);
+    start_move_ctor_test(temp);
     start_assign_ctor_test(temp);
 
     delete[] temp_arr;
@@ -67,6 +69,36 @@ private:
     tll.to_array(temp_new_arr);
 
     test_results["assign constructor"] =
+        check_arrays<int>(temp_new_arr, temp_arr, N);
+
+    delete[] temp_new_arr;
+  }
+
+  void start_copy_ctor_test(int *arr) {
+    LinkedList<int> ll(arr, N);
+    ll.to_array(temp_arr);
+
+    LinkedList<int> tll(ll);
+
+    int *temp_new_arr = new int[N];
+    tll.to_array(temp_new_arr);
+
+    test_results["copy constructor"] =
+        check_arrays<int>(temp_new_arr, temp_arr, N);
+
+    delete[] temp_new_arr;
+  }
+
+  void start_move_ctor_test(int *arr) {
+    LinkedList<int> ll(arr, N);
+    ll.to_array(temp_arr);
+
+    LinkedList<int> tll(std::move(ll));
+
+    int *temp_new_arr = new int[N];
+    tll.to_array(temp_new_arr);
+
+    test_results["move constructor"] =
         check_arrays<int>(temp_new_arr, temp_arr, N);
 
     delete[] temp_new_arr;
