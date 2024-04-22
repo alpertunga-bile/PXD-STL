@@ -19,6 +19,7 @@ public:
     start_reverse_array_init_test(temp);
     start_index_test(temp);
     start_reverse_test(temp);
+    start_assign_ctor_test(temp);
 
     delete[] temp_arr;
     delete[] temp;
@@ -52,6 +53,23 @@ private:
     ll.to_array(temp_arr);
 
     test_results["reverse"] = check_reverse_arrays(arr, temp_arr, N);
+  }
+
+  void start_assign_ctor_test(int *arr) {
+    LinkedList<int> ll(arr, N);
+    ll.to_array(temp_arr);
+
+    LinkedList<int> tll;
+
+    int *temp_new_arr = new int[N];
+
+    tll = ll;
+    tll.to_array(temp_new_arr);
+
+    test_results["assign constructor"] =
+        check_arrays<int>(temp_new_arr, temp_arr, N);
+
+    delete[] temp_new_arr;
   }
 
 private:
