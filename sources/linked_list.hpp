@@ -16,7 +16,22 @@ public:
     end = nullptr;
     length = 0;
   } // default constructor
-  LinkedList(T *node_list, int size) {}
+  LinkedList(T *node_list, int size, bool is_reverse = false) {
+    head = nullptr;
+    end = nullptr;
+    length = 0;
+
+    for (int i = 0; i < size; i++) {
+      Node *new_node = new Node();
+      new_node->value = node_list[i];
+
+      if (is_reverse) {
+        add_to_front(new_node);
+      } else {
+        add_to_back(new_node);
+      }
+    }
+  }
 
   LinkedList(const LinkedList<T> &other) = delete;
   LinkedList(LinkedList<T> &&other) = delete;
@@ -39,7 +54,7 @@ public:
     end = nullptr;
   }
 
-  decltype(auto) operator[](int index) {
+  T &operator[](int index) {
     PXD_ASSERT(index < length);
 
     int calc_index = index;
@@ -52,7 +67,7 @@ public:
     Node *current_node = head;
 
     for (int i = 0; i < calc_index; i++) {
-      current_node = head->next;
+      current_node = current_node->next;
     }
 
     return current_node->value;
@@ -109,22 +124,9 @@ public:
 
     do {
       array[index] = current_node->value;
-      current_node = head->next;
+      current_node = current_node->next;
       index++;
     } while (index != length);
-  }
-
-  void print() {
-    if (is_empty()) {
-      return;
-    }
-
-    Node *current_node = head;
-
-    do {
-      std::cout << "    -> " << current_node->value << "\n";
-      current_node = current_node->next;
-    } while (current_node != nullptr);
   }
 
   inline int get_length() { return length; }
@@ -153,8 +155,6 @@ private:
       Node *temp = head;
       head = new_node;
       new_node->next = temp;
-
-      end = temp;
     }
 
     length++;

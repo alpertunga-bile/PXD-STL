@@ -4,25 +4,23 @@
 #include <cstdio>
 
 namespace pxd {
-class TestManager
-{
+class TestManager {
 public:
-  void add_test(std::string&& name, ITest& test)
-  {
+  void add_test(std::string &&name, ITest &test) {
     test.start_test();
     tests[name] = test.test_results;
   }
 
-  void print_results()
-  {
-    for (auto& [test_name, test] : tests) {
+  void print_results() {
+    for (auto &[test_name, test] : tests) {
       printf(
-        "---------------------------------------------------------------\n");
+          "---------------------------------------------------------------\n");
       printf("Test Name : %s\n", test_name.c_str());
 
-      for (auto& [test_case_name, test_result] : test) {
+      for (auto &[test_case_name, test_result] : test) {
         std::string result_string = test_result == true ? "Passed" : "Failed";
-        printf("%30s -> %6s\n", test_case_name.c_str(), result_string.c_str());
+        printf("  %-30s -> %-6s\n", test_case_name.c_str(),
+               result_string.c_str());
       }
     }
 
@@ -32,4 +30,4 @@ public:
 private:
   std::unordered_map<std::string, std::unordered_map<std::string, bool>> tests;
 };
-}
+} // namespace pxd
