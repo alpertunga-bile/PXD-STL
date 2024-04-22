@@ -40,7 +40,7 @@ target_precompile_headers(
     ${HEADER_FILES}
 )
 
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 
 # ------------------------------------------------------------------------------------------------------
 # -- Test Executable
@@ -68,7 +68,7 @@ IF(BUILD_TEST_EXECUTABLE)
         ${TEST_FILES}
     )
 
-    target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
+    set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 ENDIF(BUILD_TEST_EXECUTABLE)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
