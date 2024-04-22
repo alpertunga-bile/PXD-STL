@@ -12,10 +12,14 @@ public:
     copy(given_array, arr_ptr, 0, size);
   }
 
-  Array(const Array<T> &other) = delete;            // copy constructor
-  Array(Array<T> &&other) = delete;                 // move constructor
-  Array &operator=(const Array<T> &other) = delete; // copy assignment
-  ~Array()                                          // deconstructor
+  Array(const Array<T> &other) { from(other); } // copy constructor
+  Array(Array<T> &&other) { from(other); }      // move constructor
+  Array &operator=(const Array<T> &other) {
+    from(other);
+
+    *this;
+  }        // copy assignment
+  ~Array() // deconstructor
   {
     if (arr_ptr == nullptr) {
       return;
@@ -24,8 +28,12 @@ public:
     delete[] arr_ptr;
   }
 
-  bool operator==(Array<T> &other) { return other.arr_ptr == arr_ptr; }
-  bool operator!=(Array<T> &other) { return other.arr_ptr != arr_ptr; }
+  bool operator==(Array<T> &other) {
+    return other.get_ptr() == arr_ptr && other.get_length() == length;
+  }
+  bool operator!=(Array<T> &other) {
+    return other.get_ptr() != arr_ptr && other.get_length() != length;
+  }
 
   decltype(auto) operator[](int index) {
     PXD_ASSERT(index < length);
@@ -66,7 +74,9 @@ public:
   }
 
   void copy_to(Array<T> &to) {
-    PXD_ASSERT(to.get_length() == length);
+    if (to.get_length() != length) {
+      to.resize(length);
+    }
 
     for (int i = 0; i < length; i++) {
       to[i] = arr_ptr[i];
@@ -101,6 +111,7 @@ public:
 
   inline T *get_ptr() { return arr_ptr; }
   inline int get_length() { return length; }
+  inline int get_length() const { return length; }
   inline size_t get_byte_size() { return byte_size; }
   inline float get_mbyte_size() { return ((float)byte_size) / 1024.f; }
   inline float get_gbyte_size() {
@@ -131,6 +142,26 @@ private:
 
     for (int i = start; i < end; i++) {
       to[i] = from[i];
+    }
+  }
+
+  void from(const Array<T> &from) {
+    if (length != from.get_length()) {
+      resize(from.get_length());
+    }
+
+    for (int i = 0; i < length; i++) {
+      arr_ptr[i] = from[i];
+    }
+  }
+
+  void from(Array<T> &&from) {
+    if (length != from.get_length()) {
+      resize(from.get_length());
+    }
+
+    for (int i = 0; i < length; i++) {
+      arr_ptr[i] = from[i];
     }
   }
 
