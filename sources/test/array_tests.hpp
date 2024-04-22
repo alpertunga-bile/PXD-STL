@@ -82,7 +82,8 @@ private:
   template <typename T> void start_index_test(T *temp) {
     Array<T> arr(temp, N);
 
-    test_results["index test"] = arr[-1] == arr[N - 1] && arr[2] == 2;
+    test_results["negative index test"] = arr[-1] == arr[N - 1];
+    test_results["index test"] = arr[2] == 2;
   }
 
   template <typename T> void start_resize_test(T *temp) {
