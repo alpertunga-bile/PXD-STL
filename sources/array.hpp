@@ -31,8 +31,8 @@ public:
     PXD_ASSERT(index < length);
 
     if (index < 0) {
-      PXD_ASSERT((index * -1) <= length);
-      return arr_ptr[length - (index * -1)];
+      PXD_ASSERT(length + index >= 0);
+      return arr_ptr[length + index];
     }
 
     return arr_ptr[index];

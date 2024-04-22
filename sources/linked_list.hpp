@@ -60,8 +60,8 @@ public:
     int calc_index = index;
 
     if (index < 0) {
-      PXD_ASSERT((index * -1) <= length);
-      calc_index = length - (index * -1);
+      PXD_ASSERT(length + index >= 0);
+      calc_index = length + index;
     }
 
     Node *current_node = head;
