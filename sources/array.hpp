@@ -83,8 +83,7 @@ public:
     T* temp_array = new T[length];
     copy(arr_ptr, temp_array, 0, length);
 
-    release();
-    allocate(temp_array, new_size);
+    reallocate(temp_array, new_size);
 
     delete[] temp_array;
   }
@@ -93,6 +92,12 @@ public:
   {
     release();
     allocate(given_array, size);
+  }
+
+  void reallocate(int size)
+  {
+    release();
+    allocate(size);
   }
 
   void release()
@@ -161,6 +166,8 @@ public:
 private:
   void allocate(int size)
   {
+    PXD_ASSERT(arr_ptr == nullptr);
+
     arr_ptr = new T[size];
     length = size;
     byte_size = size * sizeof(T);
@@ -168,6 +175,7 @@ private:
 
   void allocate(T* given_array, int size)
   {
+    PXD_ASSERT(arr_ptr == nullptr);
     PXD_ASSERT(given_array != nullptr);
 
     arr_ptr = new T[size];
@@ -190,7 +198,7 @@ private:
   void from(const Array<T>& given_array)
   {
     if (length != given_array.get_length()) {
-      resize(given_array.get_length());
+      reallocate(given_array.get_length());
     }
 
     for (int i = 0; i < length; i++) {
@@ -201,7 +209,7 @@ private:
   void from(Array<T>&& given_array)
   {
     if (length != given_array.get_length()) {
-      resize(given_array.get_length());
+      reallocate(given_array.get_length());
     }
 
     for (int i = 0; i < length; i++) {
