@@ -20,6 +20,8 @@ set(HEADER_FILES
 set(LIB_SOURCE_FILES
     third-party/SIMDString/SIMDString.cpp
 
+    sources/linked_list.cpp
+
     ${HEADER_FILES}
 )
 
