@@ -3,6 +3,10 @@
 #include "checks.hpp"
 
 namespace pxd {
+
+template<typename T>
+class Array;
+
 template<typename T>
 class LinkedList
 {
@@ -95,35 +99,30 @@ public:
       return;
     }
 
-    // O(n) for memory and speed
     T* temp_array = new T[length];
 
     to_array(temp_array);
     from_array(temp_array, length, true);
 
     delete[] temp_array;
+  }
 
-    // O(nk) for speed, O(1) for memory
-    /*
-    Node *temp_head = end;
-    Node *temp_end = head;
+  // returns length + 1 because negative indexing is supported
+  // so this will lead to unwanted situations
+  int where(T& value)
+  {
+    Node* current_node = head;
+    int current_index = 0;
 
-    Node *current_node = get_node_at(-2);
-    temp_head->next = current_node;
+    do {
+      if (current_node->value == value) {
+        return current_index;
+      }
+      current_node = current_node->next;
+      current_index++;
+    } while (current_node != nullptr);
 
-    for (int index = 3; index < length; index++) {
-      Node *next_node = get_node_at(-1 * index);
-      current_node->next = next_node;
-      current_node = next_node;
-    }
-
-    current_node->next = temp_end;
-
-    head = temp_head;
-    end = temp_end;
-
-    end->next = nullptr;
-    */
+    return length;
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -187,6 +186,15 @@ public:
     length--;
   }
 
+  void remove(T& value)
+  {
+    int remove_index = where(value);
+
+    PXD_ASSERT(remove_index < length);
+
+    remove_at(remove_index);
+  }
+
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Conversions
 
@@ -196,14 +204,7 @@ public:
       return;
     }
 
-    Node* current_node = head;
-    int index = 0;
-
-    do {
-      array[index] = current_node->value;
-      current_node = current_node->next;
-      index++;
-    } while (index != length);
+    fill_array(array);
   }
 
   void to_array(T* array) const
@@ -212,17 +213,52 @@ public:
       return;
     }
 
-    Node* current_node = head;
-    int index = 0;
+    fill_array(array);
+  }
 
-    do {
-      array[index] = current_node->value;
-      current_node = current_node->next;
-      index++;
-    } while (index != length);
+  void to_array(Array<T>& array)
+  {
+    if (is_empty()) {
+      return;
+    }
+
+    array.reallocate(length);
+
+    fill_array(array);
+  }
+
+  Array<T> to_array()
+  {
+    if (is_empty()) {
+      return;
+    }
+
+    Array<T> array(length);
+
+    fill_array(array);
+
+    return array;
   }
 
   void from_array(T* node_list, int size, bool is_reverse = false)
+  {
+    head = nullptr;
+    end = nullptr;
+    length = 0;
+
+    for (int i = 0; i < size; i++) {
+      Node* new_node = new Node();
+      new_node->value = node_list[i];
+
+      if (is_reverse) {
+        add_to_front(new_node);
+      } else {
+        add_to_back(new_node);
+      }
+    }
+  }
+
+  void from_array(Array<T>& node_list, int size, bool is_reverse = false)
   {
     head = nullptr;
     end = nullptr;
@@ -368,6 +404,30 @@ private:
     }
 
     return calc_index;
+  }
+
+  void fill_array(T* array)
+  {
+    Node* current_node = head;
+    int index = 0;
+
+    do {
+      array[index] = current_node->value;
+      current_node = current_node->next;
+      index++;
+    } while (current_node != nullptr);
+  }
+
+  void fill_array(Array<T>& array)
+  {
+    Node* current_node = head;
+    int index = 0;
+
+    do {
+      array[index] = current_node->value;
+      current_node = current_node->next;
+      index++;
+    } while (current_node != nullptr);
   }
 
 private:
