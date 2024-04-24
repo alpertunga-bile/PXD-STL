@@ -4,8 +4,8 @@ project(pxd-stl VERSION 0.1.0 LANGUAGES C CXX)
 include(CTest)
 enable_testing()
 
-################################################################################
-## GLOBAL DEFINITIONS
+# ------------------------------------------------------------------------------------
+# -- GLOBAL DEFINITIONS
 
 option(PXD_STL_BUILD_TEST_EXECUTABLE "Build test executable" ON)
 
@@ -20,6 +20,7 @@ set(HEADER_FILES
 set(LIB_SOURCE_FILES
     third-party/SIMDString/SIMDString.cpp
 
+    sources/array.cpp
     sources/linked_list.cpp
 
     ${HEADER_FILES}
