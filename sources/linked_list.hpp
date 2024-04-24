@@ -182,14 +182,6 @@ public:
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Conversions
 
-  void to_array(T *array) {
-    if (is_empty()) {
-      return;
-    }
-
-    fill_array(array);
-  }
-
   void to_array(T *array) const {
     if (is_empty()) {
       return;
@@ -257,17 +249,12 @@ public:
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Variable Inline Functions
 
-  inline int get_length() { return length; }
-  inline bool is_empty() {
-    return head == nullptr && length == 0 ? true : false;
-  }
-
-  inline size_t get_byte_size() { return length * sizeof(T); }
-  inline size_t get_mbyte_size() { return (length * sizeof(T)) / 1024.f; }
-  inline size_t get_gbyte_size() {
+  inline size_t get_byte_size() const { return length * sizeof(T); }
+  inline size_t get_mbyte_size() const { return (length * sizeof(T)) / 1024.f; }
+  inline size_t get_gbyte_size() const {
     return (length * sizeof(T)) / (1024.f * 1024.f);
   }
-  inline size_t get_data_size() { return sizeof(T); }
+  inline size_t get_data_size() const { return sizeof(T); }
 
   inline int get_length() const { return length; }
   inline bool is_empty() const {
@@ -377,7 +364,7 @@ private:
     return calc_index;
   }
 
-  void fill_array(T *array) {
+  void fill_array(T *array) const {
     Node *current_node = head;
     int index = 0;
 

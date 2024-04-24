@@ -150,15 +150,14 @@ public:
     return ll;
   }
 
-  inline T *get_ptr() { return arr_ptr; }
-  inline int get_length() { return length; }
+  inline T *get_ptr() const { return arr_ptr; }
   inline int get_length() const { return length; }
-  inline size_t get_byte_size() { return byte_size; }
-  inline float get_mbyte_size() { return ((float)byte_size) / 1024.f; }
-  inline float get_gbyte_size() {
+  inline size_t get_byte_size() const { return byte_size; }
+  inline float get_mbyte_size() const { return ((float)byte_size) / 1024.f; }
+  inline float get_gbyte_size() const {
     return ((float)byte_size) / (1024.f * 1024.f);
   }
-  inline size_t get_data_size() { return sizeof(T); }
+  inline size_t get_data_size() const { return sizeof(T); }
 
 private:
   void allocate(int size) {
