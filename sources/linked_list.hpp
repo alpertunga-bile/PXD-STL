@@ -80,6 +80,7 @@ public:
 
     head = nullptr;
     end = nullptr;
+    length = 0;
   }
 
   void reverse() {
