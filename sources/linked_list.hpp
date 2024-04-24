@@ -260,10 +260,13 @@ public:
   inline bool is_empty() {
     return head == nullptr && length == 0 ? true : false;
   }
-  inline Node *get_head_node() { return head; }
-  inline Node *get_end_node() { return end; }
-  inline void set_head_node(Node *_head) { head = _head; }
-  inline void set_end_node(Node *_end) { end = _end; }
+
+  inline size_t get_byte_size() { return length * sizeof(T); }
+  inline size_t get_mbyte_size() { return (length * sizeof(T)) / 1024.f; }
+  inline size_t get_gbyte_size() {
+    return (length * sizeof(T)) / (1024.f * 1024.f);
+  }
+  inline size_t get_data_size() { return sizeof(T); }
 
   inline int get_length() const { return length; }
   inline bool is_empty() const {
@@ -271,8 +274,6 @@ public:
   }
   inline Node *get_head_node() const { return head; }
   inline Node *get_end_node() const { return end; }
-  inline void set_head_node(Node *_head) const { head = _head; }
-  inline void set_end_node(Node *_end) const { end = _end; }
 
 private:
   void add_to_back(Node *new_node) {
