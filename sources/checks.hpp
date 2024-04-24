@@ -3,7 +3,6 @@
 #include <cstdlib>
 #include <iostream>
 
-
 #ifndef __FUNCTION_NAME__
 #ifdef _WIN32
 #define __FUNCTION_NAME__ __FUNCTION__
@@ -12,17 +11,17 @@
 #endif
 #endif
 
+#define IS_VALID(obj) (obj == nullptr ? false : true)
+
 #ifdef ENABLE_ASSERTS
 #define PXD_ASSERT(exp) assert_func(exp, __FILE__, __LINE__, __FUNCTION_NAME__)
 #define PXD_ASSERT_MSG(exp, msg)                                               \
   assert_msg_func(msg, exp, __FILE__, __LINE__, __FUNCTION_NAME__)
 #define PXD_TODO(msg) todo_func(msg, __FILE__, __LINE__, __FUNCTION_NAME__)
-#define IS_VALID(obj) (obj == nullptr ? false : true)
 #else
 #define PXD_ASSERT(exp)
 #define PXD_ASSERT_MSG(exp, msg)
 #define PXD_TODO(msg)
-#define IS_VALID(obj) (obj == nullptr ? false : true)
 #endif
 
 inline void assert_func(bool expression, const char *filename, int line,
