@@ -3,7 +3,7 @@
 #include "checks.hpp"
 
 namespace pxd {
-enum class ePXD_BST_ORDER : uint8_t {
+enum class eBST_ORDER : uint8_t {
   INORDER,
   PREORDER,
   POSTORDER,
@@ -19,9 +19,12 @@ private:
 
 public:
   BinarySearchTree() = default;
-  BinarySearchTree(const BinarySearchTree<T> &other) = delete;
-  BinarySearchTree(BinarySearchTree<T> &&other) = delete;
-  BinarySearchTree &operator=(const BinarySearchTree<T> &other) = delete;
+  BinarySearchTree(const BinarySearchTree<T> &other) { from_bst(other); }
+  BinarySearchTree(BinarySearchTree<T> &&other) { from_bst(other); }
+  BinarySearchTree &operator=(const BinarySearchTree<T> &other) {
+    from_bst(other);
+    return *this;
+  }
   ~BinarySearchTree() { release(); }
 
   bool operator==(BinarySearchTree<T> &other) {
@@ -31,7 +34,24 @@ public:
     return other.get_root() != root;
   }
 
-  void release(){};
+  void release() {
+    if (root == nullptr) {
+      return;
+    }
+
+    Node **release_array = new Node *[total_node_count];
+
+    get_nodes_in_order(release_array);
+
+    for (int i = 0; i < total_node_count; i++) {
+      delete release_array[i];
+    }
+
+    delete[] release_array;
+
+    root = nullptr;
+    total_node_count = 0;
+  };
 
   void add(T &value) {
     if (!IS_VALID(root)) {
@@ -105,7 +125,7 @@ public:
     total_node_count++;
   }
 
-  void get_order(T *array, ePXD_BST_ORDER &&order) {
+  void get_order(T *array, eBST_ORDER &&order) {
     if (root == nullptr) {
       return;
     }
@@ -114,13 +134,37 @@ public:
     int index = 0;
 
     switch (order) {
-    case ePXD_BST_ORDER::INORDER:
+    case eBST_ORDER::INORDER:
       inorder(root, array, index);
       break;
-    case ePXD_BST_ORDER::PREORDER:
+    case eBST_ORDER::PREORDER:
       preorder(root, array, index);
       break;
-    case ePXD_BST_ORDER::POSTORDER:
+    case eBST_ORDER::POSTORDER:
+      postorder(root, array, index);
+      break;
+
+    default:
+      break;
+    }
+  }
+
+  void get_order(T *array, eBST_ORDER &&order) const {
+    if (root == nullptr) {
+      return;
+    }
+
+    PXD_ASSERT(array != nullptr);
+    int index = 0;
+
+    switch (order) {
+    case eBST_ORDER::INORDER:
+      inorder(root, array, index);
+      break;
+    case eBST_ORDER::PREORDER:
+      preorder(root, array, index);
+      break;
+    case eBST_ORDER::POSTORDER:
       postorder(root, array, index);
       break;
 
@@ -131,9 +175,23 @@ public:
 
   inline Node *get_root() const { return root; }
   inline int get_total_node_count() { return total_node_count; }
+  inline int get_total_node_count() const { return total_node_count; }
 
 private:
   void inorder(Node *node, T *array, int &index) {
+    if (node == nullptr) {
+      return;
+    }
+
+    inorder(node->left, array, index);
+
+    array[index] = node->value;
+    index = index + 1;
+
+    inorder(node->right, array, index);
+  }
+
+  void inorder(Node *node, T *array, int &index) const {
     if (node == nullptr) {
       return;
     }
@@ -158,6 +216,18 @@ private:
     preorder(node->right, array, index);
   }
 
+  void preorder(Node *node, T *array, int &index) const {
+    if (node == nullptr) {
+      return;
+    }
+
+    array[index] = node->value;
+    index = index + 1;
+
+    preorder(node->left, array, index);
+    preorder(node->right, array, index);
+  }
+
   void postorder(Node *node, T *array, int &index) {
     if (node == nullptr) {
       return;
@@ -168,6 +238,67 @@ private:
 
     array[index] = node->value;
     index = index + 1;
+  }
+
+  void postorder(Node *node, T *array, int &index) const {
+    if (node == nullptr) {
+      return;
+    }
+
+    postorder(node->left, array, index);
+    postorder(node->right, array, index);
+
+    array[index] = node->value;
+    index = index + 1;
+  }
+
+  void get_nodes_in_order(Node **array) {
+    int index = 0;
+
+    node_inorder(root, array, index);
+  }
+
+  void node_inorder(Node *node, Node **array, int &index) {
+    if (node == nullptr) {
+      return;
+    }
+
+    node_inorder(node->left, array, index);
+
+    array[index] = node;
+    index++;
+
+    node_inorder(node->right, array, index);
+  }
+
+  void construct_from_preorder(T *array, int node_size) {
+    release();
+
+    for (int i = 0; i < node_size; i++) {
+      add(array[i]);
+    }
+  }
+
+  void from_bst(const BinarySearchTree<T> &other) {
+    const int node_size = other.get_total_node_count();
+    T *others_values = new T[node_size];
+
+    other.get_order(others_values, eBST_ORDER::PREORDER);
+
+    construct_from_preorder(others_values, node_size);
+
+    delete[] others_values;
+  }
+
+  void from_bst(BinarySearchTree<T> &&other) {
+    const int node_size = other.get_total_node_count();
+    T *others_values = new T[node_size];
+
+    other.get_order(others_values, eBST_ORDER::PREORDER);
+
+    construct_from_preorder(others_values, node_size);
+
+    delete[] others_values;
   }
 
 private:
