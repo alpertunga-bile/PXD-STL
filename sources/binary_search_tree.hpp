@@ -40,15 +40,7 @@ public:
       return;
     }
 
-    Node **release_array = new Node *[total_node_count];
-
-    get_nodes_in_order(release_array);
-
-    for (int i = 0; i < total_node_count; i++) {
-      delete release_array[i];
-    }
-
-    delete[] release_array;
+    release_tree(root);
 
     root = nullptr;
     total_node_count = 0;
@@ -81,7 +73,7 @@ public:
 
     PXD_ASSERT(parent_node != nullptr);
 
-    if (value <= parent_node->value) {
+    if (value < parent_node->value) {
       parent_node->left = current_node;
     } else {
       parent_node->right = current_node;
@@ -152,7 +144,7 @@ public:
 
   BinarySearchTree<T> get_balanced_tree() {
     if (root == nullptr && total_node_count < 3) {
-      return BinarySearchTree<T>();
+      return *this;
     }
 
     T *values = new T[total_node_count];
@@ -164,6 +156,74 @@ public:
     delete[] values;
 
     return temp_bst;
+  }
+
+  bool is_contain(T &value) {
+    if (root == nullptr) {
+      return false;
+    }
+
+    Node *current_node = root;
+
+    do {
+      if (value < current_node->value) {
+        current_node = current_node->left;
+      } else if (value > current_node->value) {
+        current_node = current_node->right;
+      } else {
+        return true;
+      }
+    } while (current_node != nullptr);
+
+    return false;
+  }
+
+  bool is_contain(T &&value) {
+    if (root == nullptr) {
+      return false;
+    }
+
+    Node *current_node = root;
+
+    do {
+      if (value < current_node->value) {
+        current_node = current_node->left;
+      } else if (value > current_node->value) {
+        current_node = current_node->right;
+      } else {
+        return true;
+      }
+    } while (current_node != nullptr);
+
+    return false;
+  }
+
+  T get_min_value() {
+    if (root == nullptr) {
+      return T();
+    }
+
+    Node *current_node = root;
+
+    while (current_node->left != nullptr) {
+      current_node = current_node->left;
+    }
+
+    return current_node->value;
+  }
+
+  T get_max_value() {
+    if (root == nullptr) {
+      return T();
+    }
+
+    Node *current_node = root;
+
+    while (current_node->right != nullptr) {
+      current_node = current_node->right;
+    }
+
+    return current_node->value;
   }
 
   inline Node *get_root() const { return root; }
@@ -207,23 +267,15 @@ private:
     index = index + 1;
   }
 
-  void get_nodes_in_order(Node **array) {
-    int index = 0;
-
-    node_inorder(root, array, index);
-  }
-
-  void node_inorder(Node *node, Node **array, int &index) {
+  void release_tree(Node *node) {
     if (node == nullptr) {
       return;
     }
 
-    node_inorder(node->left, array, index);
+    release_tree(node->left);
+    release_tree(node->right);
 
-    array[index] = node;
-    index++;
-
-    node_inorder(node->right, array, index);
+    delete node;
   }
 
   void construct_from_array(T *array, int node_size) {
