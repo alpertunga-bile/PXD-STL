@@ -4,6 +4,13 @@ project(pxd-stl VERSION 0.1.0 LANGUAGES C CXX)
 include(CTest)
 enable_testing()
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+if(!MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
+endif(!MSVC)
+
 # ------------------------------------------------------------------------------------
 # -- GLOBAL DEFINITIONS
 
@@ -11,6 +18,10 @@ option(PXD_STL_BUILD_TEST_EXECUTABLE "Build test executable" ON)
 
 set(HEADER_FILES
     sources/array.hpp
+    sources/linked_list.hpp
+    sources/binary_search_tree.hpp
+    
+    sources/logger.hpp
     sources/checks.hpp
     "sources/string.hpp"
 
@@ -22,6 +33,7 @@ set(LIB_SOURCE_FILES
 
     sources/array.cpp
     sources/linked_list.cpp
+    sources/logger.cpp
 
     ${HEADER_FILES}
 )
@@ -33,6 +45,11 @@ include_directories(
 set(COMMON_STD_HEADERS
     <iostream>
     <cstdlib>
+
+    # Logger is using these headers
+    <filesystem>
+    <format>
+    <fstream>
 
     # SIMDString is using these headers
     <algorithm>
@@ -50,6 +67,7 @@ set(COMMON_STD_HEADERS
     <immintrin.h>
 )
 
+
 # ------------------------------------------------------------------------------------------------------
 # -- Project Static Library 
 
@@ -62,8 +80,6 @@ target_precompile_headers(
     ${COMMON_STD_HEADERS}
     ${HEADER_FILES}
 )
-
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 
 # ------------------------------------------------------------------------------------------------------
 # -- Test Executable
@@ -96,8 +112,6 @@ IF(PXD_STL_BUILD_TEST_EXECUTABLE)
         ${TEST_HEADER_FILES}
         ${HEADER_FILES}
     )
-
-    set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 ENDIF(PXD_STL_BUILD_TEST_EXECUTABLE)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
