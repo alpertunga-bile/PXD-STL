@@ -3,13 +3,13 @@
 #include "checks.hpp"
 
 namespace pxd {
-enum class ePXD_BT_ORDER : uint8_t {
+enum class ePXD_BST_ORDER : uint8_t {
   INORDER,
   PREORDER,
   POSTORDER,
 };
 
-template <typename T> class BinaryTree {
+template <typename T> class BinarySearchTree {
 private:
   struct Node {
     T value;
@@ -18,14 +18,18 @@ private:
   };
 
 public:
-  BinaryTree() = default;
-  BinaryTree(const BinaryTree<T> &other) = delete;
-  BinaryTree(BinaryTree<T> &&other) = delete;
-  BinaryTree &operator=(const BinaryTree<T> &other) = delete;
-  ~BinaryTree() { release(); }
+  BinarySearchTree() = default;
+  BinarySearchTree(const BinarySearchTree<T> &other) = delete;
+  BinarySearchTree(BinarySearchTree<T> &&other) = delete;
+  BinarySearchTree &operator=(const BinarySearchTree<T> &other) = delete;
+  ~BinarySearchTree() { release(); }
 
-  bool operator==(BinaryTree<T> &other) { return other.get_root() == root; }
-  bool operator!=(BinaryTree<T> &other) { return other.get_root() != root; }
+  bool operator==(BinarySearchTree<T> &other) {
+    return other.get_root() == root;
+  }
+  bool operator!=(BinarySearchTree<T> &other) {
+    return other.get_root() != root;
+  }
 
   void release(){};
 
@@ -42,10 +46,12 @@ public:
 
     do {
       parent_node = current_node;
-      if (value <= current_node->value) {
+      if (value < current_node->value) {
         current_node = current_node->left;
-      } else {
+      } else if (value > current_node->value) {
         current_node = current_node->right;
+      } else {
+        return;
       }
     } while (current_node != nullptr);
 
@@ -76,10 +82,12 @@ public:
 
     do {
       parent_node = current_node;
-      if (value <= current_node->value) {
+      if (value < current_node->value) {
         current_node = current_node->left;
-      } else {
+      } else if (value > current_node->value) {
         current_node = current_node->right;
+      } else {
+        return;
       }
     } while (current_node != nullptr);
 
@@ -97,24 +105,22 @@ public:
     total_node_count++;
   }
 
-  void get_order(T *array, ePXD_BT_ORDER order) {
+  void get_order(T *array, ePXD_BST_ORDER &&order) {
     if (root == nullptr) {
       return;
     }
 
     PXD_ASSERT(array != nullptr);
-    int index = -1;
+    int index = 0;
 
     switch (order) {
-    case ePXD_BT_ORDER::INORDER:
+    case ePXD_BST_ORDER::INORDER:
       inorder(root, array, index);
       break;
-    case ePXD_BT_ORDER::PREORDER:
-      index = 0;
+    case ePXD_BST_ORDER::PREORDER:
       preorder(root, array, index);
       break;
-    case ePXD_BT_ORDER::POSTORDER:
-      index = 0;
+    case ePXD_BST_ORDER::POSTORDER:
       postorder(root, array, index);
       break;
 
@@ -133,9 +139,9 @@ private:
     }
 
     inorder(node->left, array, index);
-    index = index + 1;
 
     array[index] = node->value;
+    index = index + 1;
 
     inorder(node->right, array, index);
   }
