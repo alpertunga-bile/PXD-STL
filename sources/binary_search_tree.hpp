@@ -152,14 +152,14 @@ public:
 
   BinarySearchTree<T> get_balanced_tree() {
     if (root == nullptr && total_node_count < 3) {
-      return;
+      return BinarySearchTree<T>();
     }
 
     T *values = new T[total_node_count];
-
     get_order(values, eBST_ORDER::INORDER);
 
-    BinarySearchTree<T> temp_bst(values);
+    BinarySearchTree<T> temp_bst;
+    build_balanced_tree(temp_bst, values, 0, total_node_count - 1);
 
     delete[] values;
 
@@ -254,6 +254,19 @@ private:
     construct_from_array(others_values, node_size);
 
     delete[] others_values;
+  }
+
+  void build_balanced_tree(BinarySearchTree<T> &bst, T *values, int start,
+                           int end) {
+    if (start > end) {
+      return;
+    }
+
+    int mid = (start + end) / 2;
+    bst.add(values[mid]);
+
+    build_balanced_tree(bst, values, start, mid - 1);
+    build_balanced_tree(bst, values, mid + 1, end);
   }
 
 private:
