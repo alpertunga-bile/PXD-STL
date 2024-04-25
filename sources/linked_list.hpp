@@ -132,16 +132,7 @@ public:
   }
 
   // for right values
-  void add(T &&new_value, bool add_back = true) {
-    Node *new_node = new Node();
-    new_node->value = new_value;
-
-    if (add_back) {
-      add_to_back(new_node);
-    } else {
-      add_to_front(new_node);
-    }
-  }
+  void add(T &&new_value, bool add_back = true) { add(new_value, add_back); }
 
   void remove_at(int index) {
     int calc_index = get_calc_index(index);
@@ -181,6 +172,8 @@ public:
 
     remove_at(remove_index);
   }
+
+  void remove(T &&value) { remove(value); }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Conversions

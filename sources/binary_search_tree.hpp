@@ -93,41 +93,7 @@ public:
     total_node_count++;
   }
 
-  void add(T &&value) {
-    if (!IS_VALID(root)) {
-      root = new Node();
-      root->value = value;
-      total_node_count++;
-      return;
-    }
-
-    Node *current_node = root;
-    Node *parent_node = nullptr;
-
-    do {
-      parent_node = current_node;
-      if (value < current_node->value) {
-        current_node = current_node->left;
-      } else if (value > current_node->value) {
-        current_node = current_node->right;
-      } else {
-        return;
-      }
-    } while (current_node != nullptr);
-
-    current_node = new Node();
-    current_node->value = value;
-
-    PXD_ASSERT(parent_node != nullptr);
-
-    if (value <= parent_node->value) {
-      parent_node->left = current_node;
-    } else {
-      parent_node->right = current_node;
-    }
-
-    total_node_count++;
-  }
+  void add(T &&value) { add(value); }
 
   void from_array(T *array, int size, bool is_balance) {
     construct_from_array(array, size);
@@ -166,6 +132,8 @@ public:
       balance_self();
     }
   }
+
+  void remove(T &value) {}
 
   void get_order(T *array, eBST_ORDER &&order) const {
     if (root == nullptr) {
@@ -266,25 +234,7 @@ public:
     return false;
   }
 
-  bool is_contain(T &&value) {
-    if (root == nullptr) {
-      return false;
-    }
-
-    Node *current_node = root;
-
-    do {
-      if (value < current_node->value) {
-        current_node = current_node->left;
-      } else if (value > current_node->value) {
-        current_node = current_node->right;
-      } else {
-        return true;
-      }
-    } while (current_node != nullptr);
-
-    return false;
-  }
+  bool is_contain(T &&value) { return is_contain(value); }
 
   T get_min_value() {
     if (root == nullptr) {
