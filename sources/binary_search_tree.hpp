@@ -23,7 +23,7 @@ private:
 public:
   BinarySearchTree() = default;
   BinarySearchTree(T *values, int size, bool is_balance = false) {
-    construct_from_array(values, size, is_balance);
+    from_array(values, size, is_balance);
   }
   BinarySearchTree(Array<T> &array, bool is_balance = false) {
     from_array(array, is_balance);
@@ -233,7 +233,7 @@ public:
 
   void balance_self() {
     if (root == nullptr && total_node_count < 3) {
-      return *this;
+      return;
     }
 
     T *values = new T[total_node_count];
