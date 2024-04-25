@@ -91,12 +91,23 @@ public:
       return;
     }
 
-    T *temp_array = new T[length];
+    Node *current_node = head->next;
 
-    to_array(temp_array);
-    from_array(temp_array, length, true);
+    Node *prev_node = head;
+    prev_node->next = nullptr;
+    end = prev_node;
 
-    delete[] temp_array;
+    Node *forw_node = nullptr;
+
+    while (current_node != nullptr) {
+      forw_node = current_node->next;
+      current_node->next = prev_node;
+
+      prev_node = current_node;
+      current_node = forw_node;
+    }
+
+    head = prev_node;
   }
 
   // returns length + 1 because negative indexing is supported
@@ -137,6 +148,10 @@ public:
   void remove_at(int index) {
     int calc_index = get_calc_index(index);
 
+    if (head == nullptr) {
+      return;
+    }
+
     if (calc_index == 0) {
       Node *new_head = head->next;
       delete head;
@@ -160,6 +175,10 @@ public:
 
       prev_node->next = new_neighbor;
       delete node_to_delete;
+    }
+
+    if (head == nullptr) {
+      end = nullptr;
     }
 
     length--;
@@ -225,10 +244,12 @@ public:
     }
   }
 
-  void from_array(Array<T> &node_list, int size, bool is_reverse = false) {
+  void from_array(Array<T> &node_list, bool is_reverse = false) {
     head = nullptr;
     end = nullptr;
     length = 0;
+
+    const int size = node_list.get_length();
 
     for (int i = 0; i < size; i++) {
       Node *new_node = new Node();
