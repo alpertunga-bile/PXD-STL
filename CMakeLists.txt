@@ -20,6 +20,8 @@ set(HEADER_FILES
     sources/array.hpp
     sources/linked_list.hpp
     sources/binary_search_tree.hpp
+    sources/stack.hpp
+    sources/queue.hpp
     
     sources/logger.hpp
     sources/checks.hpp

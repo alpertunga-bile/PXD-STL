@@ -87,7 +87,7 @@ public:
   }
 
   void reverse() {
-    if (is_empty() && length == 1) {
+    if (is_empty() || length == 1) {
       return;
     }
 

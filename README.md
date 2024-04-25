@@ -38,6 +38,7 @@ Test Name : Binary Search Tree Tests
   get balanced tree              -> Passed
   is contain                     -> Passed
   min max                        -> Passed
+  remove                         -> Passed
 ---------------------------------------------------------------
 Test Name : Linked Link Tests
   normal array init              -> Passed

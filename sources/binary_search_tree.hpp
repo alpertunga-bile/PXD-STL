@@ -157,9 +157,9 @@ public:
     Node *current_node = root;
     Node *parent_node = root;
 
-    // iterate until reaching a leaf node
     while (current_node->value != value) {
       parent_node = current_node;
+
       if (value < current_node->value) {
         current_node = current_node->left;
       } else if (value > current_node->value) {
@@ -168,54 +168,13 @@ public:
     }
 
     // when current node has one child situations
-    if (current_node->has_one_child() && parent_node->right == current_node) {
-      if (current_node->has_left()) {
-        parent_node->right = current_node->left;
-      } else {
-        parent_node->right = current_node->right;
-      }
-    } else if (current_node->has_one_child() &&
-               parent_node->left == current_node) {
-      if (current_node->has_left()) {
-        parent_node->left = current_node->left;
-      } else {
-        parent_node->left = current_node->right;
-      }
-    }
+    remove_from_one_child(current_node, parent_node);
 
     // when current_node has two children situations
-    if (current_node->has_two_children() && parent_node->left == current_node &&
-        current_node->left->has_right()) {
-      Node *new_node = current_node->left;
-      place_to_new_node(current_node->right, new_node->right);
-      new_node->right = current_node->right;
-      parent_node->left = new_node;
-    } else if (current_node->has_two_children() &&
-               parent_node->right == current_node &&
-               current_node->right->has_left()) {
-      Node *new_node = current_node->right;
-      place_to_new_node(current_node->left, new_node->left);
-      new_node->left = current_node->left;
-      parent_node->right = new_node;
-    }
+    remove_from_two_children(current_node, parent_node);
 
-    if (current_node == root && current_node->has_two_children()) {
-      Node *new_node = current_node->right;
-      place_to_new_node(new_node, current_node->left);
-      root = new_node;
-    } else if (current_node == root && current_node->has_one_child()) {
-      if (current_node->has_left()) {
-        root = current_node->left;
-      } else {
-        root = current_node->right;
-      }
-    }
-
-    if (parent_node->left == current_node) {
-      parent_node->left = nullptr;
-    } else if (parent_node->right == current_node) {
-      parent_node->right = nullptr;
-    }
+    // when current_node is root situations
+    remove_from_root(current_node, parent_node);
 
     if (root == current_node) {
       delete root;
@@ -411,6 +370,7 @@ private:
     release_tree(node->right);
 
     delete node;
+    node = nullptr;
   }
 
   void construct_from_array(T *array, int node_size) {
@@ -468,7 +428,7 @@ private:
     build_balanced_tree_self(values, mid + 1, end);
   }
 
-  void place_to_new_node(Node *start, Node *new_node) {
+  void place_new_node(Node *start, Node *new_node) {
     Node *current_node = start;
     Node *parent_node = nullptr;
 
@@ -488,6 +448,60 @@ private:
       parent_node->left = current_node;
     } else {
       parent_node->right = current_node;
+    }
+  }
+
+  void remove_from_one_child(Node *current_node, Node *parent_node) {
+    if (current_node->has_one_child() && parent_node->right == current_node) {
+      if (current_node->has_left()) {
+        parent_node->right = current_node->left;
+      } else {
+        parent_node->right = current_node->right;
+      }
+    } else if (current_node->has_one_child() &&
+               parent_node->left == current_node) {
+      if (current_node->has_left()) {
+        parent_node->left = current_node->left;
+      } else {
+        parent_node->left = current_node->right;
+      }
+    }
+  }
+
+  void remove_from_two_children(Node *current_node, Node *parent_node) {
+    if (current_node->has_two_children() && parent_node->left == current_node &&
+        current_node->left->has_right()) {
+      Node *new_node = current_node->left;
+      place_new_node(current_node->right, new_node->right);
+      new_node->right = current_node->right;
+      parent_node->left = new_node;
+    } else if (current_node->has_two_children() &&
+               parent_node->right == current_node &&
+               current_node->right->has_left()) {
+      Node *new_node = current_node->right;
+      place_new_node(current_node->left, new_node->left);
+      new_node->left = current_node->left;
+      parent_node->right = new_node;
+    }
+  }
+
+  void remove_from_root(Node *current_node, Node *parent_node) {
+    if (current_node == root && current_node->has_two_children()) {
+      Node *new_node = current_node->right;
+      place_new_node(new_node, current_node->left);
+      root = new_node;
+    } else if (current_node == root && current_node->has_one_child()) {
+      if (current_node->has_left()) {
+        root = current_node->left;
+      } else {
+        root = current_node->right;
+      }
+    }
+
+    if (parent_node->left == current_node) {
+      parent_node->left = nullptr;
+    } else if (parent_node->right == current_node) {
+      parent_node->right = nullptr;
     }
   }
 
