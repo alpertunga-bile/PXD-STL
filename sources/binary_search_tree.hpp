@@ -18,6 +18,18 @@ private:
     T value;
     Node *left = nullptr;
     Node *right = nullptr;
+
+    inline bool has_one_child() {
+      return (left != nullptr && right == nullptr) ||
+             (left == nullptr && right != nullptr);
+    }
+
+    inline bool has_two_children() {
+      return left != nullptr && right != nullptr;
+    }
+
+    inline bool has_left() { return left != nullptr; }
+    inline bool has_right() { return right != nullptr; }
   };
 
 public:
@@ -133,7 +145,91 @@ public:
     }
   }
 
-  void remove(T &value) {}
+  void remove(T &value) {
+    if (root == nullptr) {
+      return;
+    }
+
+    if (!is_contain(value)) {
+      return;
+    }
+
+    Node *current_node = root;
+    Node *parent_node = root;
+
+    // iterate until reaching a leaf node
+    while (current_node->value != value) {
+      parent_node = current_node;
+      if (value < current_node->value) {
+        current_node = current_node->left;
+      } else if (value > current_node->value) {
+        current_node = current_node->right;
+      }
+    }
+
+    // when current node has one child situations
+    if (current_node->has_one_child() && parent_node->right == current_node) {
+      if (current_node->has_left()) {
+        parent_node->right = current_node->left;
+      } else {
+        parent_node->right = current_node->right;
+      }
+    } else if (current_node->has_one_child() &&
+               parent_node->left == current_node) {
+      if (current_node->has_left()) {
+        parent_node->left = current_node->left;
+      } else {
+        parent_node->left = current_node->right;
+      }
+    }
+
+    // when current_node has two children situations
+    if (current_node->has_two_children() && parent_node->left == current_node &&
+        current_node->left->has_right()) {
+      Node *new_node = current_node->left;
+      place_to_new_node(current_node->right, new_node->right);
+      new_node->right = current_node->right;
+      parent_node->left = new_node;
+    } else if (current_node->has_two_children() &&
+               parent_node->right == current_node &&
+               current_node->right->has_left()) {
+      Node *new_node = current_node->right;
+      place_to_new_node(current_node->left, new_node->left);
+      new_node->left = current_node->left;
+      parent_node->right = new_node;
+    }
+
+    if (current_node == root && current_node->has_two_children()) {
+      Node *new_node = current_node->right;
+      place_to_new_node(new_node, current_node->left);
+      root = new_node;
+    } else if (current_node == root && current_node->has_one_child()) {
+      if (current_node->has_left()) {
+        root = current_node->left;
+      } else {
+        root = current_node->right;
+      }
+    }
+
+    if (parent_node->left == current_node) {
+      parent_node->left = nullptr;
+    } else if (parent_node->right == current_node) {
+      parent_node->right = nullptr;
+    }
+
+    if (root == current_node) {
+      delete root;
+      total_node_count = 0;
+      root = nullptr;
+    } else {
+      delete current_node;
+      current_node = nullptr;
+
+      total_node_count--;
+    }
+  }
+
+  void remove(T &&value) { remove(value); }
 
   void get_order(T *array, eBST_ORDER &&order) const {
     if (root == nullptr) {
@@ -204,12 +300,13 @@ public:
       return;
     }
 
+    int total_count = total_node_count;
     T *values = new T[total_node_count];
     get_order(values, eBST_ORDER::INORDER);
 
     release();
 
-    build_balanced_tree_self(values, 0, total_node_count - 1);
+    build_balanced_tree_self(values, 0, total_count - 1);
 
     delete[] values;
   }
@@ -369,6 +466,29 @@ private:
 
     build_balanced_tree_self(values, start, mid - 1);
     build_balanced_tree_self(values, mid + 1, end);
+  }
+
+  void place_to_new_node(Node *start, Node *new_node) {
+    Node *current_node = start;
+    Node *parent_node = nullptr;
+
+    while (current_node != nullptr) {
+      parent_node = current_node;
+
+      if (new_node->value < current_node->value) {
+        current_node = current_node->left;
+      } else if (new_node->value > current_node->value) {
+        current_node = current_node->right;
+      }
+    }
+
+    current_node = new_node;
+
+    if (current_node->value < parent_node->value) {
+      parent_node->left = current_node;
+    } else {
+      parent_node->right = current_node;
+    }
   }
 
 private:

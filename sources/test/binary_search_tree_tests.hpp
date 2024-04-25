@@ -22,6 +22,7 @@ public:
     start_balanced_tree_test(temp_arr, check_arr);
     start_is_contain_test(temp_arr);
     start_min_max_test(temp_arr);
+    start_remove_test(temp_arr);
 
     delete[] check_arr;
     delete[] temp_arr;
@@ -83,6 +84,23 @@ private:
 
     test_results["min max"] =
         bst.get_min_value() == 1 && bst.get_max_value() == 10;
+  }
+
+  void start_remove_test(int *temp_arr) {
+    BinarySearchTree<int> bst(temp_arr, N, true);
+
+    bst.remove(1);
+    bst.remove(3);
+    bst.remove(6);
+    bst.remove(9);
+    bst.remove(5);
+    bst.remove(4);
+    bst.remove(2);
+    bst.remove(7);
+    bst.remove(10);
+    bst.remove(8);
+
+    test_results["remove"] = bst.get_total_node_count() == 0;
   }
 
 private:
