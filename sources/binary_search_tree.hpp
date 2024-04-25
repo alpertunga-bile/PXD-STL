@@ -77,30 +77,14 @@ public:
       return;
     }
 
-    Node *current_node = root;
-    Node *parent_node = nullptr;
-
-    do {
-      parent_node = current_node;
-      if (value < current_node->value) {
-        current_node = current_node->left;
-      } else if (value > current_node->value) {
-        current_node = current_node->right;
-      } else {
-        return;
-      }
-    } while (current_node != nullptr);
-
-    current_node = new Node();
-    current_node->value = value;
-
-    PXD_ASSERT(parent_node != nullptr);
-
-    if (value < parent_node->value) {
-      parent_node->left = current_node;
-    } else {
-      parent_node->right = current_node;
+    if (is_contain(value)) {
+      return;
     }
+
+    Node *new_node = new Node();
+    new_node->value = value;
+
+    place_new_node(root, new_node);
 
     total_node_count++;
   }
@@ -167,13 +151,13 @@ public:
       }
     }
 
-    // when current node has one child situations
+    // when current node has one child
     remove_from_one_child(current_node, parent_node);
 
-    // when current_node has two children situations
+    // when current_node has two children
     remove_from_two_children(current_node, parent_node);
 
-    // when current_node is root situations
+    // when current_node is root
     remove_from_root(current_node, parent_node);
 
     if (root == current_node) {
@@ -432,6 +416,7 @@ private:
     Node *current_node = start;
     Node *parent_node = nullptr;
 
+    // to find the parent node
     while (current_node != nullptr) {
       parent_node = current_node;
 
