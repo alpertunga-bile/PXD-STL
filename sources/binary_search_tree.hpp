@@ -9,6 +9,9 @@ enum class eBST_ORDER : uint8_t {
   POSTORDER,
 };
 
+template <typename T> class Array;
+template <typename T> class LinkedList;
+
 template <typename T> class BinarySearchTree {
 private:
   struct Node {
@@ -19,7 +22,15 @@ private:
 
 public:
   BinarySearchTree() = default;
-  BinarySearchTree(T *values, int size) { construct_from_array(values, size); }
+  BinarySearchTree(T *values, int size, bool is_balance = false) {
+    construct_from_array(values, size, is_balance);
+  }
+  BinarySearchTree(Array<T> &array, bool is_balance = false) {
+    from_array(array, is_balance);
+  }
+  BinarySearchTree(LinkedList<T> &linked_list, bool is_balance = false) {
+    from_linked_list(linked_list, is_balance);
+  }
   BinarySearchTree(const BinarySearchTree<T> &other) { from_bst(other); }
   BinarySearchTree(BinarySearchTree<T> &&other) { from_bst(other); }
   BinarySearchTree &operator=(const BinarySearchTree<T> &other) {
@@ -118,6 +129,44 @@ public:
     total_node_count++;
   }
 
+  void from_array(T *array, int size, bool is_balance) {
+    construct_from_array(array, size);
+
+    if (is_balance) {
+      balance_self();
+    }
+  }
+
+  void from_array(Array<T> &array, bool is_balance) {
+    if (array.get_length() == 0) {
+      return;
+    }
+
+    construct_from_array(array.get_ptr(), array.get_length());
+
+    if (is_balance) {
+      balance_self();
+    }
+  }
+
+  void from_linked_list(LinkedList<T> &linked_list, bool is_balance) {
+    if (linked_list.get_length() == 0) {
+      return 0;
+    }
+
+    release();
+
+    const int size = linked_list.get_length();
+
+    for (int i = 0; i < size; i++) {
+      add(linked_list[i]);
+    }
+
+    if (is_balance) {
+      balance_self();
+    }
+  }
+
   void get_order(T *array, eBST_ORDER &&order) const {
     if (root == nullptr) {
       return;
@@ -142,6 +191,30 @@ public:
     }
   }
 
+  void get_order(Array<T> &array, eBST_ORDER &&order) const {
+    if (root == nullptr) {
+      return;
+    }
+
+    array.reallocate(total_node_count);
+    int index = 0;
+
+    switch (order) {
+    case eBST_ORDER::INORDER:
+      inorder(root, array.get_ptr(), index);
+      break;
+    case eBST_ORDER::PREORDER:
+      preorder(root, array.get_ptr(), index);
+      break;
+    case eBST_ORDER::POSTORDER:
+      postorder(root, array.get_ptr(), index);
+      break;
+
+    default:
+      break;
+    }
+  }
+
   BinarySearchTree<T> get_balanced_tree() {
     if (root == nullptr && total_node_count < 3) {
       return *this;
@@ -156,6 +229,21 @@ public:
     delete[] values;
 
     return temp_bst;
+  }
+
+  void balance_self() {
+    if (root == nullptr && total_node_count < 3) {
+      return *this;
+    }
+
+    T *values = new T[total_node_count];
+    get_order(values, eBST_ORDER::INORDER);
+
+    release();
+
+    build_balanced_tree_self(values, 0, total_node_count - 1);
+
+    delete[] values;
   }
 
   bool is_contain(T &value) {
@@ -319,6 +407,18 @@ private:
 
     build_balanced_tree(bst, values, start, mid - 1);
     build_balanced_tree(bst, values, mid + 1, end);
+  }
+
+  void build_balanced_tree_self(T *values, int start, int end) {
+    if (start > end) {
+      return;
+    }
+
+    int mid = (start + end) / 2;
+    add(values[mid]);
+
+    build_balanced_tree_self(values, start, mid - 1);
+    build_balanced_tree_self(values, mid + 1, end);
   }
 
 private:

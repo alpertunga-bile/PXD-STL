@@ -33,6 +33,7 @@ set(LIB_SOURCE_FILES
 
     sources/array.cpp
     sources/linked_list.cpp
+    sources/binary_search_tree.cpp
     sources/logger.cpp
 
     ${HEADER_FILES}

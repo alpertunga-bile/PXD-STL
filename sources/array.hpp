@@ -8,7 +8,11 @@ template <typename T> class LinkedList;
 
 template <typename T> class Array {
 public:
-  Array() = delete; // default constructor
+  Array() {
+    arr_ptr = nullptr;
+    length = 0;
+    byte_size = 0;
+  } // default constructor
   Array(int size) { allocate(size); }
   Array(T *given_array, int size) {
     allocate(size);
@@ -150,6 +154,7 @@ public:
     return ll;
   }
 
+  inline T *get_ptr() { return arr_ptr; }
   inline T *get_ptr() const { return arr_ptr; }
   inline int get_length() const { return length; }
   inline size_t get_byte_size() const { return byte_size; }

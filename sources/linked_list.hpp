@@ -25,6 +25,9 @@ public:
   LinkedList(T *node_list, int size, bool is_reverse = false) {
     from_array(node_list, size, is_reverse);
   }
+  LinkedList(Array<T> &node_list, bool is_reverse = false) {
+    from_array(node_list.get_ptr(), node_list.get_length(), is_reverse);
+  }
   LinkedList(const LinkedList<T> &other) { from_linked_list(other); }
   LinkedList(LinkedList<T> &&other) { from_linked_list(other); }
   LinkedList &operator=(const LinkedList<T> &other) {
@@ -35,7 +38,7 @@ public:
   ~LinkedList() { release(); }
 
   T &operator[](int index) {
-    int calc_index = get_calc_index(index);
+    const int calc_index = get_calc_index(index);
 
     Node *current_node = head;
 
