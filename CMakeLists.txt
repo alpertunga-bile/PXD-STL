@@ -22,6 +22,7 @@ set(HEADER_FILES
     sources/binary_search_tree.hpp
     sources/stack.hpp
     sources/queue.hpp
+    sources/handle.hpp
     
     sources/logger.hpp
     sources/checks.hpp
@@ -37,6 +38,7 @@ set(LIB_SOURCE_FILES
     sources/linked_list.cpp
     sources/binary_search_tree.cpp
     sources/logger.cpp
+    sources/handle.cpp
 
     ${HEADER_FILES}
 )
@@ -93,14 +95,14 @@ IF(PXD_STL_BUILD_TEST_EXECUTABLE)
     set(CMAKE_BUILD_TYPE "Debug")
 
     set(TEST_HEADER_FILES
-        sources/test/queue_tests.hpp
-        sources/test/stack_tests.hpp
-        sources/test/binary_search_tree_tests.hpp
-        sources/test/linked_list_tests.hpp
-        sources/test/array_tests.hpp
-        sources/test/i_test.hpp
-        sources/test/test_manager.hpp
-        sources/test/test_utils.hpp
+        test/queue_tests.hpp
+        test/stack_tests.hpp
+        test/binary_search_tree_tests.hpp
+        test/linked_list_tests.hpp
+        test/array_tests.hpp
+        test/i_test.hpp
+        test/test_manager.hpp
+        test/test_utils.hpp
     )
 
     set(TEST_SOURCE_FILES

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../checks.hpp"
+#include "checks.hpp"
 #include <string>
 #include <unordered_map>
 

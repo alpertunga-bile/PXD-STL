@@ -1,12 +1,12 @@
 #define ENABLE_ASSERTS
 
-#include "sources/test/array_tests.hpp"
-#include "sources/test/binary_search_tree_tests.hpp"
-#include "sources/test/linked_list_tests.hpp"
-#include "sources/test/queue_tests.hpp"
-#include "sources/test/stack_tests.hpp"
+#include "test/array_tests.hpp"
+#include "test/binary_search_tree_tests.hpp"
+#include "test/linked_list_tests.hpp"
+#include "test/queue_tests.hpp"
+#include "test/stack_tests.hpp"
 
-#include "sources/test/test_manager.hpp"
+#include "test/test_manager.hpp"
 
 int main() {
   pxd::TestManager test_manager;
