@@ -7,9 +7,9 @@ enable_testing()
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if(!MSVC)
+if(NOT MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
-endif(!MSVC)
+endif(NOT MSVC)
 
 # ------------------------------------------------------------------------------------
 # -- GLOBAL DEFINITIONS
