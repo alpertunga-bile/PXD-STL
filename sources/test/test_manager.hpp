@@ -18,9 +18,8 @@ public:
       printf("Test Name : %s\n", test_name.c_str());
 
       for (auto &[test_case_name, test_result] : test) {
-        std::string result_string = test_result == true ? "Passed" : "Failed";
         printf("  %-30s -> %-6s\n", test_case_name.c_str(),
-               result_string.c_str());
+               test_result == true ? "Passed" : "Failed");
       }
     }
 

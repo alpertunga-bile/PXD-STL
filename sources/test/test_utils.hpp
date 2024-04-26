@@ -9,9 +9,6 @@ template <typename T>
 inline bool check_arrays(T *first_array, T *second_array, int size) {
   for (int i = 0; i < size; i++) {
     if (first_array[i] != second_array[i]) {
-      std::cout << "first_array : " << first_array[i]
-                << " second_array : " << second_array[i] << "\n";
-
       return false;
     }
   }

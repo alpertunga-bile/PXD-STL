@@ -93,6 +93,8 @@ IF(PXD_STL_BUILD_TEST_EXECUTABLE)
     set(CMAKE_BUILD_TYPE "Debug")
 
     set(TEST_HEADER_FILES
+        sources/test/queue_tests.hpp
+        sources/test/stack_tests.hpp
         sources/test/binary_search_tree_tests.hpp
         sources/test/linked_list_tests.hpp
         sources/test/array_tests.hpp
