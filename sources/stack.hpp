@@ -6,6 +6,7 @@ namespace pxd {
 template <typename T> class Stack {
 public:
   Stack() : stack(){};
+  Stack(T *array, int size) : stack(array, size, true){};
   Stack(const Stack<T> &other) : stack(other.get_stack()){};
   Stack(Stack<T> &&other) : stack(other.get_stack()){};
   Stack &operator=(const Stack<T> &other) {
@@ -32,6 +33,10 @@ public:
 
     return stack[0];
   }
+
+  inline void release() { stack.release(); }
+
+  inline void to_array(T *array) { stack.to_array(array); }
 
   inline void reverse() { stack.reverse(); }
 

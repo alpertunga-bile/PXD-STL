@@ -6,6 +6,7 @@ namespace pxd {
 template <typename T> class Queue {
 public:
   Queue() : queue(){};
+  Queue(T *array, int size) : queue(array, size){};
   Queue(const Queue<T> &other) : queue(other.get_queue()) {}
   Queue(Queue<T> &&other) : queue(other.get_queue()) {}
   Queue &operator=(const Queue<T> &other) {
@@ -32,6 +33,10 @@ public:
 
     return queue[0];
   }
+
+  inline void to_array(int *array) { queue.to_array(array); }
+
+  inline void release() { queue.release(); }
 
   inline void reverse() { queue.reverse(); }
 
