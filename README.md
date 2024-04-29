@@ -20,13 +20,14 @@ Standard library under the PixelDancer package.
 ---------------------------------------------------------------
 Test Name : Array Tests
   init with array                -> Passed
-  copy constructor               -> Passed
   copy_to                        -> Passed
+  resize less                    -> Passed
+  resize much                    -> Passed
   bool compare                   -> Passed
   expand                         -> Passed
   negative index                 -> Passed
   index                          -> Passed
-  resize test                    -> Passed
+  copy constructor               -> Passed
   move constructor               -> Passed
   assign constructor             -> Passed
 ---------------------------------------------------------------
@@ -72,5 +73,17 @@ Test Name : Stack Tests
   push                           -> Passed
   reverse                        -> Passed
   pop                            -> Passed
+---------------------------------------------------------------
+Test Name : Dynamic Array Tests
+  assign ctor                    -> Passed
+  move ctor                      -> Passed
+  copy ctor                      -> Passed
+  expand from 0                  -> Passed
+  shrink                         -> Passed
+  expand with exist              -> Passed
+  add                            -> Passed
+  index                          -> Passed
+  negative index                 -> Passed
+  resize                         -> Passed
 ---------------------------------------------------------------
 ```
