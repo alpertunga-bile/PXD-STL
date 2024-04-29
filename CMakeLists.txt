@@ -23,6 +23,7 @@ set(HEADER_FILES
     sources/stack.hpp
     sources/queue.hpp
     sources/handle.hpp
+    sources/dynamic_array.hpp
     
     sources/logger.hpp
     sources/checks.hpp
@@ -39,6 +40,7 @@ set(LIB_SOURCE_FILES
     sources/binary_search_tree.cpp
     sources/logger.cpp
     sources/handle.cpp
+    sources/dynamic_array.cpp
 
     ${HEADER_FILES}
 )
@@ -95,6 +97,7 @@ IF(PXD_STL_BUILD_TEST_EXECUTABLE)
     set(CMAKE_BUILD_TYPE "Debug")
 
     set(TEST_HEADER_FILES
+        test/dynamic_array_tests.hpp
         test/queue_tests.hpp
         test/stack_tests.hpp
         test/binary_search_tree_tests.hpp
