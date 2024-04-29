@@ -68,12 +68,16 @@ private:
   }
 
   void start_resize_test(int *temp) {
-    int new_size = 5;
+    int new_size = 20;
     Array<int> arr(temp, N);
 
     arr.resize(new_size);
+    test_results["resize much"] = check_arrays<int>(temp, arr.get_ptr(), N);
 
-    test_results["resize test"] =
+    new_size = 5;
+
+    arr.resize(new_size);
+    test_results["resize less"] =
         check_arrays<int>(temp, arr.get_ptr(), new_size);
   }
 
