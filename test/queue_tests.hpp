@@ -6,7 +6,7 @@
 namespace pxd {
 class QueueTests : public ITest {
 public:
-  void start_test() {
+  void start_test() override {
     int *temp_arr = new int[N];
     int *check_arr = new int[N];
 
