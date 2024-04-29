@@ -14,30 +14,13 @@ public:
     byte_size = 0;
   } // default constructor
   Array(int size) { allocate(size); }
-  Array(T *given_array, int size) {
-    allocate(size);
-    copy_full(given_array, arr_ptr);
-  }
+  Array(T *given_array, int size) { allocate(given_array, size); }
 
-  Array(const Array<T> &other) {
-    if (!IS_VALID(arr_ptr)) {
-      allocate(other.get_length());
-    }
+  Array(const Array<T> &other) { from(other); } // copy constructor
 
-    from(other);
-  } // copy constructor
-
-  Array(Array<T> &&other) {
-    if (!IS_VALID(arr_ptr)) {
-      allocate(other.get_length());
-    }
-    from(other);
-  } // move constructor
+  Array(Array<T> &&other) { from(other); } // move constructor
 
   Array &operator=(const Array<T> &other) {
-    if (!IS_VALID(arr_ptr)) {
-      allocate(other.get_length());
-    }
     from(other);
 
     *this;
@@ -52,8 +35,8 @@ public:
     delete[] arr_ptr;
   }
 
-  bool operator==(Array<T> &other) { return other.get_ptr() == arr_ptr; }
-  bool operator!=(Array<T> &other) { return other.get_ptr() != arr_ptr; }
+  bool operator==(Array<T> &other) { return compare(other); }
+  bool operator!=(Array<T> &other) { return compare(other); }
 
   decltype(auto) operator[](int index) {
     PXD_ASSERT(index < length);
@@ -127,8 +110,7 @@ public:
     resize(new_size);
 
     size_t copy_size = given_array.get_length() * sizeof(T);
-
-    memcpy(arr_ptr + old_length, given_array.get_ptr(), copy_size);
+    copy(given_array.get_ptr(), arr_ptr + old_length, copy_size);
   }
 
   void expand(T *given_array, int size) {
@@ -137,7 +119,7 @@ public:
 
     resize(new_size);
 
-    memcpy(arr_ptr + old_length, given_array, size * sizeof(T));
+    copy(given_array, arr_ptr + old_length, size * sizeof(T));
   }
 
   void to_linked_list(LinkedList<T> &linked_list) {
@@ -176,15 +158,18 @@ private:
     arr_ptr = new T[size];
     length = size;
     byte_size = size * sizeof(T);
+
     copy_full(given_array, arr_ptr);
   }
 
-  void copy_full(T *from, T *to) {
+  void copy(T *from, T *to, size_t size) {
     PXD_ASSERT(from != nullptr);
     PXD_ASSERT(to != nullptr);
 
-    memcpy(to, from, byte_size);
+    memcpy(to, from, size);
   }
+
+  void copy_full(T *from, T *to) { copy(from, to, byte_size); }
 
   void from(const Array<T> &given_array) {
     if (length != given_array.get_length()) {
@@ -195,6 +180,31 @@ private:
   }
 
   void from(Array<T> &&given_array) { from(given_array); }
+
+  bool compare(Array<T> &other) {
+    if (length != other.get_length() || byte_size != other.get_byte_size() ||
+        !IS_VALID(other.get_ptr())) {
+      return false;
+    }
+
+    bool is_same = true;
+    compare_arrays(arr_ptr, other.get_ptr(), 0, length, is_same);
+
+    return is_same;
+  }
+
+  void compare_arrays(T *first_array, T *second_array, int start, int end,
+                      bool &result) {
+    if (start > end) {
+      return;
+    }
+
+    int mid = (start + end) / 2;
+    result = result && (first_array[mid] == second_array[mid] ? true : false);
+
+    compare_arrays(first_array, second_array, start, mid - 1, result);
+    compare_arrays(first_array, second_array, mid + 1, end, result);
+  }
 
 private:
   T *arr_ptr = nullptr;
