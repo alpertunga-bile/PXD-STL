@@ -110,7 +110,7 @@ public:
     head = prev_node;
   }
 
-  // returns length + 1 because negative indexing is supported
+  // returns length because negative indexing is supported
   // so this will lead to unwanted situations
   int where(T &value) {
     Node *current_node = head;

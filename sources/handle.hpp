@@ -94,11 +94,10 @@ public:
 
     ptr = new T[size];
 
-    for (int i = 0; i < size; i++) {
-      ptr[i] = array[i];
-    }
+    memcpy(ptr, array, size * sizeof(T));
 
     length = size;
+    byte_size = size * sizeof(T);
   }
 
   void to_array(Array<T> &array) { array.reallocate(ptr, length); }
@@ -109,9 +108,11 @@ public:
 
   inline T *get_array() const { return ptr; }
   inline int get_length() const { return length; }
+  inline int get_byte_size() const { return byte_size; }
 
 private:
   T *ptr;
   int length;
+  size_t byte_size;
 };
 } // namespace pxd
