@@ -61,6 +61,11 @@ public:
   }
 
   void resize(int new_size) {
+    if (length == 0) {
+      allocate(new_size);
+      return;
+    }
+
     T *temp_array = new T[length];
     copy_full(arr_ptr, temp_array);
 
@@ -104,6 +109,11 @@ public:
       return;
     }
 
+    if (length == 0) {
+      allocate(given_array.get_ptr(), given_array.get_length());
+      return;
+    }
+
     int old_length = length;
     int new_size = length + given_array.get_length();
 
@@ -114,6 +124,11 @@ public:
   }
 
   void expand(T *given_array, int size) {
+    if (length == 0) {
+      allocate(given_array, size);
+      return;
+    }
+
     int old_length = length;
     int new_size = length + size;
 
