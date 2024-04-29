@@ -16,7 +16,7 @@ public:
   Array(int size) { allocate(size); }
   Array(T *given_array, int size) {
     allocate(size);
-    copy(given_array, arr_ptr, 0, size);
+    copy_full(given_array, arr_ptr);
   }
 
   Array(const Array<T> &other) {
@@ -79,7 +79,7 @@ public:
 
   void resize(int new_size) {
     T *temp_array = new T[length];
-    copy(arr_ptr, temp_array, 0, length);
+    copy_full(arr_ptr, temp_array);
 
     reallocate(temp_array, new_size);
 
@@ -113,9 +113,7 @@ public:
       to.resize(length);
     }
 
-    for (int i = 0; i < length; i++) {
-      to[i] = arr_ptr[i];
-    }
+    copy_full(arr_ptr, to.get_ptr());
   }
 
   void expand(Array<T> &given_array) {
@@ -128,9 +126,9 @@ public:
 
     resize(new_size);
 
-    for (int i = old_length; i < new_size; i++) {
-      arr_ptr[i] = given_array[i - old_length];
-    }
+    size_t copy_size = given_array.get_length() * sizeof(T);
+
+    memcpy(arr_ptr + old_length, given_array.get_ptr(), copy_size);
   }
 
   void expand(T *given_array, int size) {
@@ -139,9 +137,7 @@ public:
 
     resize(new_size);
 
-    for (int i = old_length; i < new_size; i++) {
-      arr_ptr[i] = given_array[i - old_length];
-    }
+    memcpy(arr_ptr + old_length, given_array, size * sizeof(T));
   }
 
   void to_linked_list(LinkedList<T> &linked_list) {
@@ -180,17 +176,14 @@ private:
     arr_ptr = new T[size];
     length = size;
     byte_size = size * sizeof(T);
-    copy(given_array, arr_ptr, 0, size);
+    copy_full(given_array, arr_ptr);
   }
 
-  void copy(T *from, T *to, int start, int end) {
+  void copy_full(T *from, T *to) {
     PXD_ASSERT(from != nullptr);
     PXD_ASSERT(to != nullptr);
-    PXD_ASSERT(end > start);
 
-    for (int i = start; i < end; i++) {
-      to[i] = from[i];
-    }
+    memcpy(to, from, byte_size);
   }
 
   void from(const Array<T> &given_array) {
@@ -198,20 +191,10 @@ private:
       reallocate(given_array.get_length());
     }
 
-    for (int i = 0; i < length; i++) {
-      arr_ptr[i] = given_array[i];
-    }
+    copy_full(arr_ptr, given_array.get_ptr());
   }
 
-  void from(Array<T> &&given_array) {
-    if (length != given_array.get_length()) {
-      reallocate(given_array.get_length());
-    }
-
-    for (int i = 0; i < length; i++) {
-      arr_ptr[i] = given_array[i];
-    }
-  }
+  void from(Array<T> &&given_array) { from(given_array); }
 
 private:
   T *arr_ptr = nullptr;
