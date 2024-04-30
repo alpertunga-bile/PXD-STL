@@ -1,7 +1,6 @@
 #pragma once
 
 #include "checks.hpp"
-#include "utility.hpp"
 
 namespace pxd {
 
@@ -59,6 +58,7 @@ public:
     row = 0;
     column = 0;
     element_count = 0;
+    b_row_order = true;
   }
 
   void transpose() {
@@ -66,6 +66,7 @@ public:
     int current_col = 0;
     int normal_index = 0;
     int transpose_index = 0;
+    T temp;
 
     for (int i = 0; i < element_count; i++) {
       current_row = i / row;
@@ -79,14 +80,15 @@ public:
         continue;
       }
 
-      swap<T>(matrix[normal_index], matrix[transpose_index]);
+      temp = matrix[normal_index];
+      matrix[normal_index] = matrix[transpose_index];
+      matrix[transpose_index] = temp;
     }
-  }
 
-  inline void change_order() {
-    transpose();
     b_row_order = !b_row_order;
   }
+
+  inline void change_order() { transpose(); }
 
   inline T *get_matrix() { return matrix; }
   inline T *get_matrix() const { return matrix; }
@@ -94,7 +96,7 @@ public:
   inline int get_column() const { return column; }
   inline int get_element_count() const { return element_count; }
   inline size_t get_byte_size() const { return element_count * sizeof(T); }
-  inline bool is_row_order() const { return b_row_major; }
+  inline bool is_row_order() const { return b_row_order; }
 
 private:
   void allocate(int row, int column) {
@@ -104,6 +106,7 @@ private:
 
     this->row = row;
     this->column = column;
+    b_row_order = true;
   }
 
   inline void from_array(T *values) {
@@ -117,29 +120,6 @@ private:
 
   inline void from_matrix(Matrix<T> &&other) {
     memcpy(matrix, other.get_matrix(), other.get_byte_size());
-  }
-
-  Matrix<T> get_major_matrix(Matrix<T> &old_mat, int deleted_row,
-                             int deleted_col) {
-    Matrix<T> new_mat((old_mat.get_row() - 1), (old_mat.get_column() - 1));
-
-    int old_element_count = old_mat.get_element_count();
-    int new_index = 0;
-
-    for (int i = 0; i < old_element_count; i++) {
-      int current_row = i / old_mat.get_row();
-      int current_col = i % old_mat.get_column();
-
-      if (current_col == deleted_col || current_row == deleted_row) {
-        continue;
-      }
-
-      new_mat.get_matrix()[new_index] = old_mat(current_row, current_col);
-
-      new_index++;
-    }
-
-    return new_mat;
   }
 
 private:

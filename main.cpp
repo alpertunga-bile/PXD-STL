@@ -22,7 +22,7 @@ int main() {
   pxd::MatrixTests matrix_tests;
 
   test_manager.add_test("Array Tests", array_tests);
-  test_manager.add_test("Linked Link Tests", linked_list_tests);
+  test_manager.add_test("Linked List Tests", linked_list_tests);
   test_manager.add_test("Binary Search Tree Tests", binary_search_tree_tests);
   test_manager.add_test("Stack Tests", stack_tests);
   test_manager.add_test("Queue Tests", queue_tests);
