@@ -23,7 +23,7 @@ public:
   Array &operator=(const Array<T> &other) {
     from(other);
 
-    *this;
+    return *this;
   } // copy assignment
 
   ~Array() // deconstructor
@@ -197,7 +197,7 @@ private:
       reallocate(given_array.get_length());
     }
 
-    copy_full(arr_ptr, given_array.get_ptr());
+    copy_full(given_array.get_ptr(), arr_ptr);
   }
 
   void from(Array<T> &&given_array) { from(given_array); }
