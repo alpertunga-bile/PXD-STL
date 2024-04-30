@@ -200,7 +200,13 @@ private:
     copy_full(given_array.get_ptr(), arr_ptr);
   }
 
-  void from(Array<T> &&given_array) { from(given_array); }
+  void from(Array<T> &&given_array) {
+    if (length != given_array.get_length()) {
+      reallocate(given_array.get_length());
+    }
+
+    copy_full(given_array.get_ptr(), arr_ptr);
+  }
 
   bool compare(Array<T> &other) {
     if (length != other.get_length() || byte_size != other.get_byte_size() ||
@@ -209,7 +215,7 @@ private:
     }
 
     bool is_same = true;
-    compare_arrays(arr_ptr, other.get_ptr(), 0, length, is_same);
+    compare_arrays(arr_ptr, other.get_ptr(), 0, length - 1, is_same);
 
     return is_same;
   }
