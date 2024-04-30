@@ -41,6 +41,9 @@ public:
     element_count++;
   }
 
+  int where(T &value) { return array.where(value); }
+  int where(T &&value) { return array.where(value); }
+
   void add(T &&value) { add(value); }
 
   void release() {

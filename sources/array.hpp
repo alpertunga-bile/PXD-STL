@@ -60,6 +60,12 @@ public:
     return arr_ptr[index];
   }
 
+  inline int where(T &value) {
+    int index = 0;
+    return find(value, 0, length, index);
+  }
+  inline int where(T &&value) { return where(value); }
+
   void resize(int new_size) {
     if (length == 0) {
       allocate(new_size);
@@ -219,6 +225,20 @@ private:
 
     compare_arrays(first_array, second_array, start, mid - 1, result);
     compare_arrays(first_array, second_array, mid + 1, end, result);
+  }
+
+  void find(T &value, int start, int end, int &index) {
+    if (start > end) {
+      return;
+    }
+
+    int mid = (start + end) / 2;
+    if (arr_ptr[mid] == value) {
+      index = mid;
+    }
+
+    find(value, start, mid - 1, index);
+    find(value, mid + 1, end, index);
   }
 
 private:
