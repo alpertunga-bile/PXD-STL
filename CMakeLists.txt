@@ -24,6 +24,7 @@ set(HEADER_FILES
     sources/queue.hpp
     sources/handle.hpp
     sources/dynamic_array.hpp
+    sources/matrix.hpp
     
     sources/logger.hpp
     sources/checks.hpp
@@ -41,6 +42,7 @@ set(LIB_SOURCE_FILES
     sources/logger.cpp
     sources/handle.cpp
     sources/dynamic_array.cpp
+    sources/matrix.cpp
 
     ${HEADER_FILES}
 )
@@ -97,6 +99,7 @@ IF(PXD_STL_BUILD_TEST_EXECUTABLE)
     set(CMAKE_BUILD_TYPE "Debug")
 
     set(TEST_HEADER_FILES
+        test/matrix_tests.hpp
         test/dynamic_array_tests.hpp
         test/queue_tests.hpp
         test/stack_tests.hpp

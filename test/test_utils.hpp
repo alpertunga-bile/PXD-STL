@@ -8,7 +8,9 @@ namespace pxd {
 template <typename T>
 inline bool check_arrays(T *first_array, T *second_array, int size) {
   for (int i = 0; i < size; i++) {
-    if (first_array[i] != second_array[i]) {
+    T first_value = first_array[i];
+    T second_value = second_array[i];
+    if (first_value != second_value) {
       return false;
     }
   }
