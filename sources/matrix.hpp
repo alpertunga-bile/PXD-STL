@@ -23,8 +23,24 @@ public:
     memcpy(matrix, other.get_matrix(), other.get_byte_size());
   }
   Matrix(Matrix<T> &&other) {
-    allocate(other.get_row(), other.get_column());
-    memcpy(matrix, other.get_matrix(), other.get_byte_size());
+    matrix = other.get_matrix();
+    row = other.get_row();
+    column = other.get_column();
+    element_count = other.get_element_count();
+    b_row_order = other.is_row_order();
+
+    other.exec_move();
+  }
+  Matrix &operator=(Matrix<T> &&other) {
+    matrix = other.get_matrix();
+    row = other.get_row();
+    column = other.get_column();
+    element_count = other.get_element_count();
+    b_row_order = other.is_row_order();
+
+    other.exec_move();
+
+    return *this;
   }
   Matrix &operator=(const Matrix<T> &other) {
     allocate(other.get_row(), other.get_column());
@@ -97,6 +113,14 @@ public:
   inline int get_element_count() const { return element_count; }
   inline size_t get_byte_size() const { return element_count * sizeof(T); }
   inline bool is_row_order() const { return b_row_order; }
+
+  inline void exec_move() {
+    matrix = nullptr;
+    row = 0;
+    column = 0;
+    element_count = 0;
+    b_row_order = true;
+  }
 
 private:
   void allocate(int row, int column) {
