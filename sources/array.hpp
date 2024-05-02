@@ -53,8 +53,8 @@ public:
     delete[] arr_ptr;
   }
 
-  bool operator==(Array<T> &other) { return compare(other); }
-  bool operator!=(Array<T> &other) { return compare(other); }
+  constexpr bool operator==(Array<T> &other) noexcept { return compare(other); }
+  constexpr bool operator!=(Array<T> &other) noexcept { return compare(other); }
 
   constexpr decltype(auto) operator[](int index) {
     PXD_ASSERT(index < length);

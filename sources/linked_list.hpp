@@ -17,25 +17,25 @@ public:
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Constructors & Deconstructor
 
-  LinkedList() {
+  constexpr LinkedList() noexcept {
     head = nullptr;
     end = nullptr;
     length = 0;
   } // default constructor
-  LinkedList(T *node_list, int size, bool is_reverse = false) {
+  constexpr LinkedList(T *node_list, int size, bool is_reverse = false) {
     from_array(node_list, size, is_reverse);
   }
-  LinkedList(Array<T> &node_list, bool is_reverse = false) {
+  constexpr LinkedList(Array<T> &node_list, bool is_reverse = false) {
     from_array(node_list.get_ptr(), node_list.get_length(), is_reverse);
   }
-  LinkedList(const LinkedList<T> &other) { from_linked_list(other); }
-  LinkedList(LinkedList<T> &&other) {
+  constexpr LinkedList(const LinkedList<T> &other) { from_linked_list(other); }
+  constexpr LinkedList(LinkedList<T> &&other) noexcept {
     head = other.get_head_node();
     end = other.get_end_node();
     length = other.get_length();
     other.exec_move();
   }
-  LinkedList &operator=(LinkedList<T> &&other) {
+  constexpr LinkedList &operator=(LinkedList<T> &&other) {
     release();
 
     head = other.get_head_node();
@@ -46,14 +46,14 @@ public:
 
     return *this;
   }
-  LinkedList &operator=(const LinkedList<T> &other) {
+  constexpr LinkedList &operator=(const LinkedList<T> &other) {
     from_linked_list(other);
 
     return *this;
   }
-  ~LinkedList() { release(); }
+  inline ~LinkedList() noexcept { release(); }
 
-  T &operator[](int index) {
+  constexpr T &operator[](int index) noexcept {
     const int calc_index = get_calc_index(index);
 
     Node *current_node = head;
@@ -67,14 +67,14 @@ public:
 
   // actually; head, end and length will be same and inner nodes may be
   // different if the user tries hard enough but whatever
-  bool operator==(LinkedList<T> &other) {
+  constexpr bool operator==(LinkedList<T> &other) noexcept {
     return head == other.get_head_node() && end == other.get_end_node() &&
                    length == other.get_length()
                ? true
                : false;
   }
 
-  bool operator!=(LinkedList<T> &other) {
+  constexpr bool operator!=(LinkedList<T> &other) noexcept {
     return head != other.get_head_node() && end != other.get_end_node() &&
                    length != other.get_length()
                ? true
@@ -84,7 +84,7 @@ public:
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Class Functionalities
 
-  void release() {
+  inline void release() noexcept {
     if (head == nullptr) {
       return;
     }
@@ -102,7 +102,7 @@ public:
     length = 0;
   }
 
-  void reverse() {
+  constexpr void reverse() noexcept {
     if (is_empty() || length == 1) {
       return;
     }
@@ -128,7 +128,7 @@ public:
 
   // returns length because negative indexing is supported
   // so this will lead to unwanted situations
-  int where(T &value) {
+  constexpr int where(T &value) noexcept {
     Node *current_node = head;
     int current_index = 0;
 
@@ -159,9 +159,11 @@ public:
   }
 
   // for right values
-  void add(T &&new_value, bool add_back = true) { add(new_value, add_back); }
+  constexpr void add(T &&new_value, bool add_back = true) {
+    add(new_value, add_back);
+  }
 
-  void remove_at(int index) {
+  constexpr void remove_at(int index) {
     int calc_index = get_calc_index(index);
 
     if (head == nullptr) {
@@ -208,7 +210,7 @@ public:
     remove_at(remove_index);
   }
 
-  void remove(T &&value) { remove(value); }
+  constexpr void remove(T &&value) { remove(value); }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Conversions
@@ -282,27 +284,31 @@ public:
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Variable Inline Functions
 
-  inline size_t get_byte_size() const { return length * sizeof(T); }
-  inline size_t get_mbyte_size() const { return (length * sizeof(T)) / 1024.f; }
-  inline size_t get_gbyte_size() const {
+  constexpr inline size_t get_byte_size() const noexcept {
+    return length * sizeof(T);
+  }
+  constexpr inline size_t get_mbyte_size() const noexcept {
+    return (length * sizeof(T)) / 1024.f;
+  }
+  constexpr inline size_t get_gbyte_size() const noexcept {
     return (length * sizeof(T)) / (1024.f * 1024.f);
   }
-  inline size_t get_data_size() const { return sizeof(T); }
+  constexpr inline size_t get_data_size() const noexcept { return sizeof(T); }
 
-  inline int get_length() const { return length; }
-  inline bool is_empty() const {
+  constexpr inline int get_length() const noexcept { return length; }
+  constexpr inline bool is_empty() const noexcept {
     return head == nullptr && length == 0 ? true : false;
   }
-  inline Node *get_head_node() const { return head; }
-  inline Node *get_end_node() const { return end; }
-  inline void exec_move() {
+  constexpr inline Node *get_head_node() const noexcept { return head; }
+  constexpr inline Node *get_end_node() const noexcept { return end; }
+  constexpr inline void exec_move() noexcept {
     head = nullptr;
     end = nullptr;
     length = 0;
   }
 
 private:
-  void add_to_back(Node *new_node) {
+  void add_to_back(Node *new_node) noexcept {
     if (head == nullptr) {
       head = new_node;
       end = new_node;
@@ -314,7 +320,7 @@ private:
     length++;
   }
 
-  void add_to_front(Node *new_node) {
+  void add_to_front(Node *new_node) noexcept {
     if (head == nullptr) {
       head = new_node;
       end = new_node;
@@ -327,7 +333,7 @@ private:
     length++;
   }
 
-  Node *get_node_at(int index) {
+  constexpr Node *get_node_at(int index) {
     int calc_index = get_calc_index(index);
 
     Node *current_node = head;
@@ -339,7 +345,7 @@ private:
     return current_node;
   }
 
-  void from_linked_list(const LinkedList<T> &other) {
+  constexpr void from_linked_list(const LinkedList<T> &other) {
     release();
 
     Node *this_current_node = new Node();
@@ -364,7 +370,7 @@ private:
     end = this_current_node;
   }
 
-  void from_linked_list(LinkedList<T> &&other) {
+  constexpr void from_linked_list(LinkedList<T> &&other) {
     release();
 
     Node *this_current_node = new Node();
@@ -389,7 +395,7 @@ private:
     end = this_current_node;
   }
 
-  inline int get_calc_index(int index) {
+  constexpr inline int get_calc_index(int index) {
     PXD_ASSERT(index < length);
 
     int calc_index = index;
@@ -402,7 +408,7 @@ private:
     return calc_index;
   }
 
-  void fill_array(T *array) const {
+  void fill_array(T *array) const noexcept {
     Node *current_node = head;
     int index = 0;
 
@@ -413,7 +419,7 @@ private:
     } while (current_node != nullptr);
   }
 
-  void fill_array(Array<T> &array) {
+  void fill_array(Array<T> &array) noexcept {
     Node *current_node = head;
     int index = 0;
 
