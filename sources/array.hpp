@@ -18,7 +18,23 @@ public:
 
   Array(const Array<T> &other) { from(other); } // copy constructor
 
-  Array(Array<T> &&other) { from(other); } // move constructor
+  Array(Array<T> &&other) {
+    arr_ptr = other.get_ptr();
+    length = other.get_length();
+    byte_size = other.get_byte_size();
+
+    other.exec_move();
+  } // move constructor
+
+  Array &operator=(Array<T> &&other) {
+    arr_ptr = other.get_ptr();
+    length = other.get_length();
+    byte_size = other.get_byte_size();
+
+    other.exec_move();
+
+    return *this;
+  }
 
   Array &operator=(const Array<T> &other) {
     from(other);
@@ -162,6 +178,11 @@ public:
     return ((float)byte_size) / (1024.f * 1024.f);
   }
   inline size_t get_data_size() const { return sizeof(T); }
+  inline void exec_move() {
+    arr_ptr = nullptr;
+    length = 0;
+    byte_size = 0;
+  }
 
 private:
   void allocate(int size) {
@@ -193,14 +214,6 @@ private:
   void copy_full(T *from, T *to) { copy(from, to, byte_size); }
 
   void from(const Array<T> &given_array) {
-    if (length != given_array.get_length()) {
-      reallocate(given_array.get_length());
-    }
-
-    copy_full(given_array.get_ptr(), arr_ptr);
-  }
-
-  void from(Array<T> &&given_array) {
     if (length != given_array.get_length()) {
       reallocate(given_array.get_length());
     }
