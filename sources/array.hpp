@@ -8,17 +8,17 @@ template <typename T> class LinkedList;
 
 template <typename T> class Array {
 public:
-  Array() {
+  constexpr Array() {
     arr_ptr = nullptr;
     length = 0;
     byte_size = 0;
   } // default constructor
-  Array(int size) { allocate(size); }
+  constexpr Array(int size) { allocate(size); }
   Array(T *given_array, int size) { allocate(given_array, size); }
 
-  Array(const Array<T> &other) { from(other); } // copy constructor
+  constexpr Array(const Array<T> &other) { from(other); } // copy constructor
 
-  Array(Array<T> &&other) {
+  constexpr Array(Array<T> &&other) noexcept {
     arr_ptr = other.get_ptr();
     length = other.get_length();
     byte_size = other.get_byte_size();
@@ -26,7 +26,7 @@ public:
     other.exec_move();
   } // move constructor
 
-  Array &operator=(Array<T> &&other) {
+  constexpr Array &operator=(Array<T> &&other) noexcept {
     release();
 
     arr_ptr = other.get_ptr();
@@ -38,13 +38,13 @@ public:
     return *this;
   }
 
-  Array &operator=(const Array<T> &other) {
+  constexpr Array &operator=(const Array<T> &other) {
     from(other);
 
     return *this;
   } // copy assignment
 
-  ~Array() // deconstructor
+  inline ~Array() noexcept // deconstructor
   {
     if (arr_ptr == nullptr) {
       return;
@@ -56,7 +56,7 @@ public:
   bool operator==(Array<T> &other) { return compare(other); }
   bool operator!=(Array<T> &other) { return compare(other); }
 
-  decltype(auto) operator[](int index) {
+  constexpr decltype(auto) operator[](int index) {
     PXD_ASSERT(index < length);
 
     if (index < 0) {
@@ -67,7 +67,7 @@ public:
     return arr_ptr[index];
   }
 
-  decltype(auto) operator[](int index) const {
+  constexpr decltype(auto) operator[](int index) const {
     PXD_ASSERT(index < length);
 
     if (index < 0) {
@@ -78,13 +78,14 @@ public:
     return arr_ptr[index];
   }
 
-  inline int where(T &value) {
+  constexpr inline int where(T &value) noexcept {
     int index = 0;
     return find(value, 0, length, index);
   }
-  inline int where(T &&value) { return where(value); }
 
-  void resize(int new_size) {
+  constexpr inline int where(T &&value) noexcept { return where(value); }
+
+  constexpr void resize(int new_size) {
     if (length == 0) {
       allocate(new_size);
       return;
@@ -103,12 +104,12 @@ public:
     allocate(given_array, size);
   }
 
-  void reallocate(int size) {
+  constexpr void reallocate(int size) {
     release();
     allocate(size);
   }
 
-  void release() {
+  inline void release() noexcept {
     if (arr_ptr == nullptr) {
       return;
     }
@@ -171,23 +172,25 @@ public:
     return ll;
   }
 
-  inline T *get_ptr() { return arr_ptr; }
-  inline T *get_ptr() const { return arr_ptr; }
-  inline int get_length() const { return length; }
-  inline size_t get_byte_size() const { return byte_size; }
-  inline float get_mbyte_size() const { return ((float)byte_size) / 1024.f; }
-  inline float get_gbyte_size() const {
+  inline T *get_ptr() noexcept { return arr_ptr; }
+  inline T *get_ptr() const noexcept { return arr_ptr; }
+  inline int get_length() const noexcept { return length; }
+  inline size_t get_byte_size() const noexcept { return byte_size; }
+  inline float get_mbyte_size() const noexcept {
+    return ((float)byte_size) / 1024.f;
+  }
+  inline float get_gbyte_size() const noexcept {
     return ((float)byte_size) / (1024.f * 1024.f);
   }
-  inline size_t get_data_size() const { return sizeof(T); }
-  inline void exec_move() {
+  inline size_t get_data_size() const noexcept { return sizeof(T); }
+  constexpr inline void exec_move() noexcept {
     arr_ptr = nullptr;
     length = 0;
     byte_size = 0;
   }
 
 private:
-  void allocate(int size) {
+  constexpr void allocate(int size) {
     PXD_ASSERT(arr_ptr == nullptr);
 
     arr_ptr = new T[size];
@@ -215,7 +218,7 @@ private:
 
   void copy_full(T *from, T *to) { copy(from, to, byte_size); }
 
-  void from(const Array<T> &given_array) {
+  void from(const Array<T> &given_array) noexcept {
     if (length != given_array.get_length()) {
       reallocate(given_array.get_length());
     }
@@ -223,7 +226,7 @@ private:
     copy_full(given_array.get_ptr(), arr_ptr);
   }
 
-  bool compare(Array<T> &other) {
+  bool compare(Array<T> &other) noexcept {
     if (length != other.get_length() || byte_size != other.get_byte_size() ||
         !IS_VALID(other.get_ptr())) {
       return false;
@@ -236,7 +239,7 @@ private:
   }
 
   void compare_arrays(T *first_array, T *second_array, int start, int end,
-                      bool &result) {
+                      bool &result) noexcept {
     if (start > end) {
       return;
     }
@@ -248,7 +251,7 @@ private:
     compare_arrays(first_array, second_array, mid + 1, end, result);
   }
 
-  void find(T &value, int start, int end, int &index) {
+  void find(T &value, int start, int end, int &index) noexcept {
     if (start > end) {
       return;
     }
