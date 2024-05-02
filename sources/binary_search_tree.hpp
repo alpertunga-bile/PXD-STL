@@ -44,7 +44,16 @@ public:
     from_linked_list(linked_list, is_balance);
   }
   BinarySearchTree(const BinarySearchTree<T> &other) { from_bst(other); }
-  BinarySearchTree(BinarySearchTree<T> &&other) { from_bst(other); }
+  BinarySearchTree(BinarySearchTree<T> &&other) {
+    root = other.get_root();
+    total_node_count = other.get_total_node_count();
+    other.exec_move();
+  }
+  BinarySearchTree &operator=(BinarySearchTree<T> &&other) {
+    root = other.get_root();
+    total_node_count = other.get_total_node_count();
+    other.exec_move();
+  }
   BinarySearchTree &operator=(const BinarySearchTree<T> &other) {
     from_bst(other);
     return *this;
@@ -306,6 +315,10 @@ public:
 
   inline Node *get_root() const { return root; }
   inline int get_total_node_count() const { return total_node_count; }
+  inline void exec_move() {
+    root = nullptr;
+    total_node_count = 0;
+  }
 
 private:
   void inorder(Node *node, T *array, int &index) const {
