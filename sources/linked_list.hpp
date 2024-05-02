@@ -39,7 +39,10 @@ public:
     head = other.get_head_node();
     end = other.get_end_node();
     length = other.get_length();
+
     other.exec_move();
+
+    return *this;
   }
   LinkedList &operator=(const LinkedList<T> &other) {
     from_linked_list(other);

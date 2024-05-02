@@ -8,7 +8,11 @@ public:
   Stack() : stack(){};
   Stack(T *array, int size) : stack(array, size, true){};
   Stack(const Stack<T> &other) : stack(other.get_stack()){};
-  Stack(Stack<T> &&other) : stack(other.get_stack()){};
+  Stack(Stack<T> &&other) { stack = std::move(other.get_stack()); };
+  Stack &operator=(Stack<T> &&other) {
+    stack = std::move(other.get_stack());
+    return *this;
+  }
   Stack &operator=(const Stack<T> &other) {
     LinkedList<T> temp_ll(other);
     stack = temp_ll;
