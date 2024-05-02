@@ -29,7 +29,18 @@ public:
     from_array(node_list.get_ptr(), node_list.get_length(), is_reverse);
   }
   LinkedList(const LinkedList<T> &other) { from_linked_list(other); }
-  LinkedList(LinkedList<T> &&other) { from_linked_list(other); }
+  LinkedList(LinkedList<T> &&other) {
+    head = other.get_head_node();
+    end = other.get_end_node();
+    length = other.get_length();
+    other.exec_move();
+  }
+  LinkedList &operator=(LinkedList<T> &&other) {
+    head = other.get_head_node();
+    end = other.get_end_node();
+    length = other.get_length();
+    other.exec_move();
+  }
   LinkedList &operator=(const LinkedList<T> &other) {
     from_linked_list(other);
 
@@ -279,6 +290,11 @@ public:
   }
   inline Node *get_head_node() const { return head; }
   inline Node *get_end_node() const { return end; }
+  inline void exec_move() {
+    head = nullptr;
+    end = nullptr;
+    length = 0;
+  }
 
 private:
   void add_to_back(Node *new_node) {
