@@ -49,6 +49,12 @@ public:
     q.to_array(check_arr);
 
     test_results["move ctor"] = check_arrays(temp_arr, check_arr, N);
+
+    Queue<int> temp;
+    temp = std::move(q);
+    temp.to_array(check_arr);
+
+    test_results["assign move ctor"] = check_arrays(temp_arr, check_arr, N);
   }
 
   void start_assign_ctor_test(int *temp_arr, int *check_arr) {

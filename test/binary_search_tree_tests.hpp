@@ -53,6 +53,12 @@ private:
     temp_bst.get_order(check_arr, eBST_ORDER::INORDER);
 
     test_results["move ctor"] = check_arrays(temp_arr, check_arr, N);
+
+    BinarySearchTree<int> temp;
+    temp = std::move(temp_bst);
+    temp.get_order(check_arr, eBST_ORDER::INORDER);
+
+    test_results["assign move ctor"] = check_arrays(temp_arr, check_arr, N);
   }
 
   void start_assign_ctor_test(int *temp_arr, int *check_arr) {

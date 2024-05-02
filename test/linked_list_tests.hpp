@@ -103,6 +103,13 @@ private:
     test_results["move constructor"] =
         check_arrays<int>(temp_new_arr, temp_arr, N);
 
+    LinkedList<int> temp;
+    temp = std::move(tll);
+    temp.to_array(temp_new_arr);
+
+    test_results["assign move constructor"] =
+        check_arrays<int>(temp_new_arr, temp_arr, N);
+
     delete[] temp_new_arr;
   }
 

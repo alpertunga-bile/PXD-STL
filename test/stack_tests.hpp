@@ -49,6 +49,13 @@ public:
     st.to_array(check_arr);
 
     test_results["move ctor"] = check_reverse_arrays(temp_arr, check_arr, N);
+
+    Stack<int> temp;
+    temp = std::move(st);
+    temp.to_array(check_arr);
+
+    test_results["assign move ctor"] =
+        check_reverse_arrays(temp_arr, check_arr, N);
   }
 
   void start_assign_ctor_test(int *temp_arr, int *check_arr) {

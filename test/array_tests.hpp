@@ -95,6 +95,11 @@ private:
     Array<int> t(std::move(arr));
 
     test_results["move constructor"] = check_arrays(temp, t.get_ptr(), N);
+
+    Array<int> temp_arr = std::move(t);
+
+    test_results["assign move constructor"] =
+        check_arrays(temp, temp_arr.get_ptr(), N);
   }
 
   void start_assign_ctor_test(int *temp) {

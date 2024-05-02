@@ -43,6 +43,12 @@ public:
 
     test_results["move ctor"] =
         check_arrays<int>(temp_arr, dtemp.get_data(), N);
+
+    DynamicArray<int> dtemp_2;
+    dtemp_2 = std::move(dtemp);
+
+    test_results["assign move ctor"] =
+        check_arrays<int>(temp_arr, dtemp_2.get_data(), N);
   }
 
   void start_assign_ctor_test(int *temp_arr) {

@@ -46,6 +46,11 @@ public:
 
     test_results["move ctor"] =
         check_arrays<int>(temp_arr, temp.get_matrix(), N);
+
+    Matrix<int> temp_2 = std::move(temp);
+
+    test_results["assign move ctor"] =
+        check_arrays<int>(temp_arr, temp_2.get_matrix(), N);
   }
 
   void start_assign_ctor_tests(int *temp_arr) {
