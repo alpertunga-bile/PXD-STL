@@ -42,7 +42,7 @@ public:
     DynamicArray<int> dtemp(std::move(darray));
 
     test_results["move ctor"] =
-        check_arrays<int>(darray.get_data(), dtemp.get_data(), N);
+        check_arrays<int>(temp_arr, dtemp.get_data(), N);
   }
 
   void start_assign_ctor_test(int *temp_arr) {

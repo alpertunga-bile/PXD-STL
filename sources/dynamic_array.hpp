@@ -18,7 +18,24 @@ public:
     expand(other.get_data(), other.get_array().get_length());
   }
   DynamicArray(DynamicArray &&other) {
-    expand(other.get_data(), other.get_array().get_length());
+    array = std::move(other.get_array());
+    element_count = other.get_element_count();
+    total_capacity = other.get_total_capacity();
+    total_byte_size = other.get_total_size();
+    inc_size_count = other.get_increment_count();
+
+    other.exec_move();
+  }
+  DynamicArray &operator=(DynamicArray &&other) {
+    array = std::move(other.get_array());
+    element_count = other.get_element_count();
+    total_capacity = other.get_total_capacity();
+    total_byte_size = other.get_total_size();
+    inc_size_count = other.get_increment_count();
+
+    other.exec_move();
+
+    return *this;
   }
   DynamicArray &operator=(const DynamicArray &other) {
     expand(other.get_data(), other.get_array().get_length());
@@ -98,6 +115,14 @@ public:
   inline size_t get_total_size() const { return total_byte_size; }
   inline size_t get_element_size() const { return (element_count * sizeof(T)); }
   inline int get_increment_count() const { return inc_size_count; }
+
+  inline void exec_move() {
+    array.exec_move();
+    element_count = 0;
+    total_capacity = 0;
+    total_byte_size = 0;
+    inc_size_count = 5;
+  }
 
   inline void set_inc_size(int inc_size) {
     if (inc_size < 1) {
