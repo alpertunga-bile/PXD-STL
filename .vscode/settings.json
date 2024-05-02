@@ -36,6 +36,8 @@
         "utility": "cpp",
         "xlocale": "cpp",
         "xlocinfo": "cpp",
-        "xmemory": "cpp"
+        "xmemory": "cpp",
+        "xiosbase": "cpp",
+        "iosfwd": "cpp"
     }
 }

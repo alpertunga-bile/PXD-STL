@@ -2,6 +2,8 @@
 
 #include "i_test.hpp"
 #include <cstdio>
+#include <fstream>
+#include <iomanip>
 
 namespace pxd {
 class TestManager {
@@ -24,6 +26,28 @@ public:
     }
 
     printf("---------------------------------------------------------------\n");
+  }
+
+  void save_results(const char *filename = "test_results.txt") {
+    std::ofstream test_file(filename, std::ios::out);
+
+    for (auto &[test_name, test] : tests) {
+      test_file << "-----------------------------------------------------------"
+                   "----\n";
+
+      test_file << "Test Name : " << test_name << "\n";
+
+      for (auto &[test_case_name, test_result] : test) {
+        test_file << "   " << std::left << std::setw(30) << test_case_name
+                  << " -> " << std::left << std::setw(6)
+                  << (test_result == true ? "Passed" : "Failed") << "\n";
+      }
+    }
+
+    test_file << "-----------------------------------------------------------"
+                 "----\n";
+
+    test_file.close();
   }
 
 private:

@@ -132,6 +132,7 @@ IF(PXD_STL_BUILD_TEST_EXECUTABLE)
         ${COMMON_STD_HEADERS}
         <unordered_map>
         <utility>
+        <iomanip>
         ${TEST_HEADER_FILES}
         ${HEADER_FILES}
     )

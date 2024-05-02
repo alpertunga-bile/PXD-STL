@@ -1,0 +1,89 @@
+---------------------------------------------------------------
+Test Name : Array Tests
+   init with array                -> Passed
+   copy_to                        -> Passed
+   resize less                    -> Passed
+   resize much                    -> Passed
+   bool compare                   -> Passed
+   expand                         -> Passed
+   negative index                 -> Passed
+   index                          -> Passed
+   copy constructor               -> Passed
+   move constructor               -> Passed
+   assign move constructor        -> Passed
+   assign constructor             -> Passed
+---------------------------------------------------------------
+Test Name : Queue Tests
+   array ctor                     -> Passed
+   assign ctor                    -> Passed
+   move ctor                      -> Passed
+   copy ctor                      -> Passed
+   assign move ctor               -> Passed
+   peek                           -> Passed
+   push                           -> Passed
+   pop                            -> Passed
+   reverse                        -> Passed
+---------------------------------------------------------------
+Test Name : Binary Search Tree Tests
+   array default ctor             -> Passed
+   assign ctor                    -> Passed
+   move ctor                      -> Passed
+   copy ctor                      -> Passed
+   min max                        -> Passed
+   is contain                     -> Passed
+   assign move ctor               -> Passed
+   get balanced tree              -> Passed
+   remove                         -> Passed
+---------------------------------------------------------------
+Test Name : Linked List Tests
+   normal array init              -> Passed
+   negative indexing              -> Passed
+   reverse array init             -> Passed
+   reverse                        -> Passed
+   indexing                       -> Passed
+   move constructor               -> Passed
+   copy constructor               -> Passed
+   assign move constructor        -> Passed
+   assign constructor             -> Passed
+   remove_head                    -> Passed
+   remove_end                     -> Passed
+   remove_between                 -> Passed
+---------------------------------------------------------------
+Test Name : Stack Tests
+   array ctor                     -> Passed
+   assign ctor                    -> Passed
+   move ctor                      -> Passed
+   copy ctor                      -> Passed
+   assign move ctor               -> Passed
+   peek                           -> Passed
+   push                           -> Passed
+   pop                            -> Passed
+   reverse                        -> Passed
+---------------------------------------------------------------
+Test Name : Dynamic Array Tests
+   assign ctor                    -> Passed
+   move ctor                      -> Passed
+   copy ctor                      -> Passed
+   assign move ctor               -> Passed
+   resize                         -> Passed
+   expand from 0                  -> Passed
+   shrink                         -> Passed
+   expand with exist              -> Passed
+   add                            -> Passed
+   index                          -> Passed
+   negative index                 -> Passed
+---------------------------------------------------------------
+Test Name : Matrix Tests
+   array ctor                     -> Passed
+   assign ctor                    -> Passed
+   move ctor                      -> Passed
+   copy ctor                      -> Passed
+   row indexing                   -> Passed
+   assign move ctor               -> Passed
+   row indexing 2                 -> Passed
+   row indexing 3                 -> Passed
+   transpose                      -> Passed
+   double indexing                -> Passed
+   parant double indexing         -> Passed
+   assign parant double indexing  -> Passed
+---------------------------------------------------------------

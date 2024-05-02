@@ -30,6 +30,7 @@ int main() {
   test_manager.add_test("Matrix Tests", matrix_tests);
 
   test_manager.print_results();
+  test_manager.save_results();
 
   return 0;
 }
