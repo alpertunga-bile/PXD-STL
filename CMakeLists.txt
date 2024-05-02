@@ -36,6 +36,7 @@ set(HEADER_FILES
     "${PXD_INCLUDE_DIR}/string.hpp"
 
     ${PXD_THIRD_PARTY_DIR}/SIMDString/SIMDString.h
+    ${PXD_THIRD_PARTY_DIR}/re2/re2/re2.h
 )
 
 set(LIB_SOURCE_FILES
@@ -81,6 +82,15 @@ set(COMMON_STD_HEADERS
     <immintrin.h>
 )
 
+set(ABSL_PROPAGATE_CXX_STD ON)
+set(ABSL_ENABLE_INSTALL ON)
+
+IF(NOT MSVC)
+    set(CMAKE_BUILD_TYPE "Release")
+ENDIF(NOT MSVC)
+
+add_subdirectory(${PXD_THIRD_PARTY_DIR}/abseil-cpp)
+add_subdirectory(${PXD_THIRD_PARTY_DIR}/re2)
 
 # ------------------------------------------------------------------------------------------------------
 # -- Project Static Library 
@@ -90,6 +100,8 @@ IF(NOT MSVC)
 ENDIF(NOT MSVC)
 
 add_library(${PROJECT_NAME} ${LIB_SOURCE_FILES})
+
+target_link_libraries(${PROJECT_NAME} re2::re2)
 
 target_precompile_headers(
     ${PROJECT_NAME} PRIVATE
@@ -126,6 +138,8 @@ IF(PXD_STL_BUILD_TEST_EXECUTABLE)
     )
 
     add_executable(${TEST_PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp ${TEST_SOURCE_FILES})
+
+    target_link_libraries(${TEST_PROJECT_NAME} re2::re2)
 
     target_precompile_headers(
         ${PROJECT_NAME} PRIVATE
