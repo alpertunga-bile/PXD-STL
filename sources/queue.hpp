@@ -8,7 +8,11 @@ public:
   Queue() : queue(){};
   Queue(T *array, int size) : queue(array, size){};
   Queue(const Queue<T> &other) : queue(other.get_queue()) {}
-  Queue(Queue<T> &&other) : queue(other.get_queue()) {}
+  Queue(Queue<T> &&other) { queue = std::move(other.get_queue()); }
+  Queue &operator=(Queue<T> &&other) {
+    queue = std::move(other.get_queue());
+    return *this;
+  }
   Queue &operator=(const Queue<T> &other) {
     LinkedList<T> q(other.get_queue);
     queue = q;
