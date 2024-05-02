@@ -4,6 +4,9 @@ project(pxd-stl VERSION 0.1.0 LANGUAGES C CXX)
 include(CTest)
 enable_testing()
 
+# ------------------------------------------------------------------------------------
+# -- GLOBAL DEFINITIONS
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -11,44 +14,46 @@ if(NOT MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
 endif(NOT MSVC)
 
-# ------------------------------------------------------------------------------------
-# -- GLOBAL DEFINITIONS
-
 option(PXD_STL_BUILD_TEST_EXECUTABLE "Build test executable" ON)
 
-set(HEADER_FILES
-    sources/array.hpp
-    sources/linked_list.hpp
-    sources/binary_search_tree.hpp
-    sources/stack.hpp
-    sources/queue.hpp
-    sources/handle.hpp
-    sources/dynamic_array.hpp
-    sources/matrix.hpp
-    
-    sources/logger.hpp
-    sources/checks.hpp
-    "sources/string.hpp"
+set(PXD_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/sources)
+set(PXD_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/sources)
+set(PXD_THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third-party)
+set(PXD_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
 
-    third-party/SIMDString/SIMDString.h
+set(HEADER_FILES
+    ${PXD_INCLUDE_DIR}/array.hpp
+    ${PXD_INCLUDE_DIR}/linked_list.hpp
+    ${PXD_INCLUDE_DIR}/binary_search_tree.hpp
+    ${PXD_INCLUDE_DIR}/stack.hpp
+    ${PXD_INCLUDE_DIR}/queue.hpp
+    ${PXD_INCLUDE_DIR}/handle.hpp
+    ${PXD_INCLUDE_DIR}/dynamic_array.hpp
+    ${PXD_INCLUDE_DIR}/matrix.hpp
+    
+    ${PXD_INCLUDE_DIR}/logger.hpp
+    ${PXD_INCLUDE_DIR}/checks.hpp
+    "${PXD_INCLUDE_DIR}/string.hpp"
+
+    ${PXD_THIRD_PARTY_DIR}/SIMDString/SIMDString.h
 )
 
 set(LIB_SOURCE_FILES
-    third-party/SIMDString/SIMDString.cpp
+    ${PXD_THIRD_PARTY_DIR}/SIMDString/SIMDString.cpp
 
-    sources/array.cpp
-    sources/linked_list.cpp
-    sources/binary_search_tree.cpp
-    sources/logger.cpp
-    sources/handle.cpp
-    sources/dynamic_array.cpp
-    sources/matrix.cpp
+    ${PXD_SOURCE_DIR}/array.cpp
+    ${PXD_SOURCE_DIR}/linked_list.cpp
+    ${PXD_SOURCE_DIR}/binary_search_tree.cpp
+    ${PXD_SOURCE_DIR}/logger.cpp
+    ${PXD_SOURCE_DIR}/handle.cpp
+    ${PXD_SOURCE_DIR}/dynamic_array.cpp
+    ${PXD_SOURCE_DIR}/matrix.cpp
 
     ${HEADER_FILES}
 )
 
 include_directories(
-    sources
+   ${PXD_INCLUDE_DIR} 
 )
 
 set(COMMON_STD_HEADERS
@@ -71,7 +76,7 @@ set(COMMON_STD_HEADERS
     <iterator>
     <limits>
     <stdint.h>
-    <string>
+    "<string>"
     <string_view>
     <immintrin.h>
 )
@@ -80,7 +85,9 @@ set(COMMON_STD_HEADERS
 # ------------------------------------------------------------------------------------------------------
 # -- Project Static Library 
 
-set(CMAKE_BUILD_TYPE "Release")
+IF(NOT MSVC)
+    set(CMAKE_BUILD_TYPE "Release")
+ENDIF(NOT MSVC)
 
 add_library(${PROJECT_NAME} ${LIB_SOURCE_FILES})
 
@@ -96,19 +103,21 @@ target_precompile_headers(
 IF(PXD_STL_BUILD_TEST_EXECUTABLE)
     set(TEST_PROJECT_NAME pxd-stl-test)
 
-    set(CMAKE_BUILD_TYPE "Debug")
+    IF(NOT MSVC)
+        set(CMAKE_BUILD_TYPE "Debug")
+    ENDIF(NOT MSVC)
 
     set(TEST_HEADER_FILES
-        test/matrix_tests.hpp
-        test/dynamic_array_tests.hpp
-        test/queue_tests.hpp
-        test/stack_tests.hpp
-        test/binary_search_tree_tests.hpp
-        test/linked_list_tests.hpp
-        test/array_tests.hpp
-        test/i_test.hpp
-        test/test_manager.hpp
-        test/test_utils.hpp
+        ${PXD_TEST_DIR}/matrix_tests.hpp
+        ${PXD_TEST_DIR}/dynamic_array_tests.hpp
+        ${PXD_TEST_DIR}/queue_tests.hpp
+        ${PXD_TEST_DIR}/stack_tests.hpp
+        ${PXD_TEST_DIR}/binary_search_tree_tests.hpp
+        ${PXD_TEST_DIR}/linked_list_tests.hpp
+        ${PXD_TEST_DIR}/array_tests.hpp
+        ${PXD_TEST_DIR}/i_test.hpp
+        ${PXD_TEST_DIR}/test_manager.hpp
+        ${PXD_TEST_DIR}/test_utils.hpp
     )
 
     set(TEST_SOURCE_FILES
@@ -116,7 +125,7 @@ IF(PXD_STL_BUILD_TEST_EXECUTABLE)
         ${LIB_SOURCE_FILES}
     )
 
-    add_executable(${TEST_PROJECT_NAME} main.cpp ${TEST_SOURCE_FILES})
+    add_executable(${TEST_PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp ${TEST_SOURCE_FILES})
 
     target_precompile_headers(
         ${PROJECT_NAME} PRIVATE
