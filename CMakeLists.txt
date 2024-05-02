@@ -31,6 +31,7 @@ set(HEADER_FILES
     ${PXD_INCLUDE_DIR}/dynamic_array.hpp
     ${PXD_INCLUDE_DIR}/matrix.hpp
     
+    ${PXD_INCLUDE_DIR}/regex.hpp
     ${PXD_INCLUDE_DIR}/logger.hpp
     ${PXD_INCLUDE_DIR}/checks.hpp
     "${PXD_INCLUDE_DIR}/string.hpp"
@@ -49,6 +50,7 @@ set(LIB_SOURCE_FILES
     ${PXD_SOURCE_DIR}/handle.cpp
     ${PXD_SOURCE_DIR}/dynamic_array.cpp
     ${PXD_SOURCE_DIR}/matrix.cpp
+    ${PXD_SOURCE_DIR}/regex.cpp
 
     ${HEADER_FILES}
 )

@@ -7,6 +7,7 @@ Standard library under the PixelDancer package.
 - Data structures from scratch with templates.
 - Tests for the data structure functionalities.
 - ```SIMDString``` as the default string class.
+- RE2 library is used as regex engine.
 
 ## Usage
 
@@ -16,4 +17,4 @@ Standard library under the PixelDancer package.
 
 ## Current Test Results
 
-- You can check the current test results from the ```test_results.txt``` file from the repository.
+- You can check the current test results from the ```test_results.txt``` file.
