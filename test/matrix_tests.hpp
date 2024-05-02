@@ -14,6 +14,9 @@ public:
     }
 
     start_array_ctor_tests(temp_arr);
+    start_copy_ctor_tests(temp_arr);
+    start_move_ctor_tests(temp_arr);
+    start_assign_ctor_tests(temp_arr);
     start_row_index_tests(temp_arr);
     start_double_indexing_tests(temp_arr);
     start_parant_double_indexing_tests(temp_arr);
@@ -27,6 +30,30 @@ public:
 
     test_results["array ctor"] =
         check_arrays<int>(temp_arr, matrix.get_matrix(), N);
+  }
+
+  void start_copy_ctor_tests(int *temp_arr) {
+    Matrix<int> matrix(temp_arr, row, column);
+    Matrix<int> temp(matrix);
+
+    test_results["copy ctor"] =
+        check_arrays<int>(temp_arr, matrix.get_matrix(), N);
+  }
+
+  void start_move_ctor_tests(int *temp_arr) {
+    Matrix<int> matrix(temp_arr, row, column);
+    Matrix<int> temp(std::move(matrix));
+
+    test_results["move ctor"] =
+        check_arrays<int>(temp_arr, temp.get_matrix(), N);
+  }
+
+  void start_assign_ctor_tests(int *temp_arr) {
+    Matrix<int> matrix(temp_arr, row, column);
+    Matrix<int> temp = matrix;
+
+    test_results["assign ctor"] =
+        check_arrays<int>(temp_arr, temp.get_matrix(), N);
   }
 
   void start_row_index_tests(int *temp_arr) {
