@@ -8,16 +8,17 @@ template <typename T> class Array;
 
 template <typename T> class DynamicArray {
 public:
-  DynamicArray() = default;
-  DynamicArray(int size, int inc_size = 5) : inc_size_count(inc_size) {
+  constexpr DynamicArray() noexcept = default;
+  constexpr DynamicArray(int size, int inc_size = 5)
+      : inc_size_count(inc_size) {
     resize(size, true);
   }
-  DynamicArray(T *values, int size) { expand(values, size); }
-  DynamicArray(Array<T> &values) { expand(values); }
-  DynamicArray(const DynamicArray &other) {
+  constexpr DynamicArray(T *values, int size) { expand(values, size); }
+  constexpr DynamicArray(Array<T> &values) { expand(values); }
+  constexpr DynamicArray(const DynamicArray &other) {
     expand(other.get_data(), other.get_array().get_length());
   }
-  DynamicArray(DynamicArray &&other) {
+  constexpr DynamicArray(DynamicArray &&other) noexcept {
     array = std::move(other.get_array());
     element_count = other.get_element_count();
     total_capacity = other.get_total_capacity();
@@ -26,7 +27,7 @@ public:
 
     other.exec_move();
   }
-  DynamicArray &operator=(DynamicArray &&other) {
+  constexpr DynamicArray &operator=(DynamicArray &&other) {
     release();
 
     array = std::move(other.get_array());
@@ -39,12 +40,12 @@ public:
 
     return *this;
   }
-  DynamicArray &operator=(const DynamicArray &other) {
+  constexpr DynamicArray &operator=(const DynamicArray &other) {
     expand(other.get_data(), other.get_array().get_length());
   }
-  ~DynamicArray() { release(); }
+  inline ~DynamicArray() noexcept { release(); }
 
-  decltype(auto) operator[](int index) { return array[index]; }
+  constexpr decltype(auto) operator[](int index) { return array[index]; }
 
   void add(T &value) {
     if (total_capacity == 0) {
@@ -60,12 +61,12 @@ public:
     element_count++;
   }
 
-  int where(T &value) { return array.where(value); }
-  int where(T &&value) { return array.where(value); }
+  constexpr int where(T &value) noexcept { return array.where(value); }
+  constexpr int where(T &&value) noexcept { return array.where(value); }
 
-  void add(T &&value) { add(value); }
+  constexpr void add(T &&value) { add(value); }
 
-  void release() {
+  inline void release() noexcept {
     array.release();
     element_count = 0;
     total_capacity = 0;
@@ -110,15 +111,17 @@ public:
     total_byte_size = total_capacity * sizeof(T);
   }
 
-  inline Array<T> get_array() const { return array; }
-  inline T *get_data() const { return array.get_ptr(); }
-  inline int get_element_count() const { return element_count; }
-  inline int get_total_capacity() const { return total_capacity; }
-  inline size_t get_total_size() const { return total_byte_size; }
-  inline size_t get_element_size() const { return (element_count * sizeof(T)); }
-  inline int get_increment_count() const { return inc_size_count; }
+  inline Array<T> get_array() const noexcept { return array; }
+  inline T *get_data() const noexcept { return array.get_ptr(); }
+  inline int get_element_count() const noexcept { return element_count; }
+  inline int get_total_capacity() const noexcept { return total_capacity; }
+  inline size_t get_total_size() const noexcept { return total_byte_size; }
+  inline size_t get_element_size() const noexcept {
+    return (element_count * sizeof(T));
+  }
+  inline int get_increment_count() const noexcept { return inc_size_count; }
 
-  inline void exec_move() {
+  constexpr inline void exec_move() noexcept {
     array.exec_move();
     element_count = 0;
     total_capacity = 0;
@@ -126,7 +129,7 @@ public:
     inc_size_count = 5;
   }
 
-  inline void set_inc_size(int inc_size) {
+  constexpr inline void set_inc_size(int inc_size) noexcept {
     if (inc_size < 1) {
       return;
     }

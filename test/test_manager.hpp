@@ -13,17 +13,17 @@ public:
     tests[name] = test.test_results;
   }
 
-  void reset_test_counts() {
+  constexpr void reset_test_counts() noexcept {
     total_tests = 0;
     passed_tests = 0;
   }
 
-  void check_test_counts(bool result) {
+  void check_test_counts(bool result) noexcept {
     total_tests++;
     passed_tests = result ? passed_tests + 1 : 0;
   }
 
-  void print_results() {
+  void print_results() noexcept {
     reset_test_counts();
 
     for (auto &[test_name, test] : tests) {
@@ -49,7 +49,7 @@ public:
     printf("---------------------------------------------------------------\n");
   }
 
-  void save_results(const char *filename = "test_results.txt") {
+  void save_results(const char *filename = "test_results.txt") noexcept {
     std::ofstream test_file(filename, std::ios::out);
     reset_test_counts();
 
