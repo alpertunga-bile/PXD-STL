@@ -27,6 +27,8 @@ public:
   } // move constructor
 
   Array &operator=(Array<T> &&other) {
+    release();
+
     arr_ptr = other.get_ptr();
     length = other.get_length();
     byte_size = other.get_byte_size();

@@ -36,6 +36,8 @@ public:
     other.exec_move();
   }
   LinkedList &operator=(LinkedList<T> &&other) {
+    release();
+
     head = other.get_head_node();
     end = other.get_end_node();
     length = other.get_length();

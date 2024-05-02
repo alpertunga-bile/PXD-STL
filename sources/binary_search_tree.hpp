@@ -50,9 +50,13 @@ public:
     other.exec_move();
   }
   BinarySearchTree &operator=(BinarySearchTree<T> &&other) {
+    release();
+
     root = other.get_root();
     total_node_count = other.get_total_node_count();
     other.exec_move();
+
+    return *this;
   }
   BinarySearchTree &operator=(const BinarySearchTree<T> &other) {
     from_bst(other);

@@ -32,6 +32,8 @@ public:
     other.exec_move();
   }
   Matrix &operator=(Matrix<T> &&other) {
+    release();
+
     matrix = other.get_matrix();
     row = other.get_row();
     column = other.get_column();

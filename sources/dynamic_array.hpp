@@ -27,6 +27,8 @@ public:
     other.exec_move();
   }
   DynamicArray &operator=(DynamicArray &&other) {
+    release();
+
     array = std::move(other.get_array());
     element_count = other.get_element_count();
     total_capacity = other.get_total_capacity();
