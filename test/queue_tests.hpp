@@ -28,6 +28,7 @@ public:
     delete[] temp_arr;
   }
 
+private:
   void start_array_ctor_test(int *temp_arr, int *check_arr) {
     Queue<int> queue(temp_arr, N);
     queue.to_array(check_arr);

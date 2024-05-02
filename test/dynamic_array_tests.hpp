@@ -25,6 +25,7 @@ public:
     delete[] temp_arr;
   }
 
+private:
   void start_copy_ctor_test(int *temp_arr) {
     DynamicArray<int> darray;
     darray.expand(temp_arr, N);

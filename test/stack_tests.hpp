@@ -28,6 +28,7 @@ public:
     delete[] temp_arr;
   }
 
+private:
   void start_array_ctor_test(int *temp_arr, int *check_arr) {
     Stack<int> stack(temp_arr, N);
     stack.to_array(check_arr);

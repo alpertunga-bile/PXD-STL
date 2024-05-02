@@ -25,6 +25,7 @@ public:
     delete[] temp_arr;
   }
 
+private:
   void start_array_ctor_tests(int *temp_arr) {
     Matrix<int> matrix(temp_arr, row, column);
 
