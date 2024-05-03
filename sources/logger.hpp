@@ -35,7 +35,11 @@ private:
   static Logger *instance;
 
 #if defined(_DEBUG)
+#ifdef PXD_LOG_FILE_ONLY
+  bool just_log_file = true;
+#else
   bool just_log_file = false;
+#endif
 #else
 #ifdef PXD_LOG_FILE_ONLY
   bool just_log_file = true;

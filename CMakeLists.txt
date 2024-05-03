@@ -59,6 +59,8 @@ set(LIB_SOURCE_FILES
 include_directories(
    ${PXD_INCLUDE_DIR} 
    ${PXD_THIRD_PARTY_DIR}/fmt/include/fmt
+   ${PXD_THIRD_PARTY_DIR}/SIMDString
+   ${PXD_THIRD_PARTY_DIR}/re2/re2
 )
 
 set(COMMON_STD_HEADERS
