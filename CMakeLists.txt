@@ -38,6 +38,7 @@ set(HEADER_FILES
 
     ${PXD_THIRD_PARTY_DIR}/SIMDString/SIMDString.h
     ${PXD_THIRD_PARTY_DIR}/re2/re2/re2.h
+    ${PXD_THIRD_PARTY_DIR}/fmt/include/fmt/core.h
 )
 
 set(LIB_SOURCE_FILES
@@ -57,6 +58,7 @@ set(LIB_SOURCE_FILES
 
 include_directories(
    ${PXD_INCLUDE_DIR} 
+   ${PXD_THIRD_PARTY_DIR}/fmt/include/fmt
 )
 
 set(COMMON_STD_HEADERS
@@ -65,7 +67,6 @@ set(COMMON_STD_HEADERS
 
     # Logger is using these headers
     <filesystem>
-    <format>
     <fstream>
 
     # SIMDString is using these headers
@@ -93,6 +94,7 @@ ENDIF(NOT MSVC)
 
 add_subdirectory(${PXD_THIRD_PARTY_DIR}/abseil-cpp)
 add_subdirectory(${PXD_THIRD_PARTY_DIR}/re2)
+add_subdirectory(${PXD_THIRD_PARTY_DIR}/fmt)
 
 # ------------------------------------------------------------------------------------------------------
 # -- Project Static Library 
@@ -103,7 +105,7 @@ ENDIF(NOT MSVC)
 
 add_library(${PROJECT_NAME} ${LIB_SOURCE_FILES})
 
-target_link_libraries(${PROJECT_NAME} re2::re2)
+target_link_libraries(${PROJECT_NAME} re2::re2 fmt::fmt)
 
 target_precompile_headers(
     ${PROJECT_NAME} PRIVATE
@@ -132,6 +134,8 @@ IF(PXD_STL_BUILD_TEST_EXECUTABLE)
         ${PXD_TEST_DIR}/i_test.hpp
         ${PXD_TEST_DIR}/test_manager.hpp
         ${PXD_TEST_DIR}/test_utils.hpp
+
+        ${PXD_THIRD_PARTY_DIR}/fmt/include/fmt/os.h
     )
 
     set(TEST_SOURCE_FILES
@@ -141,7 +145,7 @@ IF(PXD_STL_BUILD_TEST_EXECUTABLE)
 
     add_executable(${TEST_PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp ${TEST_SOURCE_FILES})
 
-    target_link_libraries(${TEST_PROJECT_NAME} re2::re2)
+    target_link_libraries(${TEST_PROJECT_NAME} re2::re2 fmt::fmt)
 
     target_precompile_headers(
         ${PROJECT_NAME} PRIVATE
