@@ -103,6 +103,11 @@ add_subdirectory(${PXD_THIRD_PARTY_DIR}/abseil-cpp)
 add_subdirectory(${PXD_THIRD_PARTY_DIR}/re2)
 add_subdirectory(${PXD_THIRD_PARTY_DIR}/fmt)
 
+set(LIBS_TO_LINK
+    re2::re2
+    fmt::fmt
+)
+
 # ------------------------------------------------------------------------------------------------------
 # -- Project Static Library 
 
@@ -112,7 +117,7 @@ ENDIF(NOT MSVC)
 
 add_library(${PROJECT_NAME} ${LIB_SOURCE_FILES})
 
-target_link_libraries(${PROJECT_NAME} re2::re2 fmt::fmt)
+target_link_libraries(${PROJECT_NAME} ${LIBS_TO_LINK})
 
 target_precompile_headers(
     ${PROJECT_NAME} PRIVATE
@@ -150,18 +155,17 @@ IF(PXD_STL_BUILD_TEST_EXECUTABLE)
 
     add_executable(${TEST_PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp ${TEST_SOURCE_FILES})
 
-    target_link_libraries(${TEST_PROJECT_NAME} re2::re2 fmt::fmt)
+    target_link_libraries(${TEST_PROJECT_NAME} ${LIBS_TO_LINK})
 
     target_precompile_headers(
         ${PROJECT_NAME} PRIVATE
         ${COMMON_STD_HEADERS}
         <unordered_map>
         <utility>
-        <iomanip>
         ${TEST_HEADER_FILES}
         ${HEADER_FILES}
     )
-ENDIF(PXD_STL_BUILD_TEST_EXECUTABLE)
+ENDIF()
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

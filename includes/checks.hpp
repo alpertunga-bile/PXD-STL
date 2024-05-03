@@ -31,9 +31,9 @@ inline void assert_func(bool expression, const char *filename, int line,
   }
 
   fmt::print(
-      "Assertion is FAILED at:\n    Filename : %s\n    Line     : %d\n    "
+      "Assertion is FAILED at:\n    Filename : {}\n    Line     : {}\n    "
       "Function : "
-      "%s\n",
+      "{}\n",
       filename, line, function_name);
 
   exit(EXIT_FAILURE);
@@ -42,10 +42,10 @@ inline void assert_func(bool expression, const char *filename, int line,
 inline void todo_func(const char *message, const char *filename, int line,
                       const char *function_name) {
   fmt::print(
-      "TODO message:\n    Message : %s\n    Filename : %s\n    Line     : "
-      "%d\n    "
+      "TODO message:\n    Message : {}\n    Filename : {}\n    Line     : "
+      "{}\n    "
       "Function : "
-      "%s\n",
+      "{}\n",
       message, filename, line, function_name);
 
   exit(EXIT_FAILURE);
@@ -59,11 +59,11 @@ inline void assert_msg_func(const char *message, bool expression,
   }
 
   fmt::print(
-      "Assert is FAILED at: message:\n    Message : %s\n    Filename : %s\n "
+      "Assert is FAILED at: message:\n    Message : {}\n    Filename : {}\n "
       "   Line     : "
-      "%d\n    "
+      "{}\n    "
       "Function : "
-      "%s\n",
+      "{}\n",
       message, filename, line, function_name);
 
   exit(EXIT_FAILURE);
