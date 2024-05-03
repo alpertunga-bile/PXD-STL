@@ -1,4 +1,4 @@
-#define ENABLE_ASSERTS
+#define PXD_ENABLE_ASSERTS
 
 #include "test/array_tests.hpp"
 #include "test/binary_search_tree_tests.hpp"

@@ -1,7 +1,7 @@
 #pragma once
 
+#include "core.h"
 #include <cstdlib>
-#include <iostream>
 
 #ifndef __FUNCTION_NAME__
 #ifdef _WIN32
@@ -13,7 +13,7 @@
 
 #define IS_VALID(obj) (obj == nullptr ? false : true)
 
-#ifdef ENABLE_ASSERTS
+#ifdef PXD_ENABLE_ASSERTS
 #define PXD_ASSERT(exp) assert_func(exp, __FILE__, __LINE__, __FUNCTION_NAME__)
 #define PXD_ASSERT_MSG(exp, msg)                                               \
   assert_msg_func(msg, exp, __FILE__, __LINE__, __FUNCTION_NAME__)
@@ -30,21 +30,23 @@ inline void assert_func(bool expression, const char *filename, int line,
     return;
   }
 
-  printf("Assertion is FAILED at:\n    Filename : %s\n    Line     : %d\n    "
-         "Function : "
-         "%s\n",
-         filename, line, function_name);
+  fmt::print(
+      "Assertion is FAILED at:\n    Filename : %s\n    Line     : %d\n    "
+      "Function : "
+      "%s\n",
+      filename, line, function_name);
 
   exit(EXIT_FAILURE);
 }
 
 inline void todo_func(const char *message, const char *filename, int line,
                       const char *function_name) {
-  printf("TODO message:\n    Message : %s\n    Filename : %s\n    Line     : "
-         "%d\n    "
-         "Function : "
-         "%s\n",
-         message, filename, line, function_name);
+  fmt::print(
+      "TODO message:\n    Message : %s\n    Filename : %s\n    Line     : "
+      "%d\n    "
+      "Function : "
+      "%s\n",
+      message, filename, line, function_name);
 
   exit(EXIT_FAILURE);
 }
@@ -56,12 +58,13 @@ inline void assert_msg_func(const char *message, bool expression,
     return;
   }
 
-  printf("Assert is FAILED at: message:\n    Message : %s\n    Filename : %s\n "
-         "   Line     : "
-         "%d\n    "
-         "Function : "
-         "%s\n",
-         message, filename, line, function_name);
+  fmt::print(
+      "Assert is FAILED at: message:\n    Message : %s\n    Filename : %s\n "
+      "   Line     : "
+      "%d\n    "
+      "Function : "
+      "%s\n",
+      message, filename, line, function_name);
 
   exit(EXIT_FAILURE);
 }
