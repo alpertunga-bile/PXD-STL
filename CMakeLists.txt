@@ -17,9 +17,14 @@ endif(NOT MSVC)
 option(PXD_STL_BUILD_TEST_EXECUTABLE "Build test executable" ON)
 
 set(PXD_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/sources)
-set(PXD_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/sources)
 set(PXD_THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third-party)
 set(PXD_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
+
+IF(NOT ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}"))
+    set(PXD_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes PARENT_SCOPE)
+ELSE()
+    set(PXD_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes)
+ENDIF()
 
 set(HEADER_FILES
     ${PXD_INCLUDE_DIR}/array.hpp
@@ -39,6 +44,7 @@ set(HEADER_FILES
     ${PXD_THIRD_PARTY_DIR}/SIMDString/SIMDString.h
     ${PXD_THIRD_PARTY_DIR}/re2/re2/re2.h
     ${PXD_THIRD_PARTY_DIR}/fmt/include/fmt/core.h
+    ${PXD_THIRD_PARTY_DIR}/fmt/include/fmt/os.h
 )
 
 set(LIB_SOURCE_FILES
@@ -64,7 +70,6 @@ include_directories(
 )
 
 set(COMMON_STD_HEADERS
-    <iostream>
     <cstdlib>
 
     # Logger is using these headers
@@ -136,8 +141,6 @@ IF(PXD_STL_BUILD_TEST_EXECUTABLE)
         ${PXD_TEST_DIR}/i_test.hpp
         ${PXD_TEST_DIR}/test_manager.hpp
         ${PXD_TEST_DIR}/test_utils.hpp
-
-        ${PXD_THIRD_PARTY_DIR}/fmt/include/fmt/os.h
     )
 
     set(TEST_SOURCE_FILES

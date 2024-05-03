@@ -8,7 +8,7 @@
 
 #include "test/test_manager.hpp"
 
-#include "sources/logger.hpp"
+#include "logger.hpp"
 
 int main() {
   LOG_WARNING("WARNING");
