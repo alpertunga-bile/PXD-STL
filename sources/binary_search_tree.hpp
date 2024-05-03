@@ -19,21 +19,21 @@ private:
     Node *left = nullptr;
     Node *right = nullptr;
 
-    inline bool has_one_child() {
+    inline bool has_one_child() noexcept {
       return (left != nullptr && right == nullptr) ||
              (left == nullptr && right != nullptr);
     }
 
-    inline bool has_two_children() {
+    inline bool has_two_children() noexcept {
       return left != nullptr && right != nullptr;
     }
 
-    inline bool has_left() { return left != nullptr; }
-    inline bool has_right() { return right != nullptr; }
+    inline bool has_left() noexcept { return left != nullptr; }
+    inline bool has_right() noexcept { return right != nullptr; }
   };
 
 public:
-  BinarySearchTree() = default;
+  constexpr BinarySearchTree() noexcept = default;
   BinarySearchTree(T *values, int size, bool is_balance = false) {
     from_array(values, size, is_balance);
   }
@@ -44,12 +44,12 @@ public:
     from_linked_list(linked_list, is_balance);
   }
   BinarySearchTree(const BinarySearchTree<T> &other) { from_bst(other); }
-  BinarySearchTree(BinarySearchTree<T> &&other) {
+  constexpr BinarySearchTree(BinarySearchTree<T> &&other) noexcept {
     root = other.get_root();
     total_node_count = other.get_total_node_count();
     other.exec_move();
   }
-  BinarySearchTree &operator=(BinarySearchTree<T> &&other) {
+  constexpr BinarySearchTree &operator=(BinarySearchTree<T> &&other) {
     release();
 
     root = other.get_root();
@@ -62,16 +62,16 @@ public:
     from_bst(other);
     return *this;
   }
-  ~BinarySearchTree() { release(); }
+  inline ~BinarySearchTree() noexcept { release(); }
 
-  bool operator==(BinarySearchTree<T> &other) {
+  constexpr inline bool operator==(BinarySearchTree<T> &other) noexcept {
     return other.get_root() == root;
   }
-  bool operator!=(BinarySearchTree<T> &other) {
+  constexpr inline bool operator!=(BinarySearchTree<T> &other) noexcept {
     return other.get_root() != root;
   }
 
-  void release() {
+  inline void release() noexcept {
     if (root == nullptr) {
       return;
     }
@@ -142,7 +142,7 @@ public:
     }
   }
 
-  void remove(T &value) {
+  void remove(T &value) noexcept {
     if (root == nullptr) {
       return;
     }
@@ -185,7 +185,7 @@ public:
     }
   }
 
-  void remove(T &&value) { remove(value); }
+  void remove(T &&value) noexcept { remove(value); }
 
   void get_order(T *array, eBST_ORDER &&order) const {
     if (root == nullptr) {
@@ -267,7 +267,7 @@ public:
     delete[] values;
   }
 
-  bool is_contain(T &value) {
+  bool is_contain(T &value) noexcept {
     if (root == nullptr) {
       return false;
     }
@@ -287,9 +287,9 @@ public:
     return false;
   }
 
-  bool is_contain(T &&value) { return is_contain(value); }
+  constexpr bool is_contain(T &&value) noexcept { return is_contain(value); }
 
-  T get_min_value() {
+  T get_min_value() noexcept {
     if (root == nullptr) {
       return T();
     }
@@ -303,7 +303,7 @@ public:
     return current_node->value;
   }
 
-  T get_max_value() {
+  T get_max_value() noexcept {
     if (root == nullptr) {
       return T();
     }
@@ -317,15 +317,15 @@ public:
     return current_node->value;
   }
 
-  inline Node *get_root() const { return root; }
-  inline int get_total_node_count() const { return total_node_count; }
-  inline void exec_move() {
+  inline Node *get_root() const noexcept { return root; }
+  inline int get_total_node_count() const noexcept { return total_node_count; }
+  inline void exec_move() noexcept {
     root = nullptr;
     total_node_count = 0;
   }
 
 private:
-  void inorder(Node *node, T *array, int &index) const {
+  void inorder(Node *node, T *array, int &index) const noexcept {
     if (node == nullptr) {
       return;
     }
@@ -338,7 +338,7 @@ private:
     inorder(node->right, array, index);
   }
 
-  void preorder(Node *node, T *array, int &index) const {
+  void preorder(Node *node, T *array, int &index) const noexcept {
     if (node == nullptr) {
       return;
     }
@@ -350,7 +350,7 @@ private:
     preorder(node->right, array, index);
   }
 
-  void postorder(Node *node, T *array, int &index) const {
+  void postorder(Node *node, T *array, int &index) const noexcept {
     if (node == nullptr) {
       return;
     }
@@ -405,7 +405,7 @@ private:
   }
 
   void build_balanced_tree(BinarySearchTree<T> &bst, T *values, int start,
-                           int end) {
+                           int end) noexcept {
     if (start > end) {
       return;
     }
@@ -417,7 +417,7 @@ private:
     build_balanced_tree(bst, values, mid + 1, end);
   }
 
-  void build_balanced_tree_self(T *values, int start, int end) {
+  void build_balanced_tree_self(T *values, int start, int end) noexcept {
     if (start > end) {
       return;
     }
@@ -429,7 +429,7 @@ private:
     build_balanced_tree_self(values, mid + 1, end);
   }
 
-  void place_new_node(Node *start, Node *new_node) {
+  void place_new_node(Node *start, Node *new_node) noexcept {
     Node *current_node = start;
     Node *parent_node = nullptr;
 
@@ -453,7 +453,7 @@ private:
     }
   }
 
-  void remove_from_one_child(Node *current_node, Node *parent_node) {
+  void remove_from_one_child(Node *current_node, Node *parent_node) noexcept {
     if (current_node->has_one_child() && parent_node->right == current_node) {
       if (current_node->has_left()) {
         parent_node->right = current_node->left;
@@ -470,7 +470,8 @@ private:
     }
   }
 
-  void remove_from_two_children(Node *current_node, Node *parent_node) {
+  void remove_from_two_children(Node *current_node,
+                                Node *parent_node) noexcept {
     if (current_node->has_two_children() && parent_node->left == current_node &&
         current_node->left->has_right()) {
       Node *new_node = current_node->left;
@@ -487,7 +488,7 @@ private:
     }
   }
 
-  void remove_from_root(Node *current_node, Node *parent_node) {
+  void remove_from_root(Node *current_node, Node *parent_node) noexcept {
     if (current_node == root && current_node->has_two_children()) {
       Node *new_node = current_node->right;
       place_new_node(new_node, current_node->left);
