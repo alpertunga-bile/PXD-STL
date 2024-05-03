@@ -10,7 +10,13 @@
 
 #include "test/test_manager.hpp"
 
+#include "sources/logger.hpp"
+
 int main() {
+  LOG_WARNING("WARNING");
+  LOG_ERROR("ERROR");
+  LOG_INFO("Starting tests");
+
   pxd::TestManager test_manager;
 
   pxd::ArrayTests array_tests;
