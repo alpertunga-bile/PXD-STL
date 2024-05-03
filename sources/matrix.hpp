@@ -8,7 +8,7 @@ template <typename T> class Array;
 
 template <typename T> class Matrix {
 public:
-  Matrix() = default;
+  constexpr Matrix() noexcept = default;
   Matrix(int row, int column) { allocate(row, column); }
   Matrix(T *values, int row, int column) {
     allocate(row, column);
@@ -22,7 +22,7 @@ public:
     allocate(other.get_row(), other.get_column());
     memcpy(matrix, other.get_matrix(), other.get_byte_size());
   }
-  Matrix(Matrix<T> &&other) {
+  constexpr Matrix(Matrix<T> &&other) noexcept {
     matrix = other.get_matrix();
     row = other.get_row();
     column = other.get_column();
@@ -31,7 +31,7 @@ public:
 
     other.exec_move();
   }
-  Matrix &operator=(Matrix<T> &&other) {
+  constexpr Matrix &operator=(Matrix<T> &&other) noexcept {
     release();
 
     matrix = other.get_matrix();
@@ -49,7 +49,7 @@ public:
     memcpy(matrix, other.get_matrix(), other.get_byte_size());
     return *this;
   }
-  ~Matrix() { release(); }
+  inline ~Matrix() noexcept { release(); }
 
   decltype(auto) operator[](int index) {
     PXD_ASSERT(index < row);
@@ -67,7 +67,7 @@ public:
     return matrix[row * this->column + column];
   }
 
-  void release() {
+  inline void release() noexcept {
     if (matrix == nullptr) {
       return;
     }
@@ -79,7 +79,7 @@ public:
     b_row_order = true;
   }
 
-  void transpose() {
+  void transpose() noexcept {
     int current_row = 0;
     int current_col = 0;
     int normal_index = 0;
@@ -106,17 +106,19 @@ public:
     b_row_order = !b_row_order;
   }
 
-  inline void change_order() { transpose(); }
+  inline void change_order() noexcept { transpose(); }
 
-  inline T *get_matrix() { return matrix; }
-  inline T *get_matrix() const { return matrix; }
-  inline int get_row() const { return row; }
-  inline int get_column() const { return column; }
-  inline int get_element_count() const { return element_count; }
-  inline size_t get_byte_size() const { return element_count * sizeof(T); }
-  inline bool is_row_order() const { return b_row_order; }
+  inline T *get_matrix() noexcept { return matrix; }
+  inline T *get_matrix() const noexcept { return matrix; }
+  inline int get_row() const noexcept { return row; }
+  inline int get_column() const noexcept { return column; }
+  inline int get_element_count() const noexcept { return element_count; }
+  inline size_t get_byte_size() const noexcept {
+    return element_count * sizeof(T);
+  }
+  inline bool is_row_order() const noexcept { return b_row_order; }
 
-  inline void exec_move() {
+  constexpr inline void exec_move() noexcept {
     matrix = nullptr;
     row = 0;
     column = 0;
@@ -125,7 +127,7 @@ public:
   }
 
 private:
-  void allocate(int row, int column) {
+  constexpr void allocate(int row, int column) noexcept {
     element_count = row * column;
 
     matrix = new T[element_count];
