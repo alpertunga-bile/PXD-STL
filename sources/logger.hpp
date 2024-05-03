@@ -22,9 +22,27 @@ public:
 
   static Logger *get_instance() noexcept;
 
+  constexpr inline void set_just_log_file(bool log_bool) noexcept {
+    just_log_file = log_bool;
+  }
+
 private:
-  std::ofstream log_file;
+  void log(const char *log_level, const char *msg, const char *filename,
+           int line, const char *func_name);
+
+private:
+  FILE *log_file = nullptr;
   static Logger *instance;
+
+#if defined(_DEBUG)
+  bool just_log_file = false;
+#else
+#ifdef PXD_LOG_FILE_ONLY
+  bool just_log_file = true;
+#else
+  bool just_log_file = false;
+#endif
+#endif
 };
 } // namespace pxd
 
@@ -44,9 +62,26 @@ private:
     pxd::Logger *logger = pxd::Logger::get_instance();                         \
     logger->log_error(msg, __FILE__, __LINE__, __FUNCTION_NAME__);             \
   }
-
+#else
+#ifdef PXD_LOG_FILE_ONLY
+#define LOG_INFO(msg)                                                          \
+  {                                                                            \
+    pxd::Logger *logger = pxd::Logger::get_instance();                         \
+    logger->log_info(msg, __FILE__, __LINE__, __FUNCTION_NAME__);              \
+  }
+#define LOG_WARNING(msg)                                                       \
+  {                                                                            \
+    pxd::Logger *logger = pxd::Logger::get_instance();                         \
+    logger->log_warning(msg, __FILE__, __LINE__, __FUNCTION_NAME__);           \
+  }
+#define LOG_ERROR(msg)                                                         \
+  {                                                                            \
+    pxd::Logger *logger = pxd::Logger::get_instance();                         \
+    logger->log_error(msg, __FILE__, __LINE__, __FUNCTION_NAME__);             \
+  }
 #else
 #define LOG_INFO(msg)
 #define LOG_WARNING(msg)
 #define LOG_ERROR(msg)
+#endif
 #endif
