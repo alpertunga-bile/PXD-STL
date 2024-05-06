@@ -3,9 +3,6 @@
 #include "checks.hpp"
 
 namespace pxd {
-
-template <typename T> class LinkedList;
-
 template <typename T> class Array {
 public:
   constexpr Array() {
@@ -160,16 +157,6 @@ public:
     resize(new_size);
 
     copy(given_array, arr_ptr + old_length, size * sizeof(T));
-  }
-
-  void to_linked_list(LinkedList<T> &linked_list) {
-    linked_list.release();
-    linked_list.from_array(arr_ptr, length);
-  }
-
-  LinkedList<T> to_linked_list() {
-    LinkedList<T> ll(arr_ptr, length);
-    return ll;
   }
 
   inline T *get_ptr() noexcept { return arr_ptr; }

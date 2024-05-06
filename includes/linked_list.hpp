@@ -5,6 +5,8 @@
 namespace pxd {
 
 template <typename T> class Array;
+template <typename T> class DoubleLinkedList;
+template <typename T> class DynamicArray;
 
 template <typename T> class LinkedList {
 private:
@@ -236,19 +238,32 @@ public:
     fill_array(array);
   }
 
-  Array<T> to_array() {
+  void to_array(DynamicArray<T> &array) {
     if (is_empty()) {
       return;
     }
 
-    Array<T> array(length);
+    array.reallocate(length);
 
     fill_array(array);
-
-    return array;
   }
 
-  void from_array(T *node_list, int size, bool is_reverse = false) {
+  void to_double_linked_list(DoubleLinkedList<T> &dll) noexcept {
+    if (is_empty()) {
+      return;
+    }
+
+    dll.release();
+
+    Node *current_node = head;
+
+    for (int i = 0; i < length; i++) {
+      dll.add(current_node->value);
+      current_node = current_node->next;
+    }
+  }
+
+  inline void from_array(T *node_list, int size, bool is_reverse = false) {
     release();
 
     for (int i = 0; i < size; i++) {
@@ -256,7 +271,7 @@ public:
     }
   }
 
-  void from_array(Array<T> &node_list, bool is_reverse = false) {
+  inline void from_array(Array<T> &node_list, bool is_reverse = false) {
     release();
 
     const int size = node_list.get_length();
@@ -266,8 +281,29 @@ public:
     }
   }
 
+  inline void from_array(DynamicArray<T> &node_list, bool is_reverse = false) {
+    release();
+
+    const int size = node_list.get_element_count();
+
+    for (int i = 0; i < size; i++) {
+      add(node_list[i], !is_reverse);
+    }
+  }
+
+  inline void from_double_linked_list(DoubleLinkedList<T> &double_linked_list,
+                                      bool is_reverse = false) {
+    release();
+
+    const int size = double_linked_list.get_length();
+
+    for (int i = 0; i < size; i++) {
+      add(double_linked_list[i], !is_reverse);
+    }
+  }
+
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Variable Inline Functions
+  // Variable Functions
 
   constexpr inline size_t get_byte_size() const noexcept {
     return length * sizeof(T);
@@ -331,7 +367,7 @@ private:
     return calc_index;
   }
 
-  void fill_array(T *array) const noexcept {
+  inline void fill_array(T *array) const noexcept {
     Node *current_node = head;
 
     for (int i = 0; i < length; i++) {
@@ -340,7 +376,7 @@ private:
     }
   }
 
-  void fill_array(Array<T> &array) noexcept {
+  inline void fill_array(Array<T> &array) noexcept {
     Node *current_node = head;
 
     for (int i = 0; i < length; i++) {
@@ -349,7 +385,16 @@ private:
     }
   }
 
-  void remove_node(Node *prev_node, Node *current_node) noexcept {
+  inline void fill_array(DynamicArray<T> &array) noexcept {
+    Node *current_node = head;
+
+    for (int i = 0; i < length; i++) {
+      array[i] = current_node->value;
+      current_node = current_node->next;
+    }
+  }
+
+  inline void remove_node(Node *prev_node, Node *current_node) noexcept {
     if (current_node == nullptr) {
       return;
     }

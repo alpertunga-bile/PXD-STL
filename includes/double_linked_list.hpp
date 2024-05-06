@@ -217,7 +217,7 @@ public:
     head = current_node;
   }
 
-  void from_array(T *array, int size, bool add_back = true) noexcept {
+  inline void from_array(T *array, int size, bool add_back = true) noexcept {
     release();
 
     for (int i = 0; i < size; i++) {
@@ -225,7 +225,7 @@ public:
     }
   }
 
-  void from_array(Array<T> &array, bool add_back = true) noexcept {
+  inline void from_array(Array<T> &array, bool add_back = true) noexcept {
     release();
     const int size = array.get_length();
 
@@ -234,7 +234,8 @@ public:
     }
   }
 
-  void from_array(DynamicArray<T> &array, bool add_back = true) noexcept {
+  inline void from_array(DynamicArray<T> &array,
+                         bool add_back = true) noexcept {
     release();
     const int size = array.get_element_count();
 
@@ -243,8 +244,8 @@ public:
     }
   }
 
-  void from_linked_list(LinkedList<T> &linked_list,
-                        bool add_back = true) noexcept {
+  inline void from_linked_list(LinkedList<T> &linked_list,
+                               bool add_back = true) noexcept {
     release();
     const int size = linked_list.get_length();
 
@@ -253,7 +254,7 @@ public:
     }
   }
 
-  void to_array(T *array) noexcept {
+  inline void to_array(T *array) noexcept {
     Node *current_node = head;
 
     for (int i = 0; i < length; i++) {
@@ -262,7 +263,7 @@ public:
     }
   }
 
-  void to_array(Array<T> &array) noexcept {
+  inline void to_array(Array<T> &array) noexcept {
     array.reallocate(length);
     Node *current_node = head;
 
@@ -272,7 +273,7 @@ public:
     }
   }
 
-  void to_array(DynamicArray<T> &array) noexcept {
+  inline void to_array(DynamicArray<T> &array) noexcept {
     array.reallocate(length);
     Node *current_node = head;
 
@@ -282,7 +283,7 @@ public:
     }
   }
 
-  void to_linked_list(LinkedList<T> &linked_list) noexcept {
+  inline void to_linked_list(LinkedList<T> &linked_list) noexcept {
     linked_list.release();
 
     Node *current_node = head;
