@@ -147,15 +147,26 @@ public:
   // Element Functions
 
   // for left values
-  void add(T &new_value, bool add_back = true) {
+  inline void add(T &new_value, bool add_back = true) noexcept {
     Node *new_node = new Node();
     new_node->value = new_value;
 
-    if (add_back) {
-      add_to_back(new_node);
-    } else {
-      add_to_front(new_node);
+    if (head == nullptr) {
+      head = new_node;
+      end = new_node;
+      length++;
+      return;
     }
+
+    if (add_back) {
+      end->next = new_node;
+      end = new_node;
+    } else {
+      new_node->next = head;
+      head = new_node;
+    }
+
+    length++;
   }
 
   // for right values
@@ -251,14 +262,7 @@ public:
     length = 0;
 
     for (int i = 0; i < size; i++) {
-      Node *new_node = new Node();
-      new_node->value = node_list[i];
-
-      if (is_reverse) {
-        add_to_front(new_node);
-      } else {
-        add_to_back(new_node);
-      }
+      add(node_list[i], !is_reverse);
     }
   }
 
@@ -270,14 +274,7 @@ public:
     const int size = node_list.get_length();
 
     for (int i = 0; i < size; i++) {
-      Node *new_node = new Node();
-      new_node->value = node_list[i];
-
-      if (is_reverse) {
-        add_to_front(new_node);
-      } else {
-        add_to_back(new_node);
-      }
+      add(node_list[i], !is_reverse);
     }
   }
 
@@ -308,31 +305,6 @@ public:
   }
 
 private:
-  void add_to_back(Node *new_node) noexcept {
-    if (head == nullptr) {
-      head = new_node;
-      end = new_node;
-    } else {
-      end->next = new_node;
-      end = new_node;
-    }
-
-    length++;
-  }
-
-  void add_to_front(Node *new_node) noexcept {
-    if (head == nullptr) {
-      head = new_node;
-      end = new_node;
-    } else {
-      Node *temp = head;
-      head = new_node;
-      new_node->next = temp;
-    }
-
-    length++;
-  }
-
   constexpr Node *get_node_at(int index) {
     int calc_index = get_calc_index(index);
 
@@ -410,24 +382,20 @@ private:
 
   void fill_array(T *array) const noexcept {
     Node *current_node = head;
-    int index = 0;
 
-    do {
-      array[index] = current_node->value;
+    for (int i = 0; i < length; i++) {
+      array[i] = current_node->value;
       current_node = current_node->next;
-      index++;
-    } while (current_node != nullptr);
+    }
   }
 
   void fill_array(Array<T> &array) noexcept {
     Node *current_node = head;
-    int index = 0;
 
-    do {
-      array[index] = current_node->value;
+    for (int i = 0; i < length; i++) {
+      array[i] = current_node->value;
       current_node = current_node->next;
-      index++;
-    } while (current_node != nullptr);
+    }
   }
 
 private:
