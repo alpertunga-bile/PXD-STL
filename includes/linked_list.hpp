@@ -24,11 +24,17 @@ public:
     end = nullptr;
     length = 0;
   } // default constructor
-  constexpr LinkedList(T *node_list, int size, bool is_reverse = false) {
+  LinkedList(T *node_list, int size, bool is_reverse = false) {
     from_array(node_list, size, is_reverse);
   }
-  constexpr LinkedList(Array<T> &node_list, bool is_reverse = false) {
-    from_array(node_list.get_ptr(), node_list.get_length(), is_reverse);
+  LinkedList(Array<T> &node_list, bool is_reverse = false) {
+    from_array(node_list, is_reverse);
+  }
+  LinkedList(DynamicArray<T> &node_list, bool is_reverse = false) {
+    from_array(node_list, is_reverse);
+  }
+  LinkedList(DoubleLinkedList<T> &node_list, bool is_reverse = false) {
+    from_double_linked_list(node_list, is_reverse);
   }
   constexpr LinkedList(const LinkedList<T> &other) { from_linked_list(other); }
   constexpr LinkedList(LinkedList<T> &&other) noexcept {
