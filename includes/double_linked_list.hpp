@@ -3,6 +3,11 @@
 #include "checks.hpp"
 
 namespace pxd {
+
+template <typename T> class LinkedList;
+template <typename T> class Array;
+template <typename T> class DynamicArray;
+
 template <typename T> class DoubleLinkedList {
 private:
   struct Node {
@@ -19,6 +24,15 @@ public:
   }
   DoubleLinkedList(T *array, int size, bool add_back = true) {
     from_array(array, size, add_back);
+  }
+  DoubleLinkedList(Array<T> &array, bool add_back = true) {
+    from_array(array, add_back);
+  }
+  DoubleLinkedList(DynamicArray<T> &array, bool add_back = true) {
+    from_array(array, add_back);
+  }
+  DoubleLinkedList(LinkedList<T> &linked_list, bool add_back = true) {
+    from_linked_list(linked_list, add_back);
   }
   DoubleLinkedList(const DoubleLinkedList<T> &other) {
     from_double_linked_list(other);
@@ -211,11 +225,70 @@ public:
     }
   }
 
+  void from_array(Array<T> &array, bool add_back = true) noexcept {
+    release();
+    const int size = array.get_length();
+
+    for (int i = 0; i < size; i++) {
+      add(array[i], add_back);
+    }
+  }
+
+  void from_array(DynamicArray<T> &array, bool add_back = true) noexcept {
+    release();
+    const int size = array.get_element_count();
+
+    for (int i = 0; i < size; i++) {
+      add(array[i], add_back);
+    }
+  }
+
+  void from_linked_list(LinkedList<T> &linked_list,
+                        bool add_back = true) noexcept {
+    release();
+    const int size = linked_list.get_length();
+
+    for (int i = 0; i < size; i++) {
+      add(linked_list[i], add_back);
+    }
+  }
+
   void to_array(T *array) noexcept {
     Node *current_node = head;
 
     for (int i = 0; i < length; i++) {
       array[i] = current_node->value;
+      current_node = current_node->next;
+    }
+  }
+
+  void to_array(Array<T> &array) noexcept {
+    array.reallocate(length);
+    Node *current_node = head;
+
+    for (int i = 0; i < length; i++) {
+      array[i] = current_node->value;
+      current_node = current_node->next;
+    }
+  }
+
+  void to_array(DynamicArray<T> &array) noexcept {
+    array.reallocate(length);
+    Node *current_node = head;
+
+    for (int i = 0; i < length; i++) {
+      array[i] = current_node->value;
+      current_node = current_node->next;
+    }
+  }
+
+  void to_linked_list(LinkedList<T> &linked_list) noexcept {
+    linked_list.release();
+
+    Node *current_node = head;
+
+    for (int i = 0; i < length; i++) {
+      linked_list.add(current_node->value);
       current_node = current_node->next;
     }
   }

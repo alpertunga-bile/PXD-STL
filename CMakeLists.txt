@@ -59,6 +59,7 @@ set(LIB_SOURCE_FILES
     ${PXD_SOURCE_DIR}/dynamic_array.cpp
     ${PXD_SOURCE_DIR}/matrix.cpp
     ${PXD_SOURCE_DIR}/regex.cpp
+    ${PXD_SOURCE_DIR}/double_linked_list.cpp
 
     ${HEADER_FILES}
 )
