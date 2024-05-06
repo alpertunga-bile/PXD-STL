@@ -53,7 +53,7 @@ public:
   }
   inline ~LinkedList() noexcept { release(); }
 
-  constexpr T &operator[](int index) noexcept {
+  T &operator[](int index) noexcept {
     const int calc_index = get_calc_index(index);
 
     Node *current_node = head;
@@ -102,7 +102,7 @@ public:
     length = 0;
   }
 
-  constexpr void reverse() noexcept {
+  void reverse() noexcept {
     if (is_empty() || length == 1) {
       return;
     }
@@ -130,17 +130,18 @@ public:
   // so this will lead to unwanted situations
   constexpr int where(T &value) noexcept {
     Node *current_node = head;
-    int current_index = 0;
+    int index = length;
 
-    do {
+    for (int i = 0; i < length; i++) {
       if (current_node->value == value) {
-        return current_index;
+        index = i;
+        break;
       }
-      current_node = current_node->next;
-      current_index++;
-    } while (current_node != nullptr);
 
-    return length;
+      current_node = current_node->next;
+    }
+
+    return index;
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -170,63 +171,54 @@ public:
   }
 
   // for right values
-  constexpr void add(T &&new_value, bool add_back = true) {
+  inline void add(T &&new_value, bool add_back = true) {
     add(new_value, add_back);
   }
 
-  constexpr void remove_at(int index) {
-    int calc_index = get_calc_index(index);
-
+  void remove_at(int index) {
     if (head == nullptr) {
       return;
     }
 
-    if (calc_index == 0) {
-      Node *new_head = head->next;
-      delete head;
-      head = new_head;
-    } else if (calc_index == length - 1) {
-      Node *new_end = get_node_at(-2);
-      delete end;
-      end = new_end;
-      end->next = nullptr;
-    } else {
-      Node *current_node = head;
-      const int to_reach = index - 1;
+    int calc_index = get_calc_index(index);
 
-      for (int i = 1; i < to_reach; i++) {
-        current_node = current_node->next;
+    Node *prev_node = nullptr;
+    Node *current_node = head;
+
+    for (int i = 0; i < calc_index; i++) {
+      prev_node = current_node;
+      current_node = current_node->next;
+    }
+
+    remove_node(prev_node, current_node);
+  }
+
+  void remove(T &value) noexcept {
+    if (head == nullptr) {
+      return;
+    }
+
+    Node *prev_node = nullptr;
+    Node *current_node = head;
+
+    for (int i = 0; i < length; i++) {
+      if (current_node->value == value) {
+        break;
       }
 
-      Node *prev_node = current_node;
-      Node *node_to_delete = prev_node->next;
-      Node *new_neighbor = node_to_delete->next;
-
-      prev_node->next = new_neighbor;
-      delete node_to_delete;
+      prev_node = current_node;
+      current_node = current_node->next;
     }
 
-    if (head == nullptr) {
-      end = nullptr;
-    }
-
-    length--;
+    remove_node(prev_node, current_node);
   }
 
-  void remove(T &value) {
-    int remove_index = where(value);
-
-    PXD_ASSERT(remove_index < length);
-
-    remove_at(remove_index);
-  }
-
-  constexpr void remove(T &&value) { remove(value); }
+  void remove(T &&value) noexcept { remove(value); }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Conversions
 
-  void to_array(T *array) const {
+  void to_array(T *array) {
     if (is_empty()) {
       return;
     }
@@ -257,9 +249,7 @@ public:
   }
 
   void from_array(T *node_list, int size, bool is_reverse = false) {
-    head = nullptr;
-    end = nullptr;
-    length = 0;
+    release();
 
     for (int i = 0; i < size; i++) {
       add(node_list[i], !is_reverse);
@@ -267,9 +257,7 @@ public:
   }
 
   void from_array(Array<T> &node_list, bool is_reverse = false) {
-    head = nullptr;
-    end = nullptr;
-    length = 0;
+    release();
 
     const int size = node_list.get_length();
 
@@ -305,44 +293,7 @@ public:
   }
 
 private:
-  constexpr Node *get_node_at(int index) {
-    int calc_index = get_calc_index(index);
-
-    Node *current_node = head;
-
-    for (int i = 0; i < calc_index; i++) {
-      current_node = current_node->next;
-    }
-
-    return current_node;
-  }
-
   constexpr void from_linked_list(const LinkedList<T> &other) {
-    release();
-
-    Node *this_current_node = new Node();
-    Node *other_current_node = other.get_head_node();
-
-    this_current_node->value = other_current_node->value;
-    head = this_current_node;
-    other_current_node = other_current_node->next;
-
-    length = other.get_length();
-
-    for (int i = 1; i < length; i++) {
-      Node *new_node = new Node();
-      new_node->value = other_current_node->value;
-
-      this_current_node->next = new_node;
-
-      this_current_node = new_node;
-      other_current_node = other_current_node->next;
-    }
-
-    end = this_current_node;
-  }
-
-  constexpr void from_linked_list(LinkedList<T> &&other) {
     release();
 
     Node *this_current_node = new Node();
@@ -396,6 +347,30 @@ private:
       array[i] = current_node->value;
       current_node = current_node->next;
     }
+  }
+
+  void remove_node(Node *prev_node, Node *current_node) noexcept {
+    if (current_node == nullptr) {
+      return;
+    }
+
+    if (current_node == head) {
+      head = current_node->next;
+    } else if (current_node == end) {
+      end = prev_node;
+    }
+
+    if (prev_node != nullptr) {
+      prev_node->next = current_node->next;
+    }
+
+    delete current_node;
+
+    if (head == nullptr) {
+      end = nullptr;
+    }
+
+    length--;
   }
 
 private:

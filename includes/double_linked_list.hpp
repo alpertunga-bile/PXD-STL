@@ -138,11 +138,7 @@ public:
       return;
     }
 
-    Node *current_node = head;
-
-    for (int i = 0; i < index; i++) {
-      current_node = current_node->next;
-    }
+    Node *current_node = get_node_at(index);
 
     remove_node(current_node);
   }
@@ -152,15 +148,30 @@ public:
       return;
     }
 
-    Node *current_node = head;
+    Node *current_node = nullptr;
 
-    for (int i = 0; i < length; i++) {
-      if (current_node->value == value) {
+    Node *from_head = head;
+    Node *from_end = end;
+
+    int head_index = 0;
+    int end_index = length - 1;
+
+    do {
+      if (from_head->value == value) {
+        current_node = from_head;
         break;
       }
 
-      current_node = current_node->next;
-    }
+      if (from_end->value == value) {
+        current_node = from_end;
+        break;
+      }
+
+      from_head = from_head->next;
+      from_end = from_end->prev;
+      head_index++;
+      end_index--;
+    } while (head_index <= end_index);
 
     remove_node(current_node);
   }
@@ -308,6 +319,10 @@ private:
     delete current_node;
 
     length--;
+
+    if (head == nullptr) {
+      end = nullptr;
+    }
   }
 
   void from_double_linked_list(const DoubleLinkedList<T> &other) {
