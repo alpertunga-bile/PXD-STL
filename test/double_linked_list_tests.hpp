@@ -88,7 +88,17 @@ public:
     DoubleLinkedList<int> dll(temp_arr, N);
     dll.remove(2);
 
-    test_results["remove"] = dll[1] == 3;
+    test_results["remove between"] = dll[1] == 3;
+
+    dll.from_array(temp_arr, N);
+    dll.remove_at(0);
+
+    test_results["remove head"] = dll[0] == 2;
+
+    dll.from_array(temp_arr, N);
+    dll.remove_at(9);
+
+    test_results["remove end"] = dll[8] == 9;
 
     dll.from_array(temp_arr, N);
     dll.remove_at(4);
