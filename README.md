@@ -11,9 +11,9 @@ Standard library under the PixelDancer package.
 
 ## Usage
 
-- Clone the repository with ```--recursive``` flag for the ```SIMDString``` package.
+- Clone the repository with ```--recursive``` flag.
 - In CMake, add the project as subdirectory. The project is built a library.
-- Link the library with ```pxd-stl``` and use it with the header files which are under the ```sources``` folder.
+- Link the library with ```pxd-stl``` and use it with the header files which are under the ```includes``` folder.
 
 ## TODO
 
