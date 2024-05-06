@@ -135,10 +135,6 @@ public:
       current_node = current_node->next;
     }
 
-    if (current_node == nullptr) {
-      return;
-    }
-
     remove_node(current_node);
   }
 
@@ -177,7 +173,7 @@ public:
     }
   }
 
-  void to_array(T *array) {
+  void to_array(T *array) noexcept {
     Node *current_node = head;
 
     for (int i = 0; i < length; i++) {
@@ -260,6 +256,16 @@ private:
   }
 
   inline void remove_node(Node *current_node) noexcept {
+    if (current_node == nullptr) {
+      return;
+    }
+
+    if (current_node == head) {
+      head = current_node->next;
+    } else if (current_node == end) {
+      end = current_node->prev;
+    }
+
     Node *prev_node = current_node->prev;
     Node *forw_node = current_node->next;
 
@@ -272,6 +278,8 @@ private:
     }
 
     delete current_node;
+
+    length--;
   }
 
 private:
