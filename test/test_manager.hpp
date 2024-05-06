@@ -19,7 +19,7 @@ public:
 
   void check_test_counts(bool result) noexcept {
     total_tests++;
-    passed_tests = result ? passed_tests + 1 : 0;
+    passed_tests = result ? passed_tests + 1 : passed_tests + 0;
   }
 
   void print_results() noexcept {
@@ -44,7 +44,7 @@ public:
     float passed_ratio = static_cast<float>(passed_tests) /
                          static_cast<float>(total_tests) * 100.0f;
     fmt::print(
-        " Passed Tests : {} | Total Tests : {} | Passed Ratio : {:.2f}\n",
+        " Passed Tests : {} | Total Tests : {} | Passed Ratio : %{:3.2f}\n",
         passed_tests, total_tests, passed_ratio);
 
     fmt::print(
@@ -78,7 +78,7 @@ public:
                          static_cast<float>(total_tests) * 100.f;
 
     test_file.print(
-        " Passed Tests : {} | Total Tests : {} | Passed Ratio : {:3.2f}\n",
+        " Passed Tests : {} | Total Tests : {} | Passed Ratio : %{:3.2f}\n",
         passed_tests, total_tests, passed_ratio);
 
     test_file.print(

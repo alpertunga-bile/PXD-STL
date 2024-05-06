@@ -35,6 +35,7 @@ set(HEADER_FILES
     ${PXD_INCLUDE_DIR}/handle.hpp
     ${PXD_INCLUDE_DIR}/dynamic_array.hpp
     ${PXD_INCLUDE_DIR}/matrix.hpp
+    ${PXD_INCLUDE_DIR}/double_linked_list.hpp
     
     ${PXD_INCLUDE_DIR}/regex.hpp
     ${PXD_INCLUDE_DIR}/logger.hpp
@@ -136,6 +137,7 @@ IF(PXD_STL_BUILD_TEST_EXECUTABLE)
     ENDIF(NOT MSVC)
 
     set(TEST_HEADER_FILES
+        ${PXD_TEST_DIR}/double_linked_list_tests.hpp
         ${PXD_TEST_DIR}/matrix_tests.hpp
         ${PXD_TEST_DIR}/dynamic_array_tests.hpp
         ${PXD_TEST_DIR}/queue_tests.hpp

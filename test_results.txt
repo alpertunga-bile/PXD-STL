@@ -60,6 +60,19 @@ Test Name : Stack Tests
    pop                            -> Passed
    reverse                        -> Passed
 ---------------------------------------------------------------
+Test Name : Double Linked List Tests
+   from array                     -> Passed
+   add                            -> Passed
+   array ctor                     -> Passed
+   negative index                 -> Passed
+   remove at                      -> Passed
+   add reverse                    -> Passed
+   remove                         -> Passed
+   reverse                        -> Passed
+   index                          -> Passed
+   where                          -> Passed
+   where 2                        -> Passed
+---------------------------------------------------------------
 Test Name : Dynamic Array Tests
    assign ctor                    -> Passed
    move ctor                      -> Passed
@@ -87,5 +100,5 @@ Test Name : Matrix Tests
    parant double indexing         -> Passed
    assign parant double indexing  -> Passed
 ---------------------------------------------------------------
- Passed Tests : 74 | Total Tests : 74 | Passed Ratio : 100.00
+ Passed Tests : 85 | Total Tests : 85 | Passed Ratio : %100.00
 ---------------------------------------------------------------
