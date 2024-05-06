@@ -20,8 +20,13 @@ public:
   DoubleLinkedList(T *array, int size, bool add_back = true) {
     from_array(array, size, add_back);
   }
-  DoubleLinkedList(const DoubleLinkedList<T> &other);
-  DoubleLinkedList &operator=(const DoubleLinkedList<T> &other);
+  DoubleLinkedList(const DoubleLinkedList<T> &other) {
+    from_double_linked_list(other);
+  }
+  DoubleLinkedList &operator=(const DoubleLinkedList<T> &other) {
+    from_double_linked_list(other);
+    return *this;
+  }
   constexpr DoubleLinkedList(DoubleLinkedList<T> &&other) {
     head = other.get_head_node();
     end = other.get_end_node();
@@ -41,7 +46,29 @@ public:
   }
   inline ~DoubleLinkedList() noexcept { release(); }
 
-  constexpr T &operator[](int index) noexcept {
+  T &operator[](int index) noexcept {
+    bool is_negative = false;
+    int calc_index = get_calc_min_index(index, is_negative);
+    Node *current_node = nullptr;
+
+    if (!is_negative) {
+      current_node = head;
+
+      for (int i = 0; i < calc_index; i++) {
+        current_node = current_node->next;
+      }
+    } else {
+      current_node = end;
+
+      for (int i = 1; i < calc_index; i++) {
+        current_node = current_node->prev;
+      }
+    }
+
+    return current_node->value;
+  }
+
+  decltype(auto) operator[](int index) const noexcept {
     bool is_negative = false;
     int calc_index = get_calc_min_index(index, is_negative);
     Node *current_node = nullptr;
@@ -223,7 +250,8 @@ public:
   }
 
 private:
-  inline int get_calc_min_index(int &given_index, bool &is_negative) noexcept {
+  inline int get_calc_min_index(int &given_index,
+                                bool &is_negative) const noexcept {
     int positive_index = given_index >= 0 ? given_index : length + given_index;
     int negative_index =
         given_index < 0 ? given_index * -1 : length - given_index;
@@ -280,6 +308,16 @@ private:
     delete current_node;
 
     length--;
+  }
+
+  void from_double_linked_list(const DoubleLinkedList<T> &other) {
+    release();
+
+    const int other_length = other.get_length();
+
+    for (int i = 0; i < other_length; i++) {
+      add(other[i]);
+    }
   }
 
 private:

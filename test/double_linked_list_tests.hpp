@@ -16,6 +16,8 @@ public:
     }
 
     start_array_ctor_test(temp_arr, check_arr);
+    start_copy_ctor_test(temp_arr, check_arr);
+    start_move_ctor_test(temp_arr, check_arr);
     start_add_test(temp_arr, check_arr);
     start_from_array_test(temp_arr, check_arr);
     start_add_reverse_test(temp_arr, check_arr);
@@ -33,6 +35,39 @@ public:
     dll.to_array(check_arr);
 
     test_results["array ctor"] = check_arrays<int>(temp_arr, check_arr, N);
+  }
+
+  void start_copy_ctor_test(int *temp_arr, int *check_arr) {
+    DoubleLinkedList<int> dll(temp_arr, N);
+
+    DoubleLinkedList<int> t_dll(dll);
+    t_dll.to_array(check_arr);
+
+    test_results["copy ctor"] = check_arrays<int>(temp_arr, check_arr, N);
+
+    DoubleLinkedList<int> temp_dll = dll;
+    temp_dll.to_array(check_arr);
+
+    test_results["copy assign ctor"] =
+        check_arrays<int>(temp_arr, check_arr, N);
+  }
+
+  void start_move_ctor_test(int *temp_arr, int *check_arr) {
+    DoubleLinkedList<int> dll(temp_arr, N);
+
+    DoubleLinkedList<int> t_dll(std::move(dll));
+    t_dll.to_array(check_arr);
+    t_dll.release();
+
+    test_results["move ctor"] = check_arrays<int>(temp_arr, check_arr, N);
+
+    dll.from_array(temp_arr, N);
+
+    DoubleLinkedList<int> temp_dll = std::move(dll);
+    temp_dll.to_array(check_arr);
+
+    test_results["move assign ctor"] =
+        check_arrays<int>(temp_arr, check_arr, N);
   }
 
   void start_add_test(int *temp_arr, int *check_arr) {

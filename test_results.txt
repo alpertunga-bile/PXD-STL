@@ -65,11 +65,15 @@ Test Name : Double Linked List Tests
    add                            -> Passed
    remove end                     -> Passed
    array ctor                     -> Passed
-   negative index                 -> Passed
-   remove at                      -> Passed
    add reverse                    -> Passed
+   copy ctor                      -> Passed
+   move ctor                      -> Passed
+   move assign ctor               -> Passed
+   copy assign ctor               -> Passed
    reverse                        -> Passed
    index                          -> Passed
+   negative index                 -> Passed
+   remove at                      -> Passed
    remove between                 -> Passed
    remove head                    -> Passed
    where                          -> Passed
@@ -102,5 +106,5 @@ Test Name : Matrix Tests
    parant double indexing         -> Passed
    assign parant double indexing  -> Passed
 ---------------------------------------------------------------
- Passed Tests : 87 | Total Tests : 87 | Passed Ratio : %100.00
+ Passed Tests : 91 | Total Tests : 91 | Passed Ratio : %100.00
 ---------------------------------------------------------------
