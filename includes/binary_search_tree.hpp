@@ -33,6 +33,9 @@ private:
   };
 
 public:
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // Constructors
+
   constexpr BinarySearchTree() noexcept = default;
   BinarySearchTree(T *values, int size, bool is_balance = false) {
     from_array(values, size, is_balance);
@@ -64,12 +67,18 @@ public:
   }
   inline ~BinarySearchTree() noexcept { release(); }
 
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // Operator Overloads
+
   constexpr inline bool operator==(BinarySearchTree<T> &other) noexcept {
     return other.get_root() == root;
   }
   constexpr inline bool operator!=(BinarySearchTree<T> &other) noexcept {
     return other.get_root() != root;
   }
+
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // DS Functionalities
 
   inline void release() noexcept {
     if (root == nullptr) {
@@ -103,44 +112,6 @@ public:
   }
 
   void add(T &&value) { add(value); }
-
-  void from_array(T *array, int size, bool is_balance) {
-    construct_from_array(array, size);
-
-    if (is_balance) {
-      balance_self();
-    }
-  }
-
-  void from_array(Array<T> &array, bool is_balance) {
-    if (array.get_length() == 0) {
-      return;
-    }
-
-    construct_from_array(array.get_ptr(), array.get_length());
-
-    if (is_balance) {
-      balance_self();
-    }
-  }
-
-  void from_linked_list(LinkedList<T> &linked_list, bool is_balance) {
-    if (linked_list.get_length() == 0) {
-      return 0;
-    }
-
-    release();
-
-    const int size = linked_list.get_length();
-
-    for (int i = 0; i < size; i++) {
-      add(linked_list[i]);
-    }
-
-    if (is_balance) {
-      balance_self();
-    }
-  }
 
   void remove(T &value) noexcept {
     if (root == nullptr) {
@@ -186,54 +157,6 @@ public:
   }
 
   void remove(T &&value) noexcept { remove(value); }
-
-  void get_order(T *array, eBST_ORDER &&order) const {
-    if (root == nullptr) {
-      return;
-    }
-
-    PXD_ASSERT(array != nullptr);
-    int index = 0;
-
-    switch (order) {
-    case eBST_ORDER::INORDER:
-      inorder(root, array, index);
-      break;
-    case eBST_ORDER::PREORDER:
-      preorder(root, array, index);
-      break;
-    case eBST_ORDER::POSTORDER:
-      postorder(root, array, index);
-      break;
-
-    default:
-      break;
-    }
-  }
-
-  void get_order(Array<T> &array, eBST_ORDER &&order) const {
-    if (root == nullptr) {
-      return;
-    }
-
-    array.reallocate(total_node_count);
-    int index = 0;
-
-    switch (order) {
-    case eBST_ORDER::INORDER:
-      inorder(root, array.get_ptr(), index);
-      break;
-    case eBST_ORDER::PREORDER:
-      preorder(root, array.get_ptr(), index);
-      break;
-    case eBST_ORDER::POSTORDER:
-      postorder(root, array.get_ptr(), index);
-      break;
-
-    default:
-      break;
-    }
-  }
 
   BinarySearchTree<T> get_balanced_tree() {
     if (root == nullptr && total_node_count < 3) {
@@ -316,6 +239,101 @@ public:
 
     return current_node->value;
   }
+
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // From Functions
+
+  void from_array(T *array, int size, bool is_balance) {
+    construct_from_array(array, size);
+
+    if (is_balance) {
+      balance_self();
+    }
+  }
+
+  void from_array(Array<T> &array, bool is_balance) {
+    if (array.get_length() == 0) {
+      return;
+    }
+
+    construct_from_array(array.get_ptr(), array.get_length());
+
+    if (is_balance) {
+      balance_self();
+    }
+  }
+
+  void from_linked_list(LinkedList<T> &linked_list, bool is_balance) {
+    if (linked_list.get_length() == 0) {
+      return 0;
+    }
+
+    release();
+
+    const int size = linked_list.get_length();
+
+    for (int i = 0; i < size; i++) {
+      add(linked_list[i]);
+    }
+
+    if (is_balance) {
+      balance_self();
+    }
+  }
+
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // To Functions
+
+  void get_order(T *array, eBST_ORDER &&order) const {
+    if (root == nullptr) {
+      return;
+    }
+
+    PXD_ASSERT(array != nullptr);
+    int index = 0;
+
+    switch (order) {
+    case eBST_ORDER::INORDER:
+      inorder(root, array, index);
+      break;
+    case eBST_ORDER::PREORDER:
+      preorder(root, array, index);
+      break;
+    case eBST_ORDER::POSTORDER:
+      postorder(root, array, index);
+      break;
+
+    default:
+      break;
+    }
+  }
+
+  void get_order(Array<T> &array, eBST_ORDER &&order) const {
+    if (root == nullptr) {
+      return;
+    }
+
+    array.reallocate(total_node_count);
+    int index = 0;
+
+    switch (order) {
+    case eBST_ORDER::INORDER:
+      inorder(root, array.get_ptr(), index);
+      break;
+    case eBST_ORDER::PREORDER:
+      preorder(root, array.get_ptr(), index);
+      break;
+    case eBST_ORDER::POSTORDER:
+      postorder(root, array.get_ptr(), index);
+      break;
+
+    default:
+      break;
+    }
+  }
+
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // Inline Member Funcs
 
   inline Node *get_root() const noexcept { return root; }
   inline int get_total_node_count() const noexcept { return total_node_count; }

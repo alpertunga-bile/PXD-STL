@@ -9,7 +9,8 @@ template <typename T> class Array;
 template <typename T> class DynamicArray;
 
 template <typename T> class DoubleLinkedList {
-private:
+  // public for fast transition between data structures
+public:
   struct Node {
     T value;
     Node *next = nullptr;
@@ -17,7 +18,10 @@ private:
   };
 
 public:
-  constexpr DoubleLinkedList() noexcept {
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // Constructors
+
+  DoubleLinkedList() {
     head = nullptr;
     end = nullptr;
     length = 0;
@@ -60,6 +64,9 @@ public:
   }
   inline ~DoubleLinkedList() noexcept { release(); }
 
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // Operator Overloads
+
   T &operator[](int index) noexcept {
     bool is_negative = false;
     int calc_index = get_calc_min_index(index, is_negative);
@@ -81,6 +88,9 @@ public:
 
     return current_node->value;
   }
+
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // DS Functionalities
 
   inline void release() noexcept {
     if (head == nullptr) {
@@ -195,6 +205,39 @@ public:
     head = current_node;
   }
 
+  int where(T &value) noexcept {
+    Node *from_head = head;
+    Node *from_end = end;
+
+    int head_index = 0;
+    int end_index = length - 1;
+    int index = length;
+
+    do {
+      if (from_head->value == value) {
+        index = head_index;
+        break;
+      }
+
+      if (from_end->value == value) {
+        index = end_index;
+        break;
+      }
+
+      from_head = from_head->next;
+      from_end = from_end->prev;
+      head_index++;
+      end_index--;
+    } while (head_index <= end_index);
+
+    return index;
+  }
+
+  int where(T &&value) noexcept { return where(value); }
+
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // From Functions
+
   inline void from_array(T *array, int size, bool add_back = true) noexcept {
     release();
 
@@ -231,6 +274,9 @@ public:
       add(linked_list[i], add_back);
     }
   }
+
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // To Functions
 
   inline void to_array(T *array) noexcept {
     Node *current_node = head;
@@ -272,35 +318,8 @@ public:
     }
   }
 
-  int where(T &value) noexcept {
-    Node *from_head = head;
-    Node *from_end = end;
-
-    int head_index = 0;
-    int end_index = length - 1;
-    int index = length;
-
-    do {
-      if (from_head->value == value) {
-        index = head_index;
-        break;
-      }
-
-      if (from_end->value == value) {
-        index = end_index;
-        break;
-      }
-
-      from_head = from_head->next;
-      from_end = from_end->prev;
-      head_index++;
-      end_index--;
-    } while (head_index <= end_index);
-
-    return index;
-  }
-
-  int where(T &&value) noexcept { return where(value); }
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // Inline Member Funcs
 
   inline Node *get_head_node() const noexcept { return head; }
   inline Node *get_end_node() const noexcept { return end; }

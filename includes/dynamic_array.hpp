@@ -8,6 +8,9 @@ template <typename T> class Array;
 
 template <typename T> class DynamicArray {
 public:
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // Constructors
+
   constexpr DynamicArray() noexcept = default;
   constexpr DynamicArray(int size, int inc_size = 5)
       : inc_size_count(inc_size) {
@@ -45,7 +48,13 @@ public:
   }
   inline ~DynamicArray() noexcept { release(); }
 
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // Operator Overloads
+
   constexpr decltype(auto) operator[](int index) { return array[index]; }
+
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // DS Functionalities
 
   void add(T &value) {
     if (total_capacity == 0) {
@@ -110,6 +119,9 @@ public:
     total_capacity += size;
     total_byte_size = total_capacity * sizeof(T);
   }
+
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // Inline Member Funcs
 
   inline Array<T> get_array() const noexcept { return array; }
   inline T *get_data() const noexcept { return array.get_ptr(); }

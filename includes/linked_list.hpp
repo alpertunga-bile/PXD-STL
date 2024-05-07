@@ -9,7 +9,8 @@ template <typename T> class DoubleLinkedList;
 template <typename T> class DynamicArray;
 
 template <typename T> class LinkedList {
-private:
+  // public for fast conversions
+public:
   struct Node {
     T value;
     Node *next = nullptr;
@@ -17,7 +18,7 @@ private:
 
 public:
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Constructors & Deconstructor
+  // Constructors
 
   constexpr LinkedList() noexcept {
     head = nullptr;
@@ -61,6 +62,9 @@ public:
   }
   inline ~LinkedList() noexcept { release(); }
 
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Operator Overloads
+
   T &operator[](int index) noexcept {
     const int calc_index = get_calc_index(index);
 
@@ -90,7 +94,7 @@ public:
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Class Functionalities
+  // DS Functionalities
 
   inline void release() noexcept {
     if (head == nullptr) {
@@ -151,9 +155,6 @@ public:
 
     return index;
   }
-
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Element Functions
 
   // for left values
   inline void add(T &new_value, bool add_back = true) noexcept {
@@ -224,7 +225,49 @@ public:
   void remove(T &&value) noexcept { remove(value); }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Conversions
+  // From Functions
+
+  inline void from_array(T *node_list, int size, bool is_reverse = false) {
+    release();
+
+    for (int i = 0; i < size; i++) {
+      add(node_list[i], !is_reverse);
+    }
+  }
+
+  inline void from_array(Array<T> &node_list, bool is_reverse = false) {
+    release();
+
+    const int size = node_list.get_length();
+
+    for (int i = 0; i < size; i++) {
+      add(node_list[i], !is_reverse);
+    }
+  }
+
+  inline void from_array(DynamicArray<T> &node_list, bool is_reverse = false) {
+    release();
+
+    const int size = node_list.get_element_count();
+
+    for (int i = 0; i < size; i++) {
+      add(node_list[i], !is_reverse);
+    }
+  }
+
+  inline void from_double_linked_list(DoubleLinkedList<T> &double_linked_list,
+                                      bool is_reverse = false) {
+    release();
+
+    const int size = double_linked_list.get_length();
+
+    for (int i = 0; i < size; i++) {
+      add(double_linked_list[i], !is_reverse);
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // To Functions
 
   void to_array(T *array) {
     if (is_empty()) {
@@ -269,47 +312,8 @@ public:
     }
   }
 
-  inline void from_array(T *node_list, int size, bool is_reverse = false) {
-    release();
-
-    for (int i = 0; i < size; i++) {
-      add(node_list[i], !is_reverse);
-    }
-  }
-
-  inline void from_array(Array<T> &node_list, bool is_reverse = false) {
-    release();
-
-    const int size = node_list.get_length();
-
-    for (int i = 0; i < size; i++) {
-      add(node_list[i], !is_reverse);
-    }
-  }
-
-  inline void from_array(DynamicArray<T> &node_list, bool is_reverse = false) {
-    release();
-
-    const int size = node_list.get_element_count();
-
-    for (int i = 0; i < size; i++) {
-      add(node_list[i], !is_reverse);
-    }
-  }
-
-  inline void from_double_linked_list(DoubleLinkedList<T> &double_linked_list,
-                                      bool is_reverse = false) {
-    release();
-
-    const int size = double_linked_list.get_length();
-
-    for (int i = 0; i < size; i++) {
-      add(double_linked_list[i], !is_reverse);
-    }
-  }
-
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Variable Functions
+  // Inline Member Funcs
 
   constexpr inline size_t get_byte_size() const noexcept {
     return length * sizeof(T);

@@ -5,6 +5,9 @@
 namespace pxd {
 template <typename T> class Array {
 public:
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // Constructors
+
   constexpr Array() {
     arr_ptr = nullptr;
     length = 0;
@@ -12,9 +15,7 @@ public:
   } // default constructor
   constexpr Array(int size) { allocate(size); }
   Array(T *given_array, int size) { allocate(given_array, size); }
-
   constexpr Array(const Array<T> &other) { from(other); } // copy constructor
-
   constexpr Array(Array<T> &&other) noexcept {
     arr_ptr = other.get_ptr();
     length = other.get_length();
@@ -22,7 +23,6 @@ public:
 
     other.exec_move();
   } // move constructor
-
   constexpr Array &operator=(Array<T> &&other) noexcept {
     release();
 
@@ -34,13 +34,11 @@ public:
 
     return *this;
   }
-
   constexpr Array &operator=(const Array<T> &other) {
     from(other);
 
     return *this;
-  } // copy assignment
-
+  }                        // copy assignment
   inline ~Array() noexcept // deconstructor
   {
     if (arr_ptr == nullptr) {
@@ -49,6 +47,9 @@ public:
 
     delete[] arr_ptr;
   }
+
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // Operator Overloads
 
   constexpr bool operator==(Array<T> &other) noexcept { return compare(other); }
   constexpr bool operator!=(Array<T> &other) noexcept { return compare(other); }
@@ -74,6 +75,9 @@ public:
 
     return arr_ptr[index];
   }
+
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // DS Functionalities
 
   constexpr inline int where(T &value) noexcept {
     int index = 0;
@@ -118,14 +122,6 @@ public:
     byte_size = 0;
   }
 
-  void copy_to(Array<T> &to) {
-    if (to.get_length() != length) {
-      to.resize(length);
-    }
-
-    copy_full(arr_ptr, to.get_ptr());
-  }
-
   void expand(Array<T> &given_array) {
     if (given_array.get_length() == 0) {
       return;
@@ -159,6 +155,20 @@ public:
     copy(given_array, arr_ptr + old_length, size * sizeof(T));
   }
 
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // To Functions
+
+  void copy_to(Array<T> &to) {
+    if (to.get_length() != length) {
+      to.resize(length);
+    }
+
+    copy_full(arr_ptr, to.get_ptr());
+  }
+
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // Inline Member Funcs
+
   inline T *get_ptr() noexcept { return arr_ptr; }
   inline T *get_ptr() const noexcept { return arr_ptr; }
   inline int get_length() const noexcept { return length; }
@@ -170,7 +180,7 @@ public:
     return ((float)byte_size) / (1024.f * 1024.f);
   }
   inline size_t get_data_size() const noexcept { return sizeof(T); }
-  constexpr inline void exec_move() noexcept {
+  constexpr void exec_move() noexcept {
     arr_ptr = nullptr;
     length = 0;
     byte_size = 0;

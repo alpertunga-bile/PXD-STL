@@ -5,14 +5,24 @@
 #include <cstdint>
 
 namespace pxd {
+
+template <typename T> class Array;
+template <typename T> class DynamicArray;
+template <typename T> class LinkedList;
+template <typename T> class DoubleLinkedList;
+
 template <typename T> class XORDoubleLinkedList {
-private:
+  // public for fast conversions
+public:
   struct Node {
     T value;
     Node *dir = nullptr;
   };
 
 public:
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Constructors
+
   XORDoubleLinkedList() = default;
   XORDoubleLinkedList(T *array, int size) { from_array(array, size); }
   XORDoubleLinkedList(const XORDoubleLinkedList<T> &other) {
@@ -45,29 +55,8 @@ public:
   }
   inline ~XORDoubleLinkedList() noexcept { release(); }
 
-  inline void release() noexcept {
-    if (head == nullptr) {
-      return;
-    }
-
-    Node *current_node = head;
-    Node *prev_node = nullptr;
-    Node *next_node = nullptr;
-
-    for (int i = 0; i < length; i++) {
-      next_node = XOR(prev_node, current_node->dir);
-      prev_node = current_node;
-
-      delete current_node;
-      current_node = nullptr;
-
-      current_node = next_node;
-    }
-
-    head = nullptr;
-    end = nullptr;
-    length = 0;
-  }
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Operator Overloads
 
   T &operator[](int index) noexcept {
     bool is_negative = false;
@@ -96,6 +85,33 @@ public:
     }
 
     return current_node->value;
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // DS Functionalities
+
+  inline void release() noexcept {
+    if (head == nullptr) {
+      return;
+    }
+
+    Node *current_node = head;
+    Node *prev_node = nullptr;
+    Node *next_node = nullptr;
+
+    for (int i = 0; i < length; i++) {
+      next_node = XOR(prev_node, current_node->dir);
+      prev_node = current_node;
+
+      delete current_node;
+      current_node = nullptr;
+
+      current_node = next_node;
+    }
+
+    head = nullptr;
+    end = nullptr;
+    length = 0;
   }
 
   void add(T &value, bool add_back = true) noexcept {
@@ -151,6 +167,9 @@ public:
 
   void remove(T &&value) { remove(value); }
 
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // From Functions
+
   inline void from_array(T *array, int size) {
     release();
 
@@ -158,6 +177,49 @@ public:
       add(array[i]);
     }
   }
+
+  inline void from_array(Array<T> &array) {
+    release();
+
+    const int size = array.get_length();
+
+    for (int i = 0; i < size; i++) {
+      add(array[i]);
+    }
+  }
+
+  inline void from_array(DynamicArray<T> &array) {
+    release();
+
+    const int size = array.get_element_count();
+
+    for (int i = 0; i < size; i++) {
+      add(array[i]);
+    }
+  }
+
+  inline void from_linked_list(LinkedList<T> &ll) {
+    release();
+
+    const int size = ll.get_length();
+
+    for (int i = 0; i < size; i++) {
+      add(ll[i]);
+    }
+  }
+
+  inline void from_double_linked_list(DoubleLinkedList<T> &dll) {
+    release();
+
+    const int size = dll.get_length();
+
+    for (int i = 0; i < size; i++) {
+      add(dll[i]);
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // To Functions
 
   void to_array(T *array) {
     if (head == nullptr) {
@@ -176,6 +238,9 @@ public:
       current_node = next_node;
     }
   }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Inline Member Funcs
 
   inline Node *get_head_node() const noexcept { return head; }
   inline Node *get_end_node() const noexcept { return end; }
