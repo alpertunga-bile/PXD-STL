@@ -82,28 +82,6 @@ public:
     return current_node->value;
   }
 
-  decltype(auto) operator[](int index) const noexcept {
-    bool is_negative = false;
-    int calc_index = get_calc_min_index(index, is_negative);
-    Node *current_node = nullptr;
-
-    if (!is_negative) {
-      current_node = head;
-
-      for (int i = 0; i < calc_index; i++) {
-        current_node = current_node->next;
-      }
-    } else {
-      current_node = end;
-
-      for (int i = 1; i < calc_index; i++) {
-        current_node = current_node->prev;
-      }
-    }
-
-    return current_node->value;
-  }
-
   inline void release() noexcept {
     if (head == nullptr) {
       return;
@@ -399,13 +377,16 @@ private:
     }
   }
 
-  void from_double_linked_list(const DoubleLinkedList<T> &other) {
+  inline void from_double_linked_list(const DoubleLinkedList<T> &other) {
     release();
 
     const int other_length = other.get_length();
 
+    Node *current_node = other.get_head_node();
+
     for (int i = 0; i < other_length; i++) {
-      add(other[i]);
+      add(current_node->value);
+      current_node = current_node->next;
     }
   }
 
