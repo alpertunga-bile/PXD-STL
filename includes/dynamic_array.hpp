@@ -103,6 +103,9 @@ public:
     total_byte_size = element_count * sizeof(T);
   }
 
+  // ///////////////////////////////////////////////////////////////////////////////////////////////////
+  // From Functions
+
   void expand(T *new_values, int size) {
     array.expand(new_values, size);
 

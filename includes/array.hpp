@@ -8,7 +8,7 @@ public:
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // Constructors
 
-  constexpr Array() {
+  Array() {
     arr_ptr = nullptr;
     length = 0;
     byte_size = 0;
@@ -54,18 +54,7 @@ public:
   constexpr bool operator==(Array<T> &other) noexcept { return compare(other); }
   constexpr bool operator!=(Array<T> &other) noexcept { return compare(other); }
 
-  constexpr decltype(auto) operator[](int index) {
-    PXD_ASSERT(index < length);
-
-    if (index < 0) {
-      PXD_ASSERT(length + index >= 0);
-      return arr_ptr[length + index];
-    }
-
-    return arr_ptr[index];
-  }
-
-  constexpr decltype(auto) operator[](int index) const {
+  decltype(auto) operator[](int index) {
     PXD_ASSERT(index < length);
 
     if (index < 0) {
