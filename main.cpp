@@ -6,12 +6,11 @@
 #include "test/matrix_tests.hpp"
 #include "test/queue_tests.hpp"
 #include "test/stack_tests.hpp"
+#include "test/xor_double_linked_list_tests.hpp"
 
 #include "test/test_manager.hpp"
 
 #include "logger.hpp"
-
-#include "double_linked_list.hpp"
 
 void do_test() {
   LOG_WARNING("WARNING");
@@ -28,6 +27,7 @@ void do_test() {
   pxd::DynamicArrayTests dynamic_array_tests;
   pxd::MatrixTests matrix_tests;
   pxd::DoubleLinkedListTests double_linked_list_tests;
+  pxd::XORDoubleLinkedListTests xor_double_linked_list_tests;
 
   test_manager.add_test("Array Tests", array_tests);
   test_manager.add_test("Linked List Tests", linked_list_tests);
@@ -37,6 +37,8 @@ void do_test() {
   test_manager.add_test("Dynamic Array Tests", dynamic_array_tests);
   test_manager.add_test("Matrix Tests", matrix_tests);
   test_manager.add_test("Double Linked List Tests", double_linked_list_tests);
+  test_manager.add_test("XOR Double Linked List Tests",
+                        xor_double_linked_list_tests);
 
   test_manager.print_results();
   test_manager.save_results();

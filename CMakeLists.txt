@@ -20,6 +20,7 @@ set(PXD_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/sources)
 set(PXD_THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third-party)
 set(PXD_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
 
+# check if used with subdirectory or main project
 IF(NOT ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}"))
     set(PXD_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes PARENT_SCOPE)
 ELSE()
@@ -36,6 +37,7 @@ set(HEADER_FILES
     ${PXD_INCLUDE_DIR}/dynamic_array.hpp
     ${PXD_INCLUDE_DIR}/matrix.hpp
     ${PXD_INCLUDE_DIR}/double_linked_list.hpp
+    ${PXD_INCLUDE_DIR}/xor_double_linked_list.hpp
     
     ${PXD_INCLUDE_DIR}/regex.hpp
     ${PXD_INCLUDE_DIR}/logger.hpp
@@ -72,26 +74,12 @@ include_directories(
 )
 
 set(COMMON_STD_HEADERS
-    <cstdlib>
+    <stdlib.h>
+    <cstdint>
 
     # Logger is using these headers
     <filesystem>
     <fstream>
-
-    # SIMDString is using these headers
-    <algorithm>
-    <assert.h>
-    <cstddef>
-    <cstring>
-    <errno.h>
-    <initializer_list>
-    <ios>
-    <iterator>
-    <limits>
-    <stdint.h>
-    "<string>"
-    <string_view>
-    <immintrin.h>
 )
 
 set(ABSL_PROPAGATE_CXX_STD ON)
@@ -138,6 +126,7 @@ IF(PXD_STL_BUILD_TEST_EXECUTABLE)
     ENDIF(NOT MSVC)
 
     set(TEST_HEADER_FILES
+        ${PXD_TEST_DIR}/xor_double_linked_list_tests.hpp
         ${PXD_TEST_DIR}/double_linked_list_tests.hpp
         ${PXD_TEST_DIR}/matrix_tests.hpp
         ${PXD_TEST_DIR}/dynamic_array_tests.hpp

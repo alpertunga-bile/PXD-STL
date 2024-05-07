@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core.h"
-#include <cstdlib>
+#include "core.h"   // fmt/core.h
+#include <stdlib.h> // don't need the math.h lib so not using cstdlib
 
 #ifndef __FUNCTION_NAME__
 #ifdef _WIN32

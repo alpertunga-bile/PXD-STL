@@ -30,6 +30,7 @@ public:
     delete[] check_arr;
   }
 
+private:
   void start_array_ctor_test(int *temp_arr, int *check_arr) {
     DoubleLinkedList<int> dll(temp_arr, N);
     dll.to_array(check_arr);

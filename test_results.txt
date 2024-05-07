@@ -35,6 +35,19 @@ Test Name : Binary Search Tree Tests
    get balanced tree              -> Passed
    remove                         -> Passed
 ---------------------------------------------------------------
+Test Name : XOR Double Linked List Tests
+   array ctor                     -> Passed
+   add                            -> Passed
+   remove end                     -> Passed
+   negative index                 -> Passed
+   move ctor                      -> Passed
+   copy ctor                      -> Passed
+   move assign ctor               -> Passed
+   copy assign ctor               -> Passed
+   index                          -> Passed
+   remove between                 -> Passed
+   remove head                    -> Passed
+---------------------------------------------------------------
 Test Name : Linked List Tests
    normal array init              -> Passed
    negative indexing              -> Passed
@@ -106,5 +119,5 @@ Test Name : Matrix Tests
    parant double indexing         -> Passed
    assign parant double indexing  -> Passed
 ---------------------------------------------------------------
- Passed Tests : 91 | Total Tests : 91 | Passed Ratio : %100.00
+ Passed Tests : 102 | Total Tests : 102 | Passed Ratio : %100.00
 ---------------------------------------------------------------
