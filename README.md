@@ -17,8 +17,8 @@ Standard library under the PixelDancer package.
 
 ## TODO
 
-- [ ] Double Linked List
-- [ ] XOR Double Linked List
+- [x] Double Linked List
+- [x] XOR Double Linked List
 - [ ] Undirectional Graph
 - [ ] Directional Graph
 - [ ] Octree with Point
