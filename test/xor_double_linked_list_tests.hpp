@@ -26,6 +26,7 @@ public:
     delete[] check_arr;
   }
 
+private:
   void start_array_ctor_test(int *temp_arr, int *check_arr) {
     XORDoubleLinkedList<int> xdll(temp_arr, N);
     xdll.to_array(check_arr);
@@ -94,7 +95,6 @@ public:
     test_results["remove end"] = xdll[6] == 9;
   }
 
-private:
 private:
   int N = 10;
 };
