@@ -14,39 +14,60 @@ private:
   };
 
 public:
-  void insert(T element, int priority) {
+  void insert(T &element, int priority) {
     Node new_node;
     new_node.value = element;
     new_node.priority = priority;
 
     nodes.add(new_node);
-    length++;
 
-    reorder(length - 1);
+    ascend_node(nodes.get_element_count() - 1);
   }
 
   T top() {
-    PXD_ASSERT(length > 0);
+    PXD_ASSERT(nodes.get_element_count() > 0);
 
-    Node last_element = nodes[length - 1];
-    length--;
+    Node last_element = nodes.remove_last();
 
-    if (length == 0) {
+    if (nodes.get_element_count() == 0) {
       nodes.resize(0);
       return last_element.value;
     }
 
     Node root_node = nodes[0];
     nodes[0] = last_element;
-    push_down_node(0);
-
-    nodes.resize(length);
+    descend_node(0);
 
     return root_node.value;
   }
 
+  inline T peek() {
+    PXD_ASSERT(nodes.get_element_count() > 0);
+
+    return nodes[0].value;
+  }
+
+  void update_priority(T &value, int new_priority) {
+    int index;
+    find(value, index, 0, nodes.get_element_count() - 1);
+
+    if (index < 0) {
+      return;
+    }
+
+    int old_priority = nodes[index].priority;
+    nodes[index].value = value;
+    nodes[index].priority = new_priority;
+
+    if (new_priority > old_priority) {
+      ascend_node(index);
+    } else if (new_priority < old_priority) {
+      descend_node(index);
+    }
+  }
+
 private:
-  void reorder(int index) {
+  void ascend_node(int index) {
     int current_index = index;
     Node current_node = nodes[index];
 
@@ -64,7 +85,7 @@ private:
     nodes[current_index] = current_node;
   }
 
-  void push_down_node(int index = 0) {
+  void descend_node(int index = 0) {
     int current_index = index;
     const int first_leaf_index = get_first_leaf_index();
 
@@ -92,7 +113,7 @@ private:
     int highest_child_index = child_index + 1;
 
     for (int i = 2; i < D; i++) {
-      if (child_index + i >= length) {
+      if (child_index + i >= nodes.get_element_count()) {
         return highest_child_index;
       }
 
@@ -102,7 +123,7 @@ private:
       }
     }
 
-    if ((D * parent_index + 1) >= length) {
+    if ((D * parent_index + 1) >= nodes.get_element_count()) {
       return highest_child_index;
     }
 
@@ -114,11 +135,28 @@ private:
     return highest_child_index;
   }
 
-  inline int get_parent_index(int index) { return (index - 1) / D; }
-  inline int get_first_leaf_index() { return (length - 2) / D + 1; }
+  inline int get_parent_index(int index) noexcept { return (index - 1) / D; }
+  inline int get_first_leaf_index() noexcept {
+    return (nodes.get_element_count() - 2) / D + 1;
+  }
+
+  void find(T &value, int &index, int start, int end) {
+    if (start > end) {
+      index = -1;
+      return;
+    }
+
+    int mid = (end - start) / 2;
+    if (nodes[mid].value == value) {
+      index = mid;
+      return;
+    }
+
+    find(value, index, start, mid - 1);
+    find(value, index, mid + 1, end);
+  }
 
 private:
   DynamicArray<Node> nodes;
-  int length = 0;
 };
 } // namespace pxd
