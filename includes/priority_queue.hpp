@@ -6,23 +6,25 @@ namespace pxd {
 
 template <typename T> class DynamicArray;
 
-template <typename T, int D> class PriorityQueue {
+template <typename T, int D = 3, bool is_max_heap = true> class PriorityQueue {
 private:
   struct Node {
     T value;
-    int priority = 0;
+    int priority = is_max_heap ? 0 : INT_MIN;
   };
 
 public:
   void insert(T &element, int priority) {
     Node new_node;
     new_node.value = element;
-    new_node.priority = priority;
+    new_node.priority = is_max_heap ? priority : -1 * priority;
 
     nodes.add(new_node);
 
     ascend_node(nodes.get_element_count() - 1);
   }
+
+  inline void insert(T &&element, int priority) { insert(element, priority); }
 
   T top() {
     PXD_ASSERT(nodes.get_element_count() > 0);
@@ -66,7 +68,19 @@ public:
     }
   }
 
+  inline void update_priority(T &&value, int new_priority) {
+    update_priority(value, new_priority);
+  }
+
 private:
+  void heapify() {
+    int i = (nodes.get_element_count() - 1) / D;
+
+    for (; i >= 0; i++) {
+      descend_node(i);
+    }
+  }
+
   void ascend_node(int index) {
     int current_index = index;
     Node current_node = nodes[index];

@@ -49,11 +49,13 @@ void do_test() {
 int main() {
   // do_test();
 
-  pxd::PriorityQueue<char, 3> pq;
+  pxd::PriorityQueue<char> pq;
 
   pq.insert('a', 10);
   pq.insert('b', 2);
   pq.insert('c', 20);
+
+  pq.update_priority('b', 4123);
 
   char top_val = pq.top();
   top_val = pq.top();
