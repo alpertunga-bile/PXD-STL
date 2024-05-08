@@ -111,8 +111,6 @@ public:
     T last_node = array[element_count - 1];
     element_count--;
 
-    resize(element_count);
-
     return last_node;
   }
 
