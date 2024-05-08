@@ -10,6 +10,8 @@
 
 #include "test/test_manager.hpp"
 
+#include "priority_queue.hpp"
+
 #include "logger.hpp"
 
 void do_test() {
@@ -45,7 +47,19 @@ void do_test() {
 }
 
 int main() {
-  do_test();
+  // do_test();
+
+  pxd::PriorityQueue<char, 3> pq;
+
+  pq.insert('a', 10);
+  pq.insert('b', 2);
+  pq.insert('c', 20);
+
+  char top_val = pq.top();
+  top_val = pq.top();
+  top_val = pq.top();
+
+  pq.insert('d', 312);
 
   return 0;
 }

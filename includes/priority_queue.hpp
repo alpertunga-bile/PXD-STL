@@ -1,0 +1,124 @@
+#pragma once
+
+#include "checks.hpp"
+
+namespace pxd {
+
+template <typename T> class DynamicArray;
+
+template <typename T, int D> class PriorityQueue {
+private:
+  struct Node {
+    T value;
+    int priority = 0;
+  };
+
+public:
+  void insert(T element, int priority) {
+    Node new_node;
+    new_node.value = element;
+    new_node.priority = priority;
+
+    nodes.add(new_node);
+    length++;
+
+    reorder(length - 1);
+  }
+
+  T top() {
+    PXD_ASSERT(length > 0);
+
+    Node last_element = nodes[length - 1];
+    length--;
+
+    if (length == 0) {
+      nodes.resize(0);
+      return last_element.value;
+    }
+
+    Node root_node = nodes[0];
+    nodes[0] = last_element;
+    push_down_node(0);
+
+    nodes.resize(length);
+
+    return root_node.value;
+  }
+
+private:
+  void reorder(int index) {
+    int current_index = index;
+    Node current_node = nodes[index];
+
+    while (current_index > 0) {
+      int parent_index = get_parent_index(current_index);
+
+      if (nodes[parent_index].priority < current_node.priority) {
+        nodes[current_index] = nodes[parent_index];
+        current_index = parent_index;
+      } else {
+        break;
+      }
+    }
+
+    nodes[current_index] = current_node;
+  }
+
+  void push_down_node(int index = 0) {
+    int current_index = index;
+    const int first_leaf_index = get_first_leaf_index();
+
+    Node current_node = nodes[current_index];
+    Node child_node;
+
+    while (current_index < first_leaf_index) {
+      int child_index = get_highest_priority_leaf(current_index);
+      child_node = nodes[child_index];
+
+      if (child_node.priority > current_node.priority) {
+        nodes[current_index] = nodes[child_index];
+        current_index = child_index;
+      } else {
+        break;
+      }
+    }
+
+    nodes[current_index] = current_node;
+  }
+
+  inline int get_highest_priority_leaf(int parent_index) {
+    const int child_index = D * parent_index;
+    Node child_node = nodes[child_index];
+    int highest_child_index = child_index + 1;
+
+    for (int i = 2; i < D; i++) {
+      if (child_index + i >= length) {
+        return highest_child_index;
+      }
+
+      if (nodes[child_index + i].priority > child_node.priority) {
+        child_node = nodes[child_index + i];
+        highest_child_index = child_index + i;
+      }
+    }
+
+    if ((D * parent_index + 1) >= length) {
+      return highest_child_index;
+    }
+
+    if (nodes[D * (parent_index + 1)].priority > child_node.priority) {
+      child_node = nodes[D * (parent_index + 1)];
+      highest_child_index = D * (parent_index + 1);
+    }
+
+    return highest_child_index;
+  }
+
+  inline int get_parent_index(int index) { return (index - 1) / D; }
+  inline int get_first_leaf_index() { return (length - 2) / D + 1; }
+
+private:
+  DynamicArray<Node> nodes;
+  int length = 0;
+};
+} // namespace pxd

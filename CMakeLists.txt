@@ -38,6 +38,7 @@ set(HEADER_FILES
     ${PXD_INCLUDE_DIR}/matrix.hpp
     ${PXD_INCLUDE_DIR}/double_linked_list.hpp
     ${PXD_INCLUDE_DIR}/xor_double_linked_list.hpp
+    ${PXD_INCLUDE_DIR}/priority_queue.hpp
     
     ${PXD_INCLUDE_DIR}/regex.hpp
     ${PXD_INCLUDE_DIR}/logger.hpp
@@ -63,6 +64,7 @@ set(LIB_SOURCE_FILES
     ${PXD_SOURCE_DIR}/regex.cpp
     ${PXD_SOURCE_DIR}/double_linked_list.cpp
     ${PXD_SOURCE_DIR}/xor_double_linked_list.cpp
+    ${PXD_SOURCE_DIR}/priority_queue.cpp
 
     ${HEADER_FILES}
 )
