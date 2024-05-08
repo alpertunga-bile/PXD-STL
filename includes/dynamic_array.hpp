@@ -103,6 +103,19 @@ public:
     total_byte_size = element_count * sizeof(T);
   }
 
+  T remove_last() {
+    if (element_count == 0) {
+      return T();
+    }
+
+    T last_node = array[element_count - 1];
+    element_count--;
+
+    resize(element_count);
+
+    return last_node;
+  }
+
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // From Functions
 
@@ -152,19 +165,21 @@ public:
     inc_size_count = inc_size;
   }
 
+  void resize(int size, bool need_more = false) {
+    int new_size = need_more ? size + inc_size_count : size;
+
+    array.resize(new_size);
+
+    element_count = element_count < size ? element_count : size;
+    total_capacity = new_size;
+    total_byte_size = new_size * sizeof(T);
+  }
+
 private:
   void add_capacity() {
     int new_size = total_capacity + inc_size_count;
 
     resize(new_size);
-  }
-
-  void resize(int size, bool need_more = false) {
-    int new_size = need_more ? size + inc_size_count : size;
-
-    array.resize(new_size);
-    total_capacity = new_size;
-    total_byte_size = new_size * sizeof(T);
   }
 
 private:

@@ -81,6 +81,11 @@ public:
       return;
     }
 
+    if (new_size == 0) {
+      release();
+      return;
+    }
+
     T *temp_array = new T[length];
     copy_full(arr_ptr, temp_array);
 
