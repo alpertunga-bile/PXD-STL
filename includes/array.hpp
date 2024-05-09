@@ -38,7 +38,7 @@ public:
     from(other);
 
     return *this;
-  }                        // copy assignment
+  } // copy assignment
   inline ~Array() noexcept // deconstructor
   {
     if (arr_ptr == nullptr) {
@@ -69,7 +69,7 @@ public:
   // DS Functionalities
 
   constexpr inline int where(T &value) noexcept {
-    int index = 0;
+    int index = -1;
     return find(value, 0, length, index);
   }
 
