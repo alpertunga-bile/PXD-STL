@@ -58,6 +58,8 @@ int main() {
   pq.update_priority('b', 4123);
 
   pq.remove('b');
+  pq.remove('a');
+  pq.remove('c');
 
   return 0;
 }

@@ -5,8 +5,9 @@
 namespace pxd {
 
 template <typename T> class DynamicArray;
+template <typename T> class Array;
 
-template <typename T, int D = 3, bool is_max_heap = true> class PriorityQueue {
+template <typename T, int D = 4, bool is_max_heap = true> class PriorityQueue {
 private:
   struct Node {
     T value;
@@ -14,6 +15,32 @@ private:
   };
 
 public:
+  PriorityQueue() { nodes.resize(D + D * D + 1); }
+  PriorityQueue(int wanted_size) { nodes.resize(wanted_size); }
+  PriorityQueue(T *values, int size) {
+    release();
+    nodes.expand(values, size);
+    heapify();
+  }
+  PriorityQueue(Array<T> &values) {
+    release();
+    nodes.expand(values);
+    heapify();
+  }
+  PriorityQueue(DynamicArray<T> &values) {
+    release();
+    nodes.expand(values.get_array());
+    heapify();
+  }
+  PriorityQueue(const PriorityQueue<T, D, is_max_heap> &other) = default;
+  PriorityQueue &
+  operator=(const PriorityQueue<T, D, is_max_heap> &other) = default;
+  PriorityQueue(PriorityQueue<T, D, is_max_heap> &&other) = default;
+  PriorityQueue &operator=(PriorityQueue<T, D, is_max_heap> &&other) = default;
+  inline ~PriorityQueue() noexcept { nodes.release(); }
+
+  inline void release() noexcept { nodes.release(); }
+
   void insert(T &element, int priority) {
     Node new_node;
     new_node.value = element;
@@ -38,6 +65,7 @@ public:
 
     if (index == 0 && current_length == 1) {
       nodes.release();
+      return;
     }
 
     Node *new_nodes = new Node[current_length - 1];
@@ -106,6 +134,10 @@ public:
   inline void update_priority(T &&value, int new_priority) {
     update_priority(value, new_priority);
   }
+
+  inline void shrink() { nodes.shrink(); }
+
+  inline int get_size() const { return nodes.get_element_count(); }
 
 private:
   void heapify() {
