@@ -57,11 +57,7 @@ int main() {
 
   pq.update_priority('b', 4123);
 
-  char top_val = pq.top();
-  top_val = pq.top();
-  top_val = pq.top();
-
-  pq.insert('d', 312);
+  pq.remove('b');
 
   return 0;
 }

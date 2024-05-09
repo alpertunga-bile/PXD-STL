@@ -26,13 +26,48 @@ public:
 
   inline void insert(T &&element, int priority) { insert(element, priority); }
 
+  void remove(T &value) {
+    const int current_length = nodes.get_element_count();
+
+    int index;
+    find(value, index, 0, current_length);
+
+    if (index < 0) {
+      return;
+    }
+
+    if (index == 0 && current_length == 1) {
+      nodes.release();
+    }
+
+    Node *new_nodes = new Node[current_length - 1];
+    int node_index = 0;
+
+    for (int i = 0; i < current_length; i++) {
+      if (nodes[i].value == value) {
+        continue;
+      }
+
+      new_nodes[node_index++] = nodes[i];
+    }
+
+    nodes.release();
+    nodes.expand(new_nodes, current_length - 1);
+
+    heapify();
+
+    delete[] new_nodes;
+  }
+
+  inline void remove(T &&value) { remove(value); }
+
   T top() {
     PXD_ASSERT(nodes.get_element_count() > 0);
 
     Node last_element = nodes.remove_last();
 
     if (nodes.get_element_count() == 0) {
-      nodes.resize(0);
+      nodes.release();
       return last_element.value;
     }
 
