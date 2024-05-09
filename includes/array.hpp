@@ -70,7 +70,9 @@ public:
 
   constexpr inline int where(T &value) noexcept {
     int index = -1;
-    return find(value, 0, length, index);
+    find(value, 0, length - 1, index);
+
+    return index;
   }
 
   constexpr inline int where(T &&value) noexcept { return where(value); }

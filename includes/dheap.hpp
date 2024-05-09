@@ -72,8 +72,34 @@ public:
 
     delete[] new_values;
   }
-
   inline void remove(T &&value) { remove(value); }
+
+  void remove_at(int index) {
+    const int current_length = values.get_element_count();
+
+    if (index == 0 && current_length == 1) {
+      values.release();
+      return;
+    }
+
+    T *new_values = new T[current_length - 1];
+    int node_index = 0;
+
+    for (int i = 0; i < current_length; i++) {
+      if (i == index) {
+        continue;
+      }
+
+      new_values[node_index++] = values[i];
+    }
+
+    values.release();
+    values.expand(new_values, current_length - 1);
+
+    heapify();
+
+    delete[] new_values;
+  }
 
   T top() {
     PXD_ASSERT(values.get_element_count() > 0);
@@ -108,18 +134,28 @@ public:
     T old_value = values[index];
     values[index] = value;
 
-    if (compare_descend(value, old_value)) {
+    if (compare_bigger(value, old_value)) {
       ascend(index);
-    } else if (compare_ascend(value, old_value)) {
+    } else if (compare_lower(value, old_value)) {
+      descend(index);
+    }
+  }
+  inline void update(T &&value) { update(value); }
+
+  void update_at(int index, T &value) {
+    T old_value = values[index];
+    values[index] = value;
+
+    if (compare_bigger(value, old_value)) {
+      ascend(index);
+    } else if (compare_lower(value, old_value)) {
       descend(index);
     }
   }
 
-  inline void update(T &&value) { update(value); }
-
   inline void shrink() { values.shrink(); }
-
   inline int get_size() const { return values.get_element_count(); }
+  inline T at(int index) { return values[index]; }
 
 private:
   void heapify() {
@@ -137,7 +173,7 @@ private:
     while (current_index > 0) {
       int parent_index = get_parent_index(current_index);
 
-      if (compare_ascend(values[parent_index], current_value)) {
+      if (compare_lower(values[parent_index], current_value)) {
         values[current_index] = values[parent_index];
         current_index = parent_index;
       } else {
@@ -159,7 +195,7 @@ private:
       int child_index = get_highest_priority_leaf(current_index);
       child_value = values[child_index];
 
-      if (compare_descend(child_value, current_value)) {
+      if (compare_bigger(child_value, current_value)) {
         values[current_index] = values[child_index];
         current_index = child_index;
       } else {
@@ -180,7 +216,7 @@ private:
         return highest_child_index;
       }
 
-      if (compare_descend(values[child_index + i], child_value)) {
+      if (compare_bigger(values[child_index + i], child_value)) {
         child_value = values[child_index + i];
         highest_child_index = child_index + i;
       }
@@ -190,7 +226,7 @@ private:
       return highest_child_index;
     }
 
-    if ((compare_descend(values[D * (parent_index + 1)], child_value))) {
+    if ((compare_bigger(values[D * (parent_index + 1)], child_value))) {
       child_value = values[D * (parent_index + 1)];
       highest_child_index = D * (parent_index + 1);
     }
@@ -202,10 +238,10 @@ private:
   inline int get_first_leaf_index() noexcept {
     return (values.get_element_count() - 2) / D + 1;
   }
-  inline bool compare_ascend(T &first_val, T &second_val) noexcept {
+  inline bool compare_lower(T &first_val, T &second_val) noexcept {
     return is_max_heap ? first_val < second_val : first_val > second_val;
   }
-  inline bool compare_descend(T &first_val, T &second_val) noexcept {
+  inline bool compare_bigger(T &first_val, T &second_val) noexcept {
     return is_max_heap ? first_val > second_val : first_val < second_val;
   }
 

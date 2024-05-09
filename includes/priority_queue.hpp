@@ -2,43 +2,27 @@
 
 #include "checks.hpp"
 
+#include "dheap.hpp"
+
 namespace pxd {
-
-template <typename T> class DynamicArray;
-template <typename T> class Array;
-
 template <typename T, int D = 4, bool is_max_heap = true> class PriorityQueue {
 private:
   struct Node {
     T value;
     int priority = is_max_heap ? INT_MIN : INT_MAX;
+
+    inline bool operator<(const Node &other) {
+      return priority < other.priority;
+    }
+    inline bool operator>(const Node &other) {
+      return priority > other.priority;
+    }
+    inline bool operator==(const Node &other) {
+      return value == other.value && priority == other.priority;
+    }
   };
 
 public:
-  PriorityQueue() { nodes.resize(D + D * D + 1); }
-  PriorityQueue(int wanted_size) { nodes.resize(wanted_size); }
-  PriorityQueue(T *values, int size) {
-    release();
-    nodes.expand(values, size);
-    heapify();
-  }
-  PriorityQueue(Array<T> &values) {
-    release();
-    nodes.expand(values);
-    heapify();
-  }
-  PriorityQueue(DynamicArray<T> &values) {
-    release();
-    nodes.expand(values.get_array());
-    heapify();
-  }
-  PriorityQueue(const PriorityQueue<T, D, is_max_heap> &other) = default;
-  PriorityQueue &
-  operator=(const PriorityQueue<T, D, is_max_heap> &other) = default;
-  PriorityQueue(PriorityQueue<T, D, is_max_heap> &&other) = default;
-  PriorityQueue &operator=(PriorityQueue<T, D, is_max_heap> &&other) = default;
-  inline ~PriorityQueue() noexcept { nodes.release(); }
-
   inline void release() noexcept { nodes.release(); }
 
   void insert(T &element, int priority) {
@@ -46,89 +30,48 @@ public:
     new_node.value = element;
     new_node.priority = is_max_heap ? priority : -1 * priority;
 
-    nodes.add(new_node);
-
-    ascend_node(nodes.get_element_count() - 1);
+    nodes.insert(new_node);
   }
 
   inline void insert(T &&element, int priority) { insert(element, priority); }
 
   void remove(T &value) {
-    const int current_length = nodes.get_element_count();
-
-    int index;
-    find(value, index, 0, current_length);
+    int index = find_index(value);
 
     if (index < 0) {
       return;
     }
 
-    if (index == 0 && current_length == 1) {
-      nodes.release();
-      return;
-    }
-
-    Node *new_nodes = new Node[current_length - 1];
-    int node_index = 0;
-
-    for (int i = 0; i < current_length; i++) {
-      if (nodes[i].value == value) {
-        continue;
-      }
-
-      new_nodes[node_index++] = nodes[i];
-    }
-
-    nodes.release();
-    nodes.expand(new_nodes, current_length - 1);
-
-    heapify();
-
-    delete[] new_nodes;
+    nodes.remove_at(index);
   }
 
   inline void remove(T &&value) { remove(value); }
 
   T top() {
-    PXD_ASSERT(nodes.get_element_count() > 0);
+    PXD_ASSERT(nodes.get_size() > 0);
 
-    Node last_element = nodes.remove_last();
-
-    if (nodes.get_element_count() == 0) {
-      nodes.release();
-      return last_element.value;
-    }
-
-    Node root_node = nodes[0];
-    nodes[0] = last_element;
-    descend_node(0);
-
-    return root_node.value;
+    Node last_element = nodes.top();
+    return last_element.value;
   }
 
   inline T peek() {
     PXD_ASSERT(nodes.get_element_count() > 0);
 
-    return nodes[0].value;
+    return nodes.peek();
   }
 
   void update_priority(T &value, int new_priority) {
-    int index;
-    find(value, index, 0, nodes.get_element_count() - 1);
+    int index = find_index(value);
 
     if (index < 0) {
       return;
     }
 
-    int old_priority = nodes[index].priority;
-    nodes[index].value = value;
-    nodes[index].priority = new_priority;
+    Node new_node;
+    new_node.value = value;
+    new_node.priority = new_priority;
 
-    if (new_priority > old_priority) {
-      ascend_node(index);
-    } else if (new_priority < old_priority) {
-      descend_node(index);
-    }
+    nodes.update_at(index, new_node);
   }
 
   inline void update_priority(T &&value, int new_priority) {
@@ -136,108 +79,33 @@ public:
   }
 
   inline void shrink() { nodes.shrink(); }
-
-  inline int get_size() const { return nodes.get_element_count(); }
+  inline int get_size() const { return nodes.get_size(); }
 
 private:
-  void heapify() {
-    int i = (nodes.get_element_count() - 1) / D;
+  inline int find_index(T &value) {
+    int index = -1;
+    find_index_from_value(value, index, 0, nodes.get_size() - 1);
 
-    for (; i >= 0; i--) {
-      descend_node(i);
-    }
+    return index;
   }
 
-  void ascend_node(int index) {
-    int current_index = index;
-    Node current_node = nodes[index];
-
-    while (current_index > 0) {
-      int parent_index = get_parent_index(current_index);
-
-      if (nodes[parent_index].priority < current_node.priority) {
-        nodes[current_index] = nodes[parent_index];
-        current_index = parent_index;
-      } else {
-        break;
-      }
-    }
-
-    nodes[current_index] = current_node;
-  }
-
-  void descend_node(int index = 0) {
-    int current_index = index;
-    const int first_leaf_index = get_first_leaf_index();
-
-    Node current_node = nodes[current_index];
-    Node child_node;
-
-    while (current_index < first_leaf_index) {
-      int child_index = get_highest_priority_leaf(current_index);
-      child_node = nodes[child_index];
-
-      if (child_node.priority > current_node.priority) {
-        nodes[current_index] = nodes[child_index];
-        current_index = child_index;
-      } else {
-        break;
-      }
-    }
-
-    nodes[current_index] = current_node;
-  }
-
-  inline int get_highest_priority_leaf(int parent_index) {
-    const int child_index = D * parent_index;
-    Node child_node = nodes[child_index];
-    int highest_child_index = child_index + 1;
-
-    for (int i = 2; i < D; i++) {
-      if (child_index + i >= nodes.get_element_count()) {
-        return highest_child_index;
-      }
-
-      if (nodes[child_index + i].priority > child_node.priority) {
-        child_node = nodes[child_index + i];
-        highest_child_index = child_index + i;
-      }
-    }
-
-    if ((D * parent_index + 1) >= nodes.get_element_count()) {
-      return highest_child_index;
-    }
-
-    if (nodes[D * (parent_index + 1)].priority > child_node.priority) {
-      child_node = nodes[D * (parent_index + 1)];
-      highest_child_index = D * (parent_index + 1);
-    }
-
-    return highest_child_index;
-  }
-
-  inline int get_parent_index(int index) noexcept { return (index - 1) / D; }
-  inline int get_first_leaf_index() noexcept {
-    return (nodes.get_element_count() - 2) / D + 1;
-  }
-
-  void find(T &value, int &index, int start, int end) {
+  void find_index_from_value(T &value, int &index, int start, int end) {
     if (start > end) {
-      index = -1;
       return;
     }
 
     int mid = (end - start) / 2;
-    if (nodes[mid].value == value) {
+    const Node mid_node = nodes.at(mid);
+    if (mid_node.value == value) {
       index = mid;
       return;
     }
 
-    find(value, index, start, mid - 1);
-    find(value, index, mid + 1, end);
+    find_index_from_value(value, index, start, mid - 1);
+    find_index_from_value(value, index, mid + 1, end);
   }
 
 private:
-  DynamicArray<Node> nodes;
+  DHeap<Node, D, is_max_heap> nodes;
 };
 } // namespace pxd
