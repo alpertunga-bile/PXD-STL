@@ -65,6 +65,7 @@ set(LIB_SOURCE_FILES
     ${PXD_SOURCE_DIR}/double_linked_list.cpp
     ${PXD_SOURCE_DIR}/xor_double_linked_list.cpp
     ${PXD_SOURCE_DIR}/priority_queue.cpp
+    ${PXD_SOURCE_DIR}/utility.cpp
 
     ${HEADER_FILES}
 )
