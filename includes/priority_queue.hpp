@@ -10,7 +10,7 @@ template <typename T, int D = 3, bool is_max_heap = true> class PriorityQueue {
 private:
   struct Node {
     T value;
-    int priority = is_max_heap ? 0 : INT_MIN;
+    int priority = is_max_heap ? INT_MIN : INT_MAX;
   };
 
 public:
@@ -111,7 +111,7 @@ private:
   void heapify() {
     int i = (nodes.get_element_count() - 1) / D;
 
-    for (; i >= 0; i++) {
+    for (; i >= 0; i--) {
       descend_node(i);
     }
   }
