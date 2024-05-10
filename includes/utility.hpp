@@ -12,6 +12,7 @@ template <typename T> class LinkedList;
 template <typename T> struct LLNode;
 template <typename T> class DoubleLinkedList;
 template <typename T> struct DLLNode;
+template <typename T, int D, bool is_max_heap> class DHeap;
 
 template <typename T, int D, bool is_max_heap> class PriorityQueue;
 
@@ -52,6 +53,9 @@ template <typename T> inline int find(Array<T> &arr, T &value) {
 
   return INDEX_NONE;
 }
+template <typename T> inline int find(Array<T> &&arr, T &value) {
+  find<T>(arr, value);
+}
 
 template <typename T> inline int find(DynamicArray<T> &arr, T &value) {
   const int length = arr.get_element_count();
@@ -63,6 +67,10 @@ template <typename T> inline int find(DynamicArray<T> &arr, T &value) {
   }
 
   return INDEX_NONE;
+}
+
+template <typename T> inline int find(DynamicArray<T> &&arr, T &value) {
+  find<T>(arr, value);
 }
 
 template <typename T> inline int find(LinkedList<T> &ll, T &value) {
@@ -93,5 +101,10 @@ template <typename T> inline int find(DoubleLinkedList<T> &dll, T &value) {
   }
 
   return INDEX_NONE;
+}
+
+template <typename T, int D = 4, bool is_max_heap = true>
+inline int find(DHeap<T, D, is_max_heap> &dheap, T &value) {
+  return find<T>(dheap.get_values(), value);
 }
 } // namespace pxd

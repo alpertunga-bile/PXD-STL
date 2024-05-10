@@ -156,6 +156,7 @@ public:
   inline void shrink() { values.shrink(); }
   inline int get_size() const { return values.get_element_count(); }
   inline T at(int index) { return values[index]; }
+  inline DynamicArray<T> get_values() { return values; }
 
 private:
   void heapify() {

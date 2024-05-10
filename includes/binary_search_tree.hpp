@@ -12,26 +12,25 @@ enum class eBST_ORDER : uint8_t {
 template <typename T> class Array;
 template <typename T> class LinkedList;
 
+template <typename T> struct BSTNode {
+  T value;
+  BSTNode<T> *left = nullptr;
+  BSTNode<T> *right = nullptr;
+
+  inline bool has_one_child() noexcept {
+    return (left != nullptr && right == nullptr) ||
+           (left == nullptr && right != nullptr);
+  }
+
+  inline bool has_two_children() noexcept {
+    return left != nullptr && right != nullptr;
+  }
+
+  inline bool has_left() noexcept { return left != nullptr; }
+  inline bool has_right() noexcept { return right != nullptr; }
+};
+
 template <typename T> class BinarySearchTree {
-private:
-  struct Node {
-    T value;
-    Node *left = nullptr;
-    Node *right = nullptr;
-
-    inline bool has_one_child() noexcept {
-      return (left != nullptr && right == nullptr) ||
-             (left == nullptr && right != nullptr);
-    }
-
-    inline bool has_two_children() noexcept {
-      return left != nullptr && right != nullptr;
-    }
-
-    inline bool has_left() noexcept { return left != nullptr; }
-    inline bool has_right() noexcept { return right != nullptr; }
-  };
-
 public:
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // Constructors
@@ -93,7 +92,7 @@ public:
 
   void add(T &value) {
     if (!IS_VALID(root)) {
-      root = new Node();
+      root = new BSTNode<T>();
       root->value = value;
       total_node_count++;
       return;
@@ -103,7 +102,7 @@ public:
       return;
     }
 
-    Node *new_node = new Node();
+    BSTNode<T> *new_node = new BSTNode<T>();
     new_node->value = value;
 
     place_new_node(root, new_node);
@@ -122,8 +121,8 @@ public:
       return;
     }
 
-    Node *current_node = root;
-    Node *parent_node = root;
+    BSTNode<T> *current_node = root;
+    BSTNode<T> *parent_node = root;
 
     while (current_node->value != value) {
       parent_node = current_node;
@@ -195,7 +194,7 @@ public:
       return false;
     }
 
-    Node *current_node = root;
+    BSTNode<T> *current_node = root;
 
     do {
       if (value < current_node->value) {
@@ -217,7 +216,7 @@ public:
       return T();
     }
 
-    Node *current_node = root;
+    BSTNode<T> *current_node = root;
 
     while (current_node->left != nullptr) {
       current_node = current_node->left;
@@ -231,7 +230,7 @@ public:
       return T();
     }
 
-    Node *current_node = root;
+    BSTNode<T> *current_node = root;
 
     while (current_node->right != nullptr) {
       current_node = current_node->right;
@@ -335,7 +334,7 @@ public:
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // Inline Member Funcs
 
-  inline Node *get_root() const noexcept { return root; }
+  inline BSTNode<T> *get_root() const noexcept { return root; }
   inline int get_total_node_count() const noexcept { return total_node_count; }
   inline void exec_move() noexcept {
     root = nullptr;
@@ -343,7 +342,7 @@ public:
   }
 
 private:
-  void inorder(Node *node, T *array, int &index) const noexcept {
+  void inorder(BSTNode<T> *node, T *array, int &index) const noexcept {
     if (node == nullptr) {
       return;
     }
@@ -356,7 +355,7 @@ private:
     inorder(node->right, array, index);
   }
 
-  void preorder(Node *node, T *array, int &index) const noexcept {
+  void preorder(BSTNode<T> *node, T *array, int &index) const noexcept {
     if (node == nullptr) {
       return;
     }
@@ -368,7 +367,7 @@ private:
     preorder(node->right, array, index);
   }
 
-  void postorder(Node *node, T *array, int &index) const noexcept {
+  void postorder(BSTNode<T> *node, T *array, int &index) const noexcept {
     if (node == nullptr) {
       return;
     }
@@ -380,7 +379,7 @@ private:
     index = index + 1;
   }
 
-  void release_tree(Node *node) {
+  void release_tree(BSTNode<T> *node) {
     if (node == nullptr) {
       return;
     }
@@ -447,9 +446,9 @@ private:
     build_balanced_tree_self(values, mid + 1, end);
   }
 
-  void place_new_node(Node *start, Node *new_node) noexcept {
-    Node *current_node = start;
-    Node *parent_node = nullptr;
+  void place_new_node(BSTNode<T> *start, BSTNode<T> *new_node) noexcept {
+    BSTNode<T> *current_node = start;
+    BSTNode<T> *parent_node = nullptr;
 
     // to find the parent node
     while (current_node != nullptr) {
@@ -471,7 +470,8 @@ private:
     }
   }
 
-  void remove_from_one_child(Node *current_node, Node *parent_node) noexcept {
+  void remove_from_one_child(BSTNode<T> *current_node,
+                             BSTNode<T> *parent_node) noexcept {
     if (current_node->has_one_child() && parent_node->right == current_node) {
       if (current_node->has_left()) {
         parent_node->right = current_node->left;
@@ -488,27 +488,28 @@ private:
     }
   }
 
-  void remove_from_two_children(Node *current_node,
-                                Node *parent_node) noexcept {
+  void remove_from_two_children(BSTNode<T> *current_node,
+                                BSTNode<T> *parent_node) noexcept {
     if (current_node->has_two_children() && parent_node->left == current_node &&
         current_node->left->has_right()) {
-      Node *new_node = current_node->left;
+      BSTNode<T> *new_node = current_node->left;
       place_new_node(current_node->right, new_node->right);
       new_node->right = current_node->right;
       parent_node->left = new_node;
     } else if (current_node->has_two_children() &&
                parent_node->right == current_node &&
                current_node->right->has_left()) {
-      Node *new_node = current_node->right;
+      BSTNode<T> *new_node = current_node->right;
       place_new_node(current_node->left, new_node->left);
       new_node->left = current_node->left;
       parent_node->right = new_node;
     }
   }
 
-  void remove_from_root(Node *current_node, Node *parent_node) noexcept {
+  void remove_from_root(BSTNode<T> *current_node,
+                        BSTNode<T> *parent_node) noexcept {
     if (current_node == root && current_node->has_two_children()) {
-      Node *new_node = current_node->right;
+      BSTNode<T> *new_node = current_node->right;
       place_new_node(new_node, current_node->left);
       root = new_node;
     } else if (current_node == root && current_node->has_one_child()) {
@@ -527,7 +528,7 @@ private:
   }
 
 private:
-  Node *root = nullptr;
+  BSTNode<T> *root = nullptr;
   int total_node_count = 0;
 };
 } // namespace pxd
