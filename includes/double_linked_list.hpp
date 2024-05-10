@@ -8,15 +8,13 @@ template <typename T> class LinkedList;
 template <typename T> class Array;
 template <typename T> class DynamicArray;
 
-template <typename T> class DoubleLinkedList {
-  // public for fast transition between data structures
-public:
-  struct Node {
-    T value;
-    Node *next = nullptr;
-    Node *prev = nullptr;
-  };
+template <typename T> struct DLLNode {
+  T value;
+  DLLNode<T> *next = nullptr;
+  DLLNode<T> *prev = nullptr;
+};
 
+template <typename T> class DoubleLinkedList {
 public:
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // Constructors
@@ -70,7 +68,7 @@ public:
   T &operator[](int index) noexcept {
     bool is_negative = false;
     int calc_index = get_calc_min_index(index, is_negative);
-    Node *current_node = nullptr;
+    DLLNode<T> *current_node = nullptr;
 
     if (!is_negative) {
       current_node = head;
@@ -97,10 +95,10 @@ public:
       return;
     }
 
-    Node *current_node = head;
+    DLLNode<T> *current_node = head;
 
     do {
-      Node *prev_node = current_node;
+      DLLNode<T> *prev_node = current_node;
       current_node = current_node->next;
       delete prev_node;
     } while (current_node != nullptr);
@@ -111,7 +109,7 @@ public:
   }
 
   void add(T &value, bool add_back = true) noexcept {
-    Node *new_node = new Node();
+    DLLNode<T> *new_node = new DLLNode<T>();
     new_node->value = value;
 
     if (head == nullptr) {
@@ -140,7 +138,7 @@ public:
       return;
     }
 
-    Node *current_node = get_node_at(index);
+    DLLNode<T> *current_node = get_node_at(index);
 
     remove_node(current_node);
   }
@@ -150,10 +148,10 @@ public:
       return;
     }
 
-    Node *current_node = nullptr;
+    DLLNode<T> *current_node = nullptr;
 
-    Node *from_head = head;
-    Node *from_end = end;
+    DLLNode<T> *from_head = head;
+    DLLNode<T> *from_end = end;
 
     int head_index = 0;
     int end_index = length - 1;
@@ -185,8 +183,8 @@ public:
       return;
     }
 
-    Node *current_node = head;
-    Node *temp_node = nullptr;
+    DLLNode<T> *current_node = head;
+    DLLNode<T> *temp_node = nullptr;
 
     end = current_node;
 
@@ -206,8 +204,8 @@ public:
   }
 
   int where(T &value) noexcept {
-    Node *from_head = head;
-    Node *from_end = end;
+    DLLNode<T> *from_head = head;
+    DLLNode<T> *from_end = end;
 
     int head_index = 0;
     int end_index = length - 1;
@@ -279,7 +277,7 @@ public:
   // To Functions
 
   inline void to_array(T *array) noexcept {
-    Node *current_node = head;
+    DLLNode<T> *current_node = head;
 
     for (int i = 0; i < length; i++) {
       array[i] = current_node->value;
@@ -289,7 +287,7 @@ public:
 
   inline void to_array(Array<T> &array) noexcept {
     array.reallocate(length);
-    Node *current_node = head;
+    DLLNode<T> *current_node = head;
 
     for (int i = 0; i < length; i++) {
       array[i] = current_node->value;
@@ -299,7 +297,7 @@ public:
 
   inline void to_array(DynamicArray<T> &array) noexcept {
     array.reallocate(length);
-    Node *current_node = head;
+    DLLNode<T> *current_node = head;
 
     for (int i = 0; i < length; i++) {
       array[i] = current_node->value;
@@ -310,7 +308,7 @@ public:
   inline void to_linked_list(LinkedList<T> &linked_list) noexcept {
     linked_list.release();
 
-    Node *current_node = head;
+    DLLNode<T> *current_node = head;
 
     for (int i = 0; i < length; i++) {
       linked_list.add(current_node->value);
@@ -321,8 +319,8 @@ public:
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // Inline Member Funcs
 
-  inline Node *get_head_node() const noexcept { return head; }
-  inline Node *get_end_node() const noexcept { return end; }
+  inline DLLNode<T> *get_head_node() const noexcept { return head; }
+  inline DLLNode<T> *get_end_node() const noexcept { return end; }
   inline int get_length() const noexcept { return length; }
 
   constexpr void exec_move() noexcept {
@@ -343,10 +341,10 @@ private:
     return is_negative ? negative_index : positive_index;
   }
 
-  inline Node *get_node_at(int &index) noexcept {
+  inline DLLNode<T> *get_node_at(int &index) noexcept {
     bool is_negative = false;
     int calc_index = get_calc_min_index(index, is_negative);
-    Node *current_node = nullptr;
+    DLLNode<T> *current_node = nullptr;
 
     if (!is_negative) {
       current_node = head;
@@ -365,7 +363,7 @@ private:
     return current_node;
   }
 
-  inline void remove_node(Node *current_node) noexcept {
+  inline void remove_node(DLLNode<T> *current_node) noexcept {
     if (current_node == nullptr) {
       return;
     }
@@ -376,8 +374,8 @@ private:
       end = current_node->prev;
     }
 
-    Node *prev_node = current_node->prev;
-    Node *forw_node = current_node->next;
+    DLLNode<T> *prev_node = current_node->prev;
+    DLLNode<T> *forw_node = current_node->next;
 
     if (prev_node != nullptr) {
       prev_node->next = forw_node;
@@ -401,7 +399,7 @@ private:
 
     const int other_length = other.get_length();
 
-    Node *current_node = other.get_head_node();
+    DLLNode<T> *current_node = other.get_head_node();
 
     for (int i = 0; i < other_length; i++) {
       add(current_node->value);
@@ -410,8 +408,8 @@ private:
   }
 
 private:
-  Node *head = nullptr;
-  Node *end = nullptr;
+  DLLNode<T> *head = nullptr;
+  DLLNode<T> *end = nullptr;
   int length = 0;
 };
 } // namespace pxd

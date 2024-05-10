@@ -10,6 +10,9 @@ template <typename T> class Array;
 template <typename T> class DynamicArray;
 template <typename T> class LinkedList;
 template <typename T> struct LLNode;
+template <typename T> class DoubleLinkedList;
+template <typename T> struct DLLNode;
+
 template <typename T, int D, bool is_max_heap> class PriorityQueue;
 
 template <typename T> void swap(T &left, T &right) {
@@ -65,6 +68,21 @@ template <typename T> inline int find(DynamicArray<T> &arr, T &value) {
 template <typename T> inline int find(LinkedList<T> &ll, T &value) {
   LLNode<T> *current_node = ll.get_head_node();
   const int length = ll.get_length();
+
+  for (int i = 0; i < length; i++) {
+    if (value == current_node->value) {
+      return i;
+    }
+
+    current_node = current_node->next;
+  }
+
+  return INDEX_NONE;
+}
+
+template <typename T> inline int find(DoubleLinkedList<T> &dll, T &value) {
+  DLLNode<T> *current_node = dll.get_head_node();
+  const int length = dll.get_length();
 
   for (int i = 0; i < length; i++) {
     if (value == current_node->value) {
