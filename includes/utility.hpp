@@ -1,7 +1,15 @@
 #pragma once
 
+#include "utility.hpp"
+
 namespace pxd {
 
+constexpr int INDEX_NONE = -1;
+
+template <typename T> class Array;
+template <typename T> class DynamicArray;
+template <typename T> class LinkedList;
+template <typename T> struct LLNode;
 template <typename T, int D, bool is_max_heap> class PriorityQueue;
 
 template <typename T> void swap(T &left, T &right) {
@@ -25,5 +33,47 @@ PriorityQueue<T, D, false> topK(T *values, int values_size, int k) {
   }
 
   return pq;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+// find functions
+
+template <typename T> inline int find(Array<T> &arr, T &value) {
+  const int length = arr.get_length();
+
+  for (int i = 0; i < length; i++) {
+    if (value == arr[i]) {
+      return i;
+    }
+  }
+
+  return INDEX_NONE;
+}
+
+template <typename T> inline int find(DynamicArray<T> &arr, T &value) {
+  const int length = arr.get_element_count();
+
+  for (int i = 0; i < length; i++) {
+    if (value == arr[i]) {
+      return i;
+    }
+  }
+
+  return INDEX_NONE;
+}
+
+template <typename T> inline int find(LinkedList<T> &ll, T &value) {
+  LLNode<T> *current_node = ll.get_head_node();
+  const int length = ll.get_length();
+
+  for (int i = 0; i < length; i++) {
+    if (value == current_node->value) {
+      return i;
+    }
+
+    current_node = current_node->next;
+  }
+
+  return INDEX_NONE;
 }
 } // namespace pxd
