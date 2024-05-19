@@ -24,6 +24,8 @@ public:
 
   inline void release() noexcept { values.clear(); }
 
+  decltype(auto) operator[](int index) { return values[index]; }
+
   void insert(T& element)
   {
     values.push_back(element);
@@ -127,9 +129,10 @@ public:
     }
   }
 
+  inline int where(T& value) { return find_index(values, value); }
+
   inline void shrink() { values.shrink_to_fit(); }
   inline int get_size() const { return values.size(); }
-  inline T at(int index) { return values[index]; }
   inline std::vector<T> get_values() { return values; }
 
 private:
