@@ -77,7 +77,8 @@ public:
   {
     PXD_ASSERT(values.size() > 0);
 
-    T last_value = values.remove_last();
+    T last_value = values[values.size() - 1];
+    values.erase(values.end());
 
     if (values.size() == 0) {
       values.clear();
@@ -88,14 +89,14 @@ public:
     values[0] = last_value;
     descend(0);
 
-    return root_node.value;
+    return root_node;
   }
 
   inline T peek()
   {
     PXD_ASSERT(values.size() > 0);
 
-    return values[0].value;
+    return values[0];
   }
 
   void update(T& value)

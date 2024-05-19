@@ -130,6 +130,7 @@ IF(PXD_STL_BUILD_TEST_EXECUTABLE)
     set(TEST_PROJECT_NAME pxd-stl-test)
 
     set(TEST_HEADER_FILES
+        ${PXD_TEST_DIR}/priority_queue_tests.hpp
         ${PXD_TEST_DIR}/xor_double_linked_list_tests.hpp
         ${PXD_TEST_DIR}/double_linked_list_tests.hpp
         ${PXD_TEST_DIR}/matrix_tests.hpp

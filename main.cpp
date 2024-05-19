@@ -4,17 +4,18 @@
 #include "test/dynamic_array_tests.hpp"
 #include "test/linked_list_tests.hpp"
 #include "test/matrix_tests.hpp"
+#include "test/priority_queue_tests.hpp"
 #include "test/queue_tests.hpp"
 #include "test/stack_tests.hpp"
 #include "test/xor_double_linked_list_tests.hpp"
 
 #include "test/test_manager.hpp"
 
-#include "priority_queue.hpp"
-
 #include "logger.hpp"
 
-void do_test() {
+void
+do_test()
+{
   LOG_WARNING("WARNING");
   LOG_ERROR("ERROR");
   LOG_INFO("Starting tests");
@@ -30,6 +31,7 @@ void do_test() {
   pxd::MatrixTests matrix_tests;
   pxd::DoubleLinkedListTests double_linked_list_tests;
   pxd::XORDoubleLinkedListTests xor_double_linked_list_tests;
+  pxd::PriorityQueueTests priority_queue_tests;
 
   test_manager.add_test("Array Tests", array_tests);
   test_manager.add_test("Linked List Tests", linked_list_tests);
@@ -41,25 +43,14 @@ void do_test() {
   test_manager.add_test("Double Linked List Tests", double_linked_list_tests);
   test_manager.add_test("XOR Double Linked List Tests",
                         xor_double_linked_list_tests);
+  test_manager.add_test("Priority Queue Tests", priority_queue_tests);
 
   test_manager.print_results();
   test_manager.save_results();
 }
 
-int main() {
-  // do_test();
-
-  pxd::PriorityQueue<char> pq;
-
-  pq.insert('a', 10);
-  pq.insert('b', 2);
-  pq.insert('c', 20);
-
-  pq.update_priority('b', 4123);
-
-  pq.remove('b');
-  pq.remove('a');
-  pq.remove('c');
-
-  return 0;
+int
+main()
+{
+  do_test();
 }

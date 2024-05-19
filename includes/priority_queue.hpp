@@ -67,7 +67,7 @@ public:
   {
     PXD_ASSERT(nodes.get_size() > 0);
 
-    return nodes.peek();
+    return nodes.peek().value;
   }
 
   void update_priority(T& value, int new_priority)
@@ -83,6 +83,15 @@ public:
     new_node.priority = new_priority;
 
     nodes.update_at(index, new_node);
+  }
+
+  void to_array(T* array)
+  {
+    const int size = nodes.get_size();
+
+    for (int i = 0; i < size; i++) {
+      array[i] = nodes[i].value;
+    }
   }
 
   inline void update_priority(T&& value, int new_priority)
