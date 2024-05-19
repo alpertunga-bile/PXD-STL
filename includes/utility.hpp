@@ -2,28 +2,44 @@
 
 #include "utility.hpp"
 
+#include <algorithm>
+#include <vector>
+
 namespace pxd {
 
 constexpr int INDEX_NONE = -1;
 
-template <typename T> class Array;
-template <typename T> class DynamicArray;
-template <typename T> class LinkedList;
-template <typename T> struct LLNode;
-template <typename T> class DoubleLinkedList;
-template <typename T> struct DLLNode;
-template <typename T, int D, bool is_max_heap> class DHeap;
+template<typename T>
+class Array;
+template<typename T>
+class DynamicArray;
+template<typename T>
+class LinkedList;
+template<typename T>
+struct LLNode;
+template<typename T>
+class DoubleLinkedList;
+template<typename T>
+struct DLLNode;
+template<typename T, int D, bool is_max_heap>
+class DHeap;
 
-template <typename T, int D, bool is_max_heap> class PriorityQueue;
+template<typename T, int D, bool is_max_heap>
+class PriorityQueue;
 
-template <typename T> void swap(T &left, T &right) {
+template<typename T>
+void
+swap(T& left, T& right)
+{
   T temp = left;
   left = right;
   right = temp;
 }
 
-template <typename T, int D = 4>
-PriorityQueue<T, D, false> topK(T *values, int values_size, int k) {
+template<typename T, int D = 4>
+PriorityQueue<T, D, false>
+topK(T* values, int values_size, int k)
+{
   PriorityQueue<T, D, false> pq(k);
 
   for (int i = 0; i < values_size; i++) {
@@ -42,7 +58,10 @@ PriorityQueue<T, D, false> topK(T *values, int values_size, int k) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // find functions
 
-template <typename T> inline int find(Array<T> &arr, T &value) {
+template<typename T>
+inline int
+find(Array<T>& arr, T& value)
+{
   const int length = arr.get_length();
 
   for (int i = 0; i < length; i++) {
@@ -53,11 +72,18 @@ template <typename T> inline int find(Array<T> &arr, T &value) {
 
   return INDEX_NONE;
 }
-template <typename T> inline int find(Array<T> &&arr, T &value) {
+
+template<typename T>
+inline int
+find(Array<T>&& arr, T& value)
+{
   find<T>(arr, value);
 }
 
-template <typename T> inline int find(DynamicArray<T> &arr, T &value) {
+template<typename T>
+inline int
+find(DynamicArray<T>& arr, T& value)
+{
   const int length = arr.get_element_count();
 
   for (int i = 0; i < length; i++) {
@@ -69,12 +95,27 @@ template <typename T> inline int find(DynamicArray<T> &arr, T &value) {
   return INDEX_NONE;
 }
 
-template <typename T> inline int find(DynamicArray<T> &&arr, T &value) {
+template<typename T>
+inline int
+find(DynamicArray<T>&& arr, T& value)
+{
   find<T>(arr, value);
 }
 
-template <typename T> inline int find(LinkedList<T> &ll, T &value) {
-  LLNode<T> *current_node = ll.get_head_node();
+template<typename T>
+inline int
+find_index(std::vector<T>& vec, T& value)
+{
+  auto it = std::find(vec.begin(), vec.end(), value);
+
+  return it != vec.end() ? it - vec.begin() : INDEX_NONE;
+}
+
+template<typename T>
+inline int
+find(LinkedList<T>& ll, T& value)
+{
+  LLNode<T>* current_node = ll.get_head_node();
   const int length = ll.get_length();
 
   for (int i = 0; i < length; i++) {
@@ -88,8 +129,11 @@ template <typename T> inline int find(LinkedList<T> &ll, T &value) {
   return INDEX_NONE;
 }
 
-template <typename T> inline int find(DoubleLinkedList<T> &dll, T &value) {
-  DLLNode<T> *current_node = dll.get_head_node();
+template<typename T>
+inline int
+find(DoubleLinkedList<T>& dll, T& value)
+{
+  DLLNode<T>* current_node = dll.get_head_node();
   const int length = dll.get_length();
 
   for (int i = 0; i < length; i++) {
@@ -103,8 +147,10 @@ template <typename T> inline int find(DoubleLinkedList<T> &dll, T &value) {
   return INDEX_NONE;
 }
 
-template <typename T, int D = 4, bool is_max_heap = true>
-inline int find(DHeap<T, D, is_max_heap> &dheap, T &value) {
+template<typename T, int D = 4, bool is_max_heap = true>
+inline int
+find(DHeap<T, D, is_max_heap>& dheap, T& value)
+{
   return find<T>(dheap.get_values(), value);
 }
 } // namespace pxd
