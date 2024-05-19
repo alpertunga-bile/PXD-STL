@@ -3,44 +3,52 @@
 #include "checks.hpp"
 
 namespace pxd {
-template <typename T> class DynamicArray;
-template <typename T> class Array;
+template<typename T>
+class DynamicArray;
+template<typename T>
+class Array;
 
-template <typename T, int D = 4, bool is_max_heap = true> class DHeap {
+template<typename T, int D = 4, bool is_max_heap = true>
+class DHeap
+{
 public:
   DHeap() { values.resize(D + D * D + 1); }
   DHeap(int wanted_size) { values.resize(wanted_size); }
-  DHeap(T *values, int size) {
+  DHeap(T* values, int size)
+  {
     release();
-    values.expand(values, size);
     heapify();
   }
-  DHeap(Array<T> &values) {
+  DHeap(Array<T>& values)
+  {
     release();
     values.expand(values);
     heapify();
   }
-  DHeap(DynamicArray<T> &values) {
+  DHeap(DynamicArray<T>& values)
+  {
     release();
     values.expand(values.get_array());
     heapify();
   }
-  DHeap(const DHeap<T, D, is_max_heap> &other) = default;
-  DHeap &operator=(const DHeap<T, D, is_max_heap> &other) = default;
-  DHeap(DHeap<T, D, is_max_heap> &&other) = default;
-  DHeap &operator=(DHeap<T, D, is_max_heap> &&other) = default;
+  DHeap(const DHeap<T, D, is_max_heap>& other) = default;
+  DHeap& operator=(const DHeap<T, D, is_max_heap>& other) = default;
+  DHeap(DHeap<T, D, is_max_heap>&& other) = default;
+  DHeap& operator=(DHeap<T, D, is_max_heap>&& other) = default;
   inline ~DHeap() noexcept { values.release(); }
 
   inline void release() noexcept { values.release(); }
 
-  void insert(T &element) {
+  void insert(T& element)
+  {
     values.add(element);
     ascend(values.get_element_count() - 1);
   }
 
-  inline void insert(T &&element) { insert(element); }
+  inline void insert(T&& element) { insert(element); }
 
-  void remove(T &value) {
+  void remove(T& value)
+  {
     const int current_length = values.get_element_count();
 
     int index = values.where(value);
@@ -54,7 +62,7 @@ public:
       return;
     }
 
-    T *new_values = new T[current_length - 1];
+    T* new_values = new T[current_length - 1];
     int node_index = 0;
 
     for (int i = 0; i < current_length; i++) {
@@ -72,9 +80,10 @@ public:
 
     delete[] new_values;
   }
-  inline void remove(T &&value) { remove(value); }
+  inline void remove(T&& value) { remove(value); }
 
-  void remove_at(int index) {
+  void remove_at(int index)
+  {
     const int current_length = values.get_element_count();
 
     if (index == 0 && current_length == 1) {
@@ -82,7 +91,7 @@ public:
       return;
     }
 
-    T *new_values = new T[current_length - 1];
+    T* new_values = new T[current_length - 1];
     int node_index = 0;
 
     for (int i = 0; i < current_length; i++) {
@@ -101,7 +110,8 @@ public:
     delete[] new_values;
   }
 
-  T top() {
+  T top()
+  {
     PXD_ASSERT(values.get_element_count() > 0);
 
     T last_value = values.remove_last();
@@ -118,13 +128,15 @@ public:
     return root_node.value;
   }
 
-  inline T peek() {
+  inline T peek()
+  {
     PXD_ASSERT(values.get_element_count() > 0);
 
     return values[0].value;
   }
 
-  void update(T &value) {
+  void update(T& value)
+  {
     int index = values.where(value);
 
     if (index < 0) {
@@ -140,9 +152,10 @@ public:
       descend(index);
     }
   }
-  inline void update(T &&value) { update(value); }
+  inline void update(T&& value) { update(value); }
 
-  void update_at(int index, T &value) {
+  void update_at(int index, T& value)
+  {
     T old_value = values[index];
     values[index] = value;
 
@@ -159,7 +172,8 @@ public:
   inline DynamicArray<T> get_values() { return values; }
 
 private:
-  void heapify() {
+  void heapify()
+  {
     int i = (values.get_element_count() - 1) / D;
 
     for (; i >= 0; i--) {
@@ -167,7 +181,8 @@ private:
     }
   }
 
-  void ascend(int index) {
+  void ascend(int index)
+  {
     int current_index = index;
     T current_value = values[index];
 
@@ -185,7 +200,8 @@ private:
     values[current_index] = current_value;
   }
 
-  void descend(int index = 0) {
+  void descend(int index = 0)
+  {
     int current_index = index;
     const int first_leaf_index = get_first_leaf_index();
 
@@ -207,7 +223,8 @@ private:
     values[current_index] = current_value;
   }
 
-  inline int get_highest_priority_leaf(int parent_index) {
+  inline int get_highest_priority_leaf(int parent_index)
+  {
     const int child_index = D * parent_index;
     T child_value = values[child_index];
     int highest_child_index = child_index + 1;
@@ -236,13 +253,16 @@ private:
   }
 
   inline int get_parent_index(int index) noexcept { return (index - 1) / D; }
-  inline int get_first_leaf_index() noexcept {
+  inline int get_first_leaf_index() noexcept
+  {
     return (values.get_element_count() - 2) / D + 1;
   }
-  inline bool compare_lower(T &first_val, T &second_val) noexcept {
+  inline bool compare_lower(T& first_val, T& second_val) noexcept
+  {
     return is_max_heap ? first_val < second_val : first_val > second_val;
   }
-  inline bool compare_bigger(T &first_val, T &second_val) noexcept {
+  inline bool compare_bigger(T& first_val, T& second_val) noexcept
+  {
     return is_max_heap ? first_val > second_val : first_val < second_val;
   }
 

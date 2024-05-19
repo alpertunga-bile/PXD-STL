@@ -7,6 +7,10 @@ enable_testing()
 # ------------------------------------------------------------------------------------
 # -- GLOBAL DEFINITIONS
 
+IF(NOT MSVC)
+#    set(CMAKE_BUILD_TYPE "Release")
+ENDIF(NOT MSVC)
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -91,9 +95,6 @@ set(COMMON_STD_HEADERS
 set(ABSL_PROPAGATE_CXX_STD ON)
 set(ABSL_ENABLE_INSTALL ON)
 
-IF(NOT MSVC)
-    set(CMAKE_BUILD_TYPE "Release")
-ENDIF(NOT MSVC)
 
 add_subdirectory(${PXD_THIRD_PARTY_DIR}/abseil-cpp)
 add_subdirectory(${PXD_THIRD_PARTY_DIR}/re2)
@@ -106,10 +107,6 @@ set(LIBS_TO_LINK
 
 # ------------------------------------------------------------------------------------------------------
 # -- Project Static Library 
-
-IF(NOT MSVC)
-    set(CMAKE_BUILD_TYPE "Release")
-ENDIF(NOT MSVC)
 
 add_library(${PROJECT_NAME} ${LIB_SOURCE_FILES})
 
@@ -126,10 +123,6 @@ target_precompile_headers(
 
 IF(PXD_STL_BUILD_TEST_EXECUTABLE)
     set(TEST_PROJECT_NAME pxd-stl-test)
-
-    IF(NOT MSVC)
-        set(CMAKE_BUILD_TYPE "Debug")
-    ENDIF(NOT MSVC)
 
     set(TEST_HEADER_FILES
         ${PXD_TEST_DIR}/xor_double_linked_list_tests.hpp
@@ -151,7 +144,7 @@ IF(PXD_STL_BUILD_TEST_EXECUTABLE)
         ${LIB_SOURCE_FILES}
     )
 
-    add_executable(${TEST_PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp ${TEST_SOURCE_FILES})
+    add_executable(${TEST_PROJECT_NAME} ${CMAKE_SOURCE_DIR}/main.cpp ${TEST_SOURCE_FILES})
 
     target_link_libraries(${TEST_PROJECT_NAME} ${LIBS_TO_LINK})
 

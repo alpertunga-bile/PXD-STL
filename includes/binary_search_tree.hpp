@@ -3,26 +3,33 @@
 #include "checks.hpp"
 
 namespace pxd {
-enum class eBST_ORDER : uint8_t {
+enum class eBST_ORDER : uint8_t
+{
   INORDER,
   PREORDER,
   POSTORDER,
 };
 
-template <typename T> class Array;
-template <typename T> class LinkedList;
+template<typename T>
+class Array;
+template<typename T>
+class LinkedList;
 
-template <typename T> struct BSTNode {
+template<typename T>
+struct BSTNode
+{
   T value;
-  BSTNode<T> *left = nullptr;
-  BSTNode<T> *right = nullptr;
+  BSTNode<T>* left = nullptr;
+  BSTNode<T>* right = nullptr;
 
-  inline bool has_one_child() noexcept {
+  inline bool has_one_child() noexcept
+  {
     return (left != nullptr && right == nullptr) ||
            (left == nullptr && right != nullptr);
   }
 
-  inline bool has_two_children() noexcept {
+  inline bool has_two_children() noexcept
+  {
     return left != nullptr && right != nullptr;
   }
 
@@ -30,28 +37,35 @@ template <typename T> struct BSTNode {
   inline bool has_right() noexcept { return right != nullptr; }
 };
 
-template <typename T> class BinarySearchTree {
+template<typename T>
+class BinarySearchTree
+{
 public:
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // Constructors
 
   constexpr BinarySearchTree() noexcept = default;
-  BinarySearchTree(T *values, int size, bool is_balance = false) {
+  BinarySearchTree(T* values, int size, bool is_balance = false)
+  {
     from_array(values, size, is_balance);
   }
-  BinarySearchTree(Array<T> &array, bool is_balance = false) {
+  BinarySearchTree(Array<T>& array, bool is_balance = false)
+  {
     from_array(array, is_balance);
   }
-  BinarySearchTree(LinkedList<T> &linked_list, bool is_balance = false) {
+  BinarySearchTree(LinkedList<T>& linked_list, bool is_balance = false)
+  {
     from_linked_list(linked_list, is_balance);
   }
-  BinarySearchTree(const BinarySearchTree<T> &other) { from_bst(other); }
-  constexpr BinarySearchTree(BinarySearchTree<T> &&other) noexcept {
+  BinarySearchTree(const BinarySearchTree<T>& other) { from_bst(other); }
+  constexpr BinarySearchTree(BinarySearchTree<T>&& other) noexcept
+  {
     root = other.get_root();
     total_node_count = other.get_total_node_count();
     other.exec_move();
   }
-  constexpr BinarySearchTree &operator=(BinarySearchTree<T> &&other) {
+  constexpr BinarySearchTree& operator=(BinarySearchTree<T>&& other)
+  {
     release();
 
     root = other.get_root();
@@ -60,7 +74,8 @@ public:
 
     return *this;
   }
-  BinarySearchTree &operator=(const BinarySearchTree<T> &other) {
+  BinarySearchTree& operator=(const BinarySearchTree<T>& other)
+  {
     from_bst(other);
     return *this;
   }
@@ -69,17 +84,20 @@ public:
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // Operator Overloads
 
-  constexpr inline bool operator==(BinarySearchTree<T> &other) noexcept {
+  constexpr inline bool operator==(BinarySearchTree<T>& other) noexcept
+  {
     return other.get_root() == root;
   }
-  constexpr inline bool operator!=(BinarySearchTree<T> &other) noexcept {
+  constexpr inline bool operator!=(BinarySearchTree<T>& other) noexcept
+  {
     return other.get_root() != root;
   }
 
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // DS Functionalities
 
-  inline void release() noexcept {
+  inline void release() noexcept
+  {
     if (root == nullptr) {
       return;
     }
@@ -90,7 +108,8 @@ public:
     total_node_count = 0;
   };
 
-  void add(T &value) {
+  void add(T& value)
+  {
     if (!IS_VALID(root)) {
       root = new BSTNode<T>();
       root->value = value;
@@ -102,7 +121,7 @@ public:
       return;
     }
 
-    BSTNode<T> *new_node = new BSTNode<T>();
+    BSTNode<T>* new_node = new BSTNode<T>();
     new_node->value = value;
 
     place_new_node(root, new_node);
@@ -110,9 +129,10 @@ public:
     total_node_count++;
   }
 
-  void add(T &&value) { add(value); }
+  void add(T&& value) { add(value); }
 
-  void remove(T &value) noexcept {
+  void remove(T& value) noexcept
+  {
     if (root == nullptr) {
       return;
     }
@@ -121,8 +141,8 @@ public:
       return;
     }
 
-    BSTNode<T> *current_node = root;
-    BSTNode<T> *parent_node = root;
+    BSTNode<T>* current_node = root;
+    BSTNode<T>* parent_node = root;
 
     while (current_node->value != value) {
       parent_node = current_node;
@@ -155,14 +175,15 @@ public:
     }
   }
 
-  void remove(T &&value) noexcept { remove(value); }
+  void remove(T&& value) noexcept { remove(value); }
 
-  BinarySearchTree<T> get_balanced_tree() {
+  BinarySearchTree<T> get_balanced_tree()
+  {
     if (root == nullptr && total_node_count < 3) {
       return *this;
     }
 
-    T *values = new T[total_node_count];
+    T* values = new T[total_node_count];
     get_order(values, eBST_ORDER::INORDER);
 
     BinarySearchTree<T> temp_bst;
@@ -173,13 +194,14 @@ public:
     return temp_bst;
   }
 
-  void balance_self() {
+  void balance_self()
+  {
     if (root == nullptr && total_node_count < 3) {
       return;
     }
 
     int total_count = total_node_count;
-    T *values = new T[total_node_count];
+    T* values = new T[total_node_count];
     get_order(values, eBST_ORDER::INORDER);
 
     release();
@@ -189,12 +211,13 @@ public:
     delete[] values;
   }
 
-  bool is_contain(T &value) noexcept {
+  bool is_contain(T& value) noexcept
+  {
     if (root == nullptr) {
       return false;
     }
 
-    BSTNode<T> *current_node = root;
+    BSTNode<T>* current_node = root;
 
     do {
       if (value < current_node->value) {
@@ -209,14 +232,15 @@ public:
     return false;
   }
 
-  constexpr bool is_contain(T &&value) noexcept { return is_contain(value); }
+  constexpr bool is_contain(T&& value) noexcept { return is_contain(value); }
 
-  T get_min_value() noexcept {
+  T get_min_value() noexcept
+  {
     if (root == nullptr) {
       return T();
     }
 
-    BSTNode<T> *current_node = root;
+    BSTNode<T>* current_node = root;
 
     while (current_node->left != nullptr) {
       current_node = current_node->left;
@@ -225,12 +249,13 @@ public:
     return current_node->value;
   }
 
-  T get_max_value() noexcept {
+  T get_max_value() noexcept
+  {
     if (root == nullptr) {
       return T();
     }
 
-    BSTNode<T> *current_node = root;
+    BSTNode<T>* current_node = root;
 
     while (current_node->right != nullptr) {
       current_node = current_node->right;
@@ -242,7 +267,8 @@ public:
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // From Functions
 
-  void from_array(T *array, int size, bool is_balance) {
+  void from_array(T* array, int size, bool is_balance)
+  {
     construct_from_array(array, size);
 
     if (is_balance) {
@@ -250,7 +276,8 @@ public:
     }
   }
 
-  void from_array(Array<T> &array, bool is_balance) {
+  void from_array(Array<T>& array, bool is_balance)
+  {
     if (array.get_length() == 0) {
       return;
     }
@@ -262,9 +289,10 @@ public:
     }
   }
 
-  void from_linked_list(LinkedList<T> &linked_list, bool is_balance) {
+  void from_linked_list(LinkedList<T>& linked_list, bool is_balance)
+  {
     if (linked_list.get_length() == 0) {
-      return 0;
+      return;
     }
 
     release();
@@ -283,7 +311,8 @@ public:
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // To Functions
 
-  void get_order(T *array, eBST_ORDER &&order) const {
+  void get_order(T* array, eBST_ORDER&& order) const
+  {
     if (root == nullptr) {
       return;
     }
@@ -292,22 +321,23 @@ public:
     int index = 0;
 
     switch (order) {
-    case eBST_ORDER::INORDER:
-      inorder(root, array, index);
-      break;
-    case eBST_ORDER::PREORDER:
-      preorder(root, array, index);
-      break;
-    case eBST_ORDER::POSTORDER:
-      postorder(root, array, index);
-      break;
+      case eBST_ORDER::INORDER:
+        inorder(root, array, index);
+        break;
+      case eBST_ORDER::PREORDER:
+        preorder(root, array, index);
+        break;
+      case eBST_ORDER::POSTORDER:
+        postorder(root, array, index);
+        break;
 
-    default:
-      break;
+      default:
+        break;
     }
   }
 
-  void get_order(Array<T> &array, eBST_ORDER &&order) const {
+  void get_order(Array<T>& array, eBST_ORDER&& order) const
+  {
     if (root == nullptr) {
       return;
     }
@@ -316,33 +346,35 @@ public:
     int index = 0;
 
     switch (order) {
-    case eBST_ORDER::INORDER:
-      inorder(root, array.get_ptr(), index);
-      break;
-    case eBST_ORDER::PREORDER:
-      preorder(root, array.get_ptr(), index);
-      break;
-    case eBST_ORDER::POSTORDER:
-      postorder(root, array.get_ptr(), index);
-      break;
+      case eBST_ORDER::INORDER:
+        inorder(root, array.get_ptr(), index);
+        break;
+      case eBST_ORDER::PREORDER:
+        preorder(root, array.get_ptr(), index);
+        break;
+      case eBST_ORDER::POSTORDER:
+        postorder(root, array.get_ptr(), index);
+        break;
 
-    default:
-      break;
+      default:
+        break;
     }
   }
 
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // Inline Member Funcs
 
-  inline BSTNode<T> *get_root() const noexcept { return root; }
+  inline BSTNode<T>* get_root() const noexcept { return root; }
   inline int get_total_node_count() const noexcept { return total_node_count; }
-  inline void exec_move() noexcept {
+  inline void exec_move() noexcept
+  {
     root = nullptr;
     total_node_count = 0;
   }
 
 private:
-  void inorder(BSTNode<T> *node, T *array, int &index) const noexcept {
+  void inorder(BSTNode<T>* node, T* array, int& index) const noexcept
+  {
     if (node == nullptr) {
       return;
     }
@@ -355,7 +387,8 @@ private:
     inorder(node->right, array, index);
   }
 
-  void preorder(BSTNode<T> *node, T *array, int &index) const noexcept {
+  void preorder(BSTNode<T>* node, T* array, int& index) const noexcept
+  {
     if (node == nullptr) {
       return;
     }
@@ -367,7 +400,8 @@ private:
     preorder(node->right, array, index);
   }
 
-  void postorder(BSTNode<T> *node, T *array, int &index) const noexcept {
+  void postorder(BSTNode<T>* node, T* array, int& index) const noexcept
+  {
     if (node == nullptr) {
       return;
     }
@@ -379,7 +413,8 @@ private:
     index = index + 1;
   }
 
-  void release_tree(BSTNode<T> *node) {
+  void release_tree(BSTNode<T>* node)
+  {
     if (node == nullptr) {
       return;
     }
@@ -391,7 +426,8 @@ private:
     node = nullptr;
   }
 
-  void construct_from_array(T *array, int node_size) {
+  void construct_from_array(T* array, int node_size)
+  {
     release();
 
     for (int i = 0; i < node_size; i++) {
@@ -399,9 +435,10 @@ private:
     }
   }
 
-  void from_bst(const BinarySearchTree<T> &other) {
+  void from_bst(const BinarySearchTree<T>& other)
+  {
     const int node_size = other.get_total_node_count();
-    T *others_values = new T[node_size];
+    T* others_values = new T[node_size];
 
     other.get_order(others_values, eBST_ORDER::PREORDER);
 
@@ -410,9 +447,10 @@ private:
     delete[] others_values;
   }
 
-  void from_bst(BinarySearchTree<T> &&other) {
+  void from_bst(BinarySearchTree<T>&& other)
+  {
     const int node_size = other.get_total_node_count();
-    T *others_values = new T[node_size];
+    T* others_values = new T[node_size];
 
     other.get_order(others_values, eBST_ORDER::PREORDER);
 
@@ -421,8 +459,11 @@ private:
     delete[] others_values;
   }
 
-  void build_balanced_tree(BinarySearchTree<T> &bst, T *values, int start,
-                           int end) noexcept {
+  void build_balanced_tree(BinarySearchTree<T>& bst,
+                           T* values,
+                           int start,
+                           int end) noexcept
+  {
     if (start > end) {
       return;
     }
@@ -434,7 +475,8 @@ private:
     build_balanced_tree(bst, values, mid + 1, end);
   }
 
-  void build_balanced_tree_self(T *values, int start, int end) noexcept {
+  void build_balanced_tree_self(T* values, int start, int end) noexcept
+  {
     if (start > end) {
       return;
     }
@@ -446,9 +488,10 @@ private:
     build_balanced_tree_self(values, mid + 1, end);
   }
 
-  void place_new_node(BSTNode<T> *start, BSTNode<T> *new_node) noexcept {
-    BSTNode<T> *current_node = start;
-    BSTNode<T> *parent_node = nullptr;
+  void place_new_node(BSTNode<T>* start, BSTNode<T>* new_node) noexcept
+  {
+    BSTNode<T>* current_node = start;
+    BSTNode<T>* parent_node = nullptr;
 
     // to find the parent node
     while (current_node != nullptr) {
@@ -470,8 +513,9 @@ private:
     }
   }
 
-  void remove_from_one_child(BSTNode<T> *current_node,
-                             BSTNode<T> *parent_node) noexcept {
+  void remove_from_one_child(BSTNode<T>* current_node,
+                             BSTNode<T>* parent_node) noexcept
+  {
     if (current_node->has_one_child() && parent_node->right == current_node) {
       if (current_node->has_left()) {
         parent_node->right = current_node->left;
@@ -488,28 +532,30 @@ private:
     }
   }
 
-  void remove_from_two_children(BSTNode<T> *current_node,
-                                BSTNode<T> *parent_node) noexcept {
+  void remove_from_two_children(BSTNode<T>* current_node,
+                                BSTNode<T>* parent_node) noexcept
+  {
     if (current_node->has_two_children() && parent_node->left == current_node &&
         current_node->left->has_right()) {
-      BSTNode<T> *new_node = current_node->left;
+      BSTNode<T>* new_node = current_node->left;
       place_new_node(current_node->right, new_node->right);
       new_node->right = current_node->right;
       parent_node->left = new_node;
     } else if (current_node->has_two_children() &&
                parent_node->right == current_node &&
                current_node->right->has_left()) {
-      BSTNode<T> *new_node = current_node->right;
+      BSTNode<T>* new_node = current_node->right;
       place_new_node(current_node->left, new_node->left);
       new_node->left = current_node->left;
       parent_node->right = new_node;
     }
   }
 
-  void remove_from_root(BSTNode<T> *current_node,
-                        BSTNode<T> *parent_node) noexcept {
+  void remove_from_root(BSTNode<T>* current_node,
+                        BSTNode<T>* parent_node) noexcept
+  {
     if (current_node == root && current_node->has_two_children()) {
-      BSTNode<T> *new_node = current_node->right;
+      BSTNode<T>* new_node = current_node->right;
       place_new_node(new_node, current_node->left);
       root = new_node;
     } else if (current_node == root && current_node->has_one_child()) {
@@ -528,7 +574,7 @@ private:
   }
 
 private:
-  BSTNode<T> *root = nullptr;
+  BSTNode<T>* root = nullptr;
   int total_node_count = 0;
 };
 } // namespace pxd

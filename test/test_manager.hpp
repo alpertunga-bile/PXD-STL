@@ -5,33 +5,39 @@
 #include "os.h" // fmt/os.h
 
 namespace pxd {
-class TestManager {
+class TestManager
+{
 public:
-  void add_test(std::string &&name, ITest &test) {
+  void add_test(std::string&& name, ITest& test)
+  {
     test.start_test();
     tests[name] = test.test_results;
   }
 
-  constexpr void reset_test_counts() noexcept {
+  constexpr void reset_test_counts() noexcept
+  {
     total_tests = 0;
     passed_tests = 0;
   }
 
-  void check_test_counts(bool result) noexcept {
+  void check_test_counts(bool result) noexcept
+  {
     total_tests++;
     passed_tests = result ? passed_tests + 1 : passed_tests + 0;
   }
 
-  void print_results() noexcept {
+  void print_results() noexcept
+  {
     reset_test_counts();
 
-    for (auto &[test_name, test] : tests) {
+    for (auto& [test_name, test] : tests) {
       fmt::print(
-          "---------------------------------------------------------------\n");
+        "---------------------------------------------------------------\n");
       fmt::print("Test Name : {}\n", test_name.c_str());
 
-      for (auto &[test_case_name, test_result] : test) {
-        fmt::print("  {:30s} -> {:6s}\n", test_case_name.c_str(),
+      for (auto& [test_case_name, test_result] : test) {
+        fmt::print("  {:30s} -> {:6s}\n",
+                   test_case_name.c_str(),
                    test_result == true ? "Passed" : "Failed");
 
         check_test_counts(test_result);
@@ -39,31 +45,35 @@ public:
     }
 
     fmt::print(
-        "---------------------------------------------------------------\n");
+      "---------------------------------------------------------------\n");
 
     float passed_ratio = static_cast<float>(passed_tests) /
                          static_cast<float>(total_tests) * 100.0f;
     fmt::print(
-        " Passed Tests : {} | Total Tests : {} | Passed Ratio : %{:3.2f}\n",
-        passed_tests, total_tests, passed_ratio);
+      " Passed Tests : {} | Total Tests : {} | Passed Ratio : %{:3.2f}\n",
+      passed_tests,
+      total_tests,
+      passed_ratio);
 
     fmt::print(
-        "---------------------------------------------------------------\n");
+      "---------------------------------------------------------------\n");
   }
 
-  void save_results(const char *filename = "test_results.txt") noexcept {
+  void save_results(const char* filename = "test_results.txt") noexcept
+  {
     auto test_file = fmt::output_file(filename);
     reset_test_counts();
 
-    for (auto &[test_name, test] : tests) {
+    for (auto& [test_name, test] : tests) {
       test_file.print(
-          "-----------------------------------------------------------"
-          "----\n");
+        "-----------------------------------------------------------"
+        "----\n");
 
       test_file.print("Test Name : {}\n", test_name);
 
-      for (auto &[test_case_name, test_result] : test) {
-        test_file.print("   {:30s} -> {:6s}\n", test_case_name,
+      for (auto& [test_case_name, test_result] : test) {
+        test_file.print("   {:30s} -> {:6s}\n",
+                        test_case_name,
                         (test_result == true ? "Passed" : "Failed"));
 
         check_test_counts(test_result);
@@ -71,19 +81,21 @@ public:
     }
 
     test_file.print(
-        "-----------------------------------------------------------"
-        "----\n");
+      "-----------------------------------------------------------"
+      "----\n");
 
     float passed_ratio = static_cast<float>(passed_tests) /
                          static_cast<float>(total_tests) * 100.f;
 
     test_file.print(
-        " Passed Tests : {} | Total Tests : {} | Passed Ratio : %{:3.2f}\n",
-        passed_tests, total_tests, passed_ratio);
+      " Passed Tests : {} | Total Tests : {} | Passed Ratio : %{:3.2f}\n",
+      passed_tests,
+      total_tests,
+      passed_ratio);
 
     test_file.print(
-        "-----------------------------------------------------------"
-        "----\n");
+      "-----------------------------------------------------------"
+      "----\n");
 
     test_file.close();
   }
