@@ -68,6 +68,9 @@
         "xloctime": "cpp",
         "xtree": "cpp",
         "cstdlib": "cpp",
-        "cstdint": "cpp"
+        "cstdint": "cpp",
+        "expected": "cpp",
+        "future": "cpp",
+        "semaphore": "cpp"
     }
 }

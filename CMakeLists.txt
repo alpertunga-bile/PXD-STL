@@ -18,6 +18,10 @@ if(NOT MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
 endif(NOT MSVC)
 
+if(NOT MSVC)
+    add_compile_definitions(CMAKE_CXX_INCLUDE_WHAT_YOU_USE="include-what-you-use")
+endif(NOT MSVC)
+
 option(PXD_STL_BUILD_TEST_EXECUTABLE "Build test executable" ON)
 
 set(PXD_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/sources)
@@ -86,6 +90,7 @@ include_directories(
 set(COMMON_STD_HEADERS
     <stdlib.h>
     <cstdint>
+    <vector>
 
     # Logger is using these headers
     <filesystem>
@@ -94,7 +99,6 @@ set(COMMON_STD_HEADERS
 
 set(ABSL_PROPAGATE_CXX_STD ON)
 set(ABSL_ENABLE_INSTALL ON)
-
 
 add_subdirectory(${PXD_THIRD_PARTY_DIR}/abseil-cpp)
 add_subdirectory(${PXD_THIRD_PARTY_DIR}/re2)

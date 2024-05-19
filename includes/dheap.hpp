@@ -1,8 +1,10 @@
 #pragma once
 
 #include "checks.hpp"
+#include "utility.hpp"
 
 namespace pxd {
+
 template<typename T>
 class DynamicArray;
 template<typename T>
@@ -12,112 +14,71 @@ template<typename T, int D = 4, bool is_max_heap = true>
 class DHeap
 {
 public:
-  DHeap() { values.resize(D + D * D + 1); }
-  DHeap(int wanted_size) { values.resize(wanted_size); }
-  DHeap(T* values, int size)
-  {
-    release();
-    heapify();
-  }
-  DHeap(Array<T>& values)
-  {
-    release();
-    values.expand(values);
-    heapify();
-  }
-  DHeap(DynamicArray<T>& values)
-  {
-    release();
-    values.expand(values.get_array());
-    heapify();
-  }
+  DHeap() { values.reserve(D + D * D + 1); } // allocate the first 2 level
+  DHeap(int wanted_size) { values.reserve(wanted_size); }
   DHeap(const DHeap<T, D, is_max_heap>& other) = default;
   DHeap& operator=(const DHeap<T, D, is_max_heap>& other) = default;
   DHeap(DHeap<T, D, is_max_heap>&& other) = default;
   DHeap& operator=(DHeap<T, D, is_max_heap>&& other) = default;
-  inline ~DHeap() noexcept { values.release(); }
+  inline ~DHeap() noexcept { release(); }
 
-  inline void release() noexcept { values.release(); }
+  inline void release() noexcept { values.clear(); }
 
   void insert(T& element)
   {
-    values.add(element);
-    ascend(values.get_element_count() - 1);
+    values.push_back(element);
+    ascend(values.size() - 1);
   }
 
   inline void insert(T&& element) { insert(element); }
 
   void remove(T& value)
   {
-    const int current_length = values.get_element_count();
+    const int current_length = values.size();
 
-    int index = values.where(value);
+    int index = find_index(values, value);
 
     if (index < 0) {
       return;
     }
 
     if (index == 0 && current_length == 1) {
-      values.release();
+      values.clear();
       return;
     }
 
-    T* new_values = new T[current_length - 1];
-    int node_index = 0;
-
-    for (int i = 0; i < current_length; i++) {
-      if (i == index) {
-        continue;
-      }
-
-      new_values[node_index++] = values[i];
-    }
-
-    values.release();
-    values.expand(new_values, current_length - 1);
+    values.erase(values.begin() + index);
 
     heapify();
-
-    delete[] new_values;
   }
+
   inline void remove(T&& value) { remove(value); }
 
   void remove_at(int index)
   {
-    const int current_length = values.get_element_count();
-
-    if (index == 0 && current_length == 1) {
-      values.release();
+    if (index < 0) {
       return;
     }
 
-    T* new_values = new T[current_length - 1];
-    int node_index = 0;
+    const int current_length = values.size();
 
-    for (int i = 0; i < current_length; i++) {
-      if (i == index) {
-        continue;
-      }
-
-      new_values[node_index++] = values[i];
+    if (index == 0 && current_length == 1) {
+      values.clear();
+      return;
     }
 
-    values.release();
-    values.expand(new_values, current_length - 1);
-
+    values.erase(values.begin() + index);
     heapify();
-
-    delete[] new_values;
   }
 
   T top()
   {
-    PXD_ASSERT(values.get_element_count() > 0);
+    PXD_ASSERT(values.size() > 0);
 
     T last_value = values.remove_last();
 
-    if (values.get_element_count() == 0) {
-      values.release();
+    if (values.size() == 0) {
+      values.clear();
       return last_value;
     }
 
@@ -130,14 +91,14 @@ public:
 
   inline T peek()
   {
-    PXD_ASSERT(values.get_element_count() > 0);
+    PXD_ASSERT(values.size() > 0);
 
     return values[0].value;
   }
 
   void update(T& value)
   {
-    int index = values.where(value);
+    int index = find_index(values, value);
 
     if (index < 0) {
       return;
@@ -166,15 +127,15 @@ public:
     }
   }
 
-  inline void shrink() { values.shrink(); }
-  inline int get_size() const { return values.get_element_count(); }
+  inline void shrink() { values.shrink_to_fit(); }
+  inline int get_size() const { return values.size(); }
   inline T at(int index) { return values[index]; }
-  inline DynamicArray<T> get_values() { return values; }
+  inline std::vector<T> get_values() { return values; }
 
 private:
   void heapify()
   {
-    int i = (values.get_element_count() - 1) / D;
+    int i = (values.size() - 1) / D;
 
     for (; i >= 0; i--) {
       descend(i);
@@ -230,7 +191,7 @@ private:
     int highest_child_index = child_index + 1;
 
     for (int i = 2; i < D; i++) {
-      if (child_index + i >= values.get_element_count()) {
+      if (child_index + i >= values.size()) {
         return highest_child_index;
       }
 
@@ -240,7 +201,7 @@ private:
       }
     }
 
-    if ((D * parent_index + 1) >= values.get_element_count()) {
+    if ((D * parent_index + 1) >= values.size()) {
       return highest_child_index;
     }
 
@@ -255,7 +216,7 @@ private:
   inline int get_parent_index(int index) noexcept { return (index - 1) / D; }
   inline int get_first_leaf_index() noexcept
   {
-    return (values.get_element_count() - 2) / D + 1;
+    return (values.size() - 2) / D + 1;
   }
   inline bool compare_lower(T& first_val, T& second_val) noexcept
   {
@@ -267,6 +228,6 @@ private:
   }
 
 private:
-  DynamicArray<T> values;
+  std::vector<T> values;
 };
 } // namespace pxd
