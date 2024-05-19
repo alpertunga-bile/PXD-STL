@@ -91,6 +91,7 @@ set(COMMON_STD_HEADERS
     <stdlib.h>
     <cstdint>
     <vector>
+    <algorithm>
 
     # Logger is using these headers
     <filesystem>

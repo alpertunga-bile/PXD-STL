@@ -4,10 +4,9 @@ Standard library under the PixelDancer package.
 
 ## Features
 
-- Data structures from scratch with templates.
-- Tests for the data structure functionalities.
+- Includes tests for the data structure functionalities.
 - ```SIMDString``` as the default string class.
-- RE2 library is used as regex engine.
+- ```RE2``` library is used as the regex engine.
 
 ## Usage
 
@@ -17,8 +16,6 @@ Standard library under the PixelDancer package.
 
 ## TODO
 
-- [x] Double Linked List
-- [x] XOR Double Linked List
 - [ ] Undirectional Graph
 - [ ] Directional Graph
 - [ ] Octree with Point
