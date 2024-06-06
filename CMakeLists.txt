@@ -18,6 +18,15 @@ if(NOT MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
 endif(NOT MSVC)
 
+# from glm repository's CMakeLists.txt
+if((CMAKE_CXX_COMPILER_ID MATCHES "GNU") OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
+    add_compile_options(-mavx2)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "Intel")
+    add_compile_options(/QxAVX2)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    add_compile_options(/arch:AVX2)
+endif()
+
 if(NOT MSVC)
     add_compile_definitions(CMAKE_CXX_INCLUDE_WHAT_YOU_USE="include-what-you-use")
 endif(NOT MSVC)
@@ -83,6 +92,7 @@ set(LIB_SOURCE_FILES
 include_directories(
    ${PXD_INCLUDE_DIR} 
    ${PXD_INCLUDE_DIR}/ds
+
    ${PXD_THIRD_PARTY_DIR}/fmt/include/fmt
    ${PXD_THIRD_PARTY_DIR}/SIMDString
    ${PXD_THIRD_PARTY_DIR}/re2/re2
