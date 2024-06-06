@@ -61,7 +61,7 @@ topK(T* values, int values_size, int k)
 
 template<typename T>
 inline int
-find(Array<T>& arr, T& value)
+find(Array<T>&& arr, T&& value)
 {
   const int length = arr.get_length();
 
@@ -76,14 +76,7 @@ find(Array<T>& arr, T& value)
 
 template<typename T>
 inline int
-find(Array<T>&& arr, T& value)
-{
-  find<T>(arr, value);
-}
-
-template<typename T>
-inline int
-find(DynamicArray<T>& arr, T& value)
+find(DynamicArray<T>&& arr, T&& value)
 {
   const int length = arr.get_element_count();
 
@@ -98,14 +91,7 @@ find(DynamicArray<T>& arr, T& value)
 
 template<typename T>
 inline int
-find(DynamicArray<T>&& arr, T& value)
-{
-  find<T>(arr, value);
-}
-
-template<typename T>
-inline int
-find_index(std::vector<T>& vec, T&& value)
+find_index(std::vector<T>&& vec, T&& value)
 {
   auto it = std::find(vec.begin(), vec.end(), value);
 
@@ -114,7 +100,7 @@ find_index(std::vector<T>& vec, T&& value)
 
 template<typename T>
 inline int
-find(LinkedList<T>& ll, T& value)
+find(LinkedList<T>&& ll, T&& value)
 {
   LLNode<T>* current_node = ll.get_head_node();
   const int length = ll.get_length();
@@ -132,7 +118,7 @@ find(LinkedList<T>& ll, T& value)
 
 template<typename T>
 inline int
-find(DoubleLinkedList<T>& dll, T& value)
+find(DoubleLinkedList<T>&& dll, T&& value)
 {
   DLLNode<T>* current_node = dll.get_head_node();
   const int length = dll.get_length();
@@ -150,7 +136,7 @@ find(DoubleLinkedList<T>& dll, T& value)
 
 template<typename T, int D = 4, bool is_max_heap = true>
 inline int
-find(DHeap<T, D, is_max_heap>& dheap, T& value)
+find(DHeap<T, D, is_max_heap>&& dheap, T&& value)
 {
   return find<T>(dheap.get_values(), value);
 }
@@ -161,7 +147,7 @@ find(DHeap<T, D, is_max_heap>& dheap, T& value)
 // append raw array to the end of the vector
 template<typename T>
 inline void
-append(std::vector<T>& vec, T* array, int arr_size)
+append(std::vector<T>&& vec, T* array, int arr_size)
 {
   std::vector<T> temp_vec(array, arr_size);
 
