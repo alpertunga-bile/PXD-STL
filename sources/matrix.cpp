@@ -1,3 +1,3 @@
 #include "matrix.hpp"
 
-#include "array.hpp"
+#include "ds/array.hpp"
