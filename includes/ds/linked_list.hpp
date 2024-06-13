@@ -8,12 +8,13 @@ template <typename T> class Array;
 template <typename T> class DoubleLinkedList;
 template <typename T> class DynamicArray;
 
-template <typename T> struct LLNode {
-  T value;
-  LLNode<T> *next = nullptr;
-};
-
 template <typename T> class LinkedList {
+public:
+  struct Node {
+    T value;
+    Node *next = nullptr;
+  };
+
 public:
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Constructors
@@ -66,7 +67,7 @@ public:
   T &operator[](int index) noexcept {
     const int calc_index = get_calc_index(index);
 
-    LLNode<T> *current_node = head;
+    Node *current_node = head;
 
     for (int i = 0; i < calc_index; i++) {
       current_node = current_node->next;
@@ -99,10 +100,10 @@ public:
       return;
     }
 
-    LLNode<T> *current_node = head;
+    Node *current_node = head;
 
     do {
-      LLNode<T> *prev_node = current_node;
+      Node *prev_node = current_node;
       current_node = current_node->next;
       delete prev_node;
     } while (current_node != nullptr);
@@ -117,13 +118,13 @@ public:
       return;
     }
 
-    LLNode<T> *current_node = head->next;
+    Node *current_node = head->next;
 
-    LLNode<T> *prev_node = head;
+    Node *prev_node = head;
     prev_node->next = nullptr;
     end = prev_node;
 
-    LLNode<T> *forw_node = nullptr;
+    Node *forw_node = nullptr;
 
     while (current_node != nullptr) {
       forw_node = current_node->next;
@@ -139,7 +140,7 @@ public:
   // returns length because negative indexing is supported
   // so this will lead to unwanted situations
   constexpr int where(T &value) noexcept {
-    LLNode<T> *current_node = head;
+    Node *current_node = head;
     int index = length;
 
     for (int i = 0; i < length; i++) {
@@ -156,7 +157,7 @@ public:
 
   // for left values
   inline void add(T &new_value, bool add_back = true) noexcept {
-    LLNode<T> *new_node = new LLNode<T>();
+    Node *new_node = new Node();
     new_node->value = new_value;
 
     if (head == nullptr) {
@@ -189,8 +190,8 @@ public:
 
     int calc_index = get_calc_index(index);
 
-    LLNode<T> *prev_node = nullptr;
-    LLNode<T> *current_node = head;
+    Node *prev_node = nullptr;
+    Node *current_node = head;
 
     for (int i = 0; i < calc_index; i++) {
       prev_node = current_node;
@@ -205,8 +206,8 @@ public:
       return;
     }
 
-    LLNode<T> *prev_node = nullptr;
-    LLNode<T> *current_node = head;
+    Node *prev_node = nullptr;
+    Node *current_node = head;
 
     for (int i = 0; i < length; i++) {
       if (current_node->value == value) {
@@ -302,7 +303,7 @@ public:
 
     dll.release();
 
-    LLNode<T> *current_node = head;
+    Node *current_node = head;
 
     for (int i = 0; i < length; i++) {
       dll.add(current_node->value);
@@ -328,8 +329,8 @@ public:
   constexpr inline bool is_empty() const noexcept {
     return head == nullptr && length == 0 ? true : false;
   }
-  constexpr inline LLNode<T> *get_head_node() const noexcept { return head; }
-  constexpr inline LLNode<T> *get_end_node() const noexcept { return end; }
+  constexpr inline Node *get_head_node() const noexcept { return head; }
+  constexpr inline Node *get_end_node() const noexcept { return end; }
   constexpr inline void exec_move() noexcept {
     head = nullptr;
     end = nullptr;
@@ -340,8 +341,8 @@ private:
   constexpr void from_linked_list(const LinkedList<T> &other) {
     release();
 
-    LLNode<T> *this_current_node = new LLNode<T>();
-    LLNode<T> *other_current_node = other.get_head_node();
+    Node *this_current_node = new Node();
+    Node *other_current_node = other.get_head_node();
 
     this_current_node->value = other_current_node->value;
     head = this_current_node;
@@ -350,7 +351,7 @@ private:
     length = other.get_length();
 
     for (int i = 1; i < length; i++) {
-      LLNode<T> *new_node = new LLNode<T>();
+      Node *new_node = new Node();
       new_node->value = other_current_node->value;
 
       this_current_node->next = new_node;
@@ -376,7 +377,7 @@ private:
   }
 
   inline void fill_array(T *array) const noexcept {
-    LLNode<T> *current_node = head;
+    Node *current_node = head;
 
     for (int i = 0; i < length; i++) {
       array[i] = current_node->value;
@@ -385,7 +386,7 @@ private:
   }
 
   inline void fill_array(Array<T> &array) noexcept {
-    LLNode<T> *current_node = head;
+    Node *current_node = head;
 
     for (int i = 0; i < length; i++) {
       array[i] = current_node->value;
@@ -394,7 +395,7 @@ private:
   }
 
   inline void fill_array(DynamicArray<T> &array) noexcept {
-    LLNode<T> *current_node = head;
+    Node *current_node = head;
 
     for (int i = 0; i < length; i++) {
       array[i] = current_node->value;
@@ -402,8 +403,7 @@ private:
     }
   }
 
-  inline void remove_node(LLNode<T> *prev_node,
-                          LLNode<T> *current_node) noexcept {
+  inline void remove_node(Node *prev_node, Node *current_node) noexcept {
     if (current_node == nullptr) {
       return;
     }
@@ -428,8 +428,8 @@ private:
   }
 
 private:
-  LLNode<T> *head = nullptr;
-  LLNode<T> *end = nullptr;
+  Node *head = nullptr;
+  Node *end = nullptr;
   int length = 0;
 };
 } // namespace pxd

@@ -27,9 +27,9 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     add_compile_options(/arch:AVX2)
 endif()
 
-if(NOT MSVC)
+if(NOT WIN32)
     add_compile_definitions(CMAKE_CXX_INCLUDE_WHAT_YOU_USE="include-what-you-use")
-endif(NOT MSVC)
+endif(NOT WIN32)
 
 option(PXD_STL_BUILD_TEST_EXECUTABLE "Build test executable" ON)
 
@@ -172,7 +172,6 @@ IF(PXD_STL_BUILD_TEST_EXECUTABLE)
         ${PROJECT_NAME} PRIVATE
         ${COMMON_STD_HEADERS}
         <unordered_map>
-        <utility>
         ${TEST_HEADER_FILES}
         ${HEADER_FILES}
     )

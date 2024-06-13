@@ -12,7 +12,7 @@ template <typename T> class LinkedList;
 template <typename T> class DoubleLinkedList;
 
 template <typename T> class XORDoubleLinkedList {
-private:
+public:
   struct Node {
     T value;
     Node *dir = nullptr;
@@ -344,7 +344,8 @@ public:
 
 private:
   inline Node *XOR(Node *prev, Node *next) {
-    return (Node *)((uintptr_t)(prev) ^ (uintptr_t)(next));
+    return (Node *)(reinterpret_cast<std::uintptr_t>(prev) ^
+                    reinterpret_cast<std::uintptr_t>(next));
   }
 
   inline int get_calc_min_index(int &given_index, bool &is_negative) noexcept {
