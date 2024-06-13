@@ -91,6 +91,7 @@ public:
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // DS Functionalities
 
+  /// @brief delete all the nodes
   inline void release() noexcept {
     if (head == nullptr) {
       return;
@@ -109,6 +110,10 @@ public:
     length = 0;
   }
 
+  /// @brief add new value to the double linked list
+  /// @param value new value wants to be added
+  /// @param add_back true add the value to the end, false add the value to the
+  /// head
   void add(T &value, bool add_back = true) noexcept {
     Node *new_node = new Node();
     new_node->value = value;
@@ -132,8 +137,14 @@ public:
     length++;
   }
 
+  /// @brief add new value to the double linked list
+  /// @param value new value wants to be added
+  /// @param add_back true add the value to the end, false add the value to the
+  /// head
   void add(T &&value, bool add_back = true) noexcept { add(value, add_back); }
 
+  /// @brief remove the node at the given index
+  /// @param index the node's index
   void remove_at(int index) noexcept {
     if (head == nullptr || index < 0 || index >= length) {
       return;
@@ -144,6 +155,8 @@ public:
     remove_node(current_node);
   }
 
+  /// @brief remove the node based on the given value
+  /// @param value the value wants to be removed
   void remove(T &value) noexcept {
     if (head == nullptr) {
       return;
@@ -177,8 +190,11 @@ public:
     remove_node(current_node);
   }
 
+  /// @brief remove the node based on the given value
+  /// @param value the value wants to be removed
   void remove(T &&value) noexcept { remove(value); }
 
+  /// @brief reverse the double linked list's direction
   void reverse() noexcept {
     if (head == nullptr || length == 1) {
       return;
@@ -204,6 +220,9 @@ public:
     head = current_node;
   }
 
+  /// @brief find the index of the value
+  /// @param value the given value
+  /// @return index of the given value
   int where(T &value) noexcept {
     Node *from_head = head;
     Node *from_end = end;
@@ -232,6 +251,9 @@ public:
     return index;
   }
 
+  /// @brief find the index of the value
+  /// @param value the given value
+  /// @return index of the given value
   int where(T &&value) noexcept { return where(value); }
 
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -324,6 +346,8 @@ public:
   inline Node *get_end_node() const noexcept { return end; }
   inline int get_length() const noexcept { return length; }
 
+  /// @brief the function has to be executed in the move constructors. releasing
+  /// class without deleting
   constexpr void exec_move() noexcept {
     head = nullptr;
     end = nullptr;
@@ -331,6 +355,13 @@ public:
   }
 
 private:
+  /// @brief calculate the minimum iteration count for the given index. For
+  /// indices that are close to end, iterating backward is more cheapaer. This
+  /// is same for the indices that are close to head, iterating forward is more
+  /// cheaper
+  /// @param given_index the index
+  /// @param is_negative true iterate backward, false iterate forward
+  /// @return the iteration count
   inline int get_calc_min_index(int &given_index,
                                 bool &is_negative) const noexcept {
     int positive_index = given_index >= 0 ? given_index : length + given_index;
@@ -342,6 +373,9 @@ private:
     return is_negative ? negative_index : positive_index;
   }
 
+  /// @brief get the node at the given index
+  /// @param index the given index
+  /// @return the node at the given index
   inline Node *get_node_at(int &index) noexcept {
     bool is_negative = false;
     int calc_index = get_calc_min_index(index, is_negative);
@@ -364,6 +398,8 @@ private:
     return current_node;
   }
 
+  /// @brief remove the given node without violating the double linked list
+  /// @param current_node the node want to be deleted
   inline void remove_node(Node *current_node) noexcept {
     if (current_node == nullptr) {
       return;

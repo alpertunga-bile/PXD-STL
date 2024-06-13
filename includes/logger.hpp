@@ -61,24 +61,24 @@ private:
   }
 #else
 #ifdef PXD_LOG_FILE_ONLY
-#define LOG_INFO(msg)                                                          \
+#define PXD_LOG_INFO(msg)                                                      \
   {                                                                            \
     pxd::Logger *logger = pxd::Logger::get_instance();                         \
     logger->log_info(msg, __FILE__, __LINE__, __FUNCTION_NAME__);              \
   }
-#define LOG_WARNING(msg)                                                       \
+#define PXD_LOG_WARNING(msg)                                                   \
   {                                                                            \
     pxd::Logger *logger = pxd::Logger::get_instance();                         \
     logger->log_warning(msg, __FILE__, __LINE__, __FUNCTION_NAME__);           \
   }
-#define LOG_ERROR(msg)                                                         \
+#define PXD_LOG_ERROR(msg)                                                     \
   {                                                                            \
     pxd::Logger *logger = pxd::Logger::get_instance();                         \
     logger->log_error(msg, __FILE__, __LINE__, __FUNCTION_NAME__);             \
   }
 #else
-#define LOG_INFO(msg)
-#define LOG_WARNING(msg)
-#define LOG_ERROR(msg)
+#define PXD_LOG_INFO(msg)
+#define PXD_LOG_WARNING(msg)
+#define PXD_LOG_ERROR(msg)
 #endif
 #endif
