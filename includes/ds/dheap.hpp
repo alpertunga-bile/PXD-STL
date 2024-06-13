@@ -5,37 +5,31 @@
 
 namespace pxd {
 
-template<typename T>
-class DynamicArray;
-template<typename T>
-class Array;
+template <typename T> class DynamicArray;
+template <typename T> class Array;
 
-template<typename T, int D = 4, bool is_max_heap = true>
-class DHeap
-{
+template <typename T, int D = 4, bool is_max_heap = true> class DHeap {
 public:
   DHeap() { values.reserve(D + D * D + 1); } // allocate the first 2 level
   DHeap(int wanted_size) { values.reserve(wanted_size); }
-  DHeap(const DHeap<T, D, is_max_heap>& other) = default;
-  DHeap& operator=(const DHeap<T, D, is_max_heap>& other) = default;
-  DHeap(DHeap<T, D, is_max_heap>&& other) = default;
-  DHeap& operator=(DHeap<T, D, is_max_heap>&& other) = default;
+  DHeap(const DHeap<T, D, is_max_heap> &other) = default;
+  DHeap &operator=(const DHeap<T, D, is_max_heap> &other) = default;
+  DHeap(DHeap<T, D, is_max_heap> &&other) = default;
+  DHeap &operator=(DHeap<T, D, is_max_heap> &&other) = default;
   inline ~DHeap() noexcept { release(); }
 
   inline void release() noexcept { values.clear(); }
 
   decltype(auto) operator[](int index) { return values[index]; }
 
-  void insert(T& element)
-  {
+  void insert(T &element) {
     values.push_back(element);
     ascend(values.size() - 1);
   }
 
-  inline void insert(T&& element) { insert(element); }
+  inline void insert(T &&element) { insert(element); }
 
-  void remove(T& value)
-  {
+  void remove(T &value) {
     const int current_length = values.size();
 
     int index = find_index(values, value);
@@ -54,10 +48,9 @@ public:
     heapify();
   }
 
-  inline void remove(T&& value) { remove(value); }
+  inline void remove(T &&value) { remove(value); }
 
-  void remove_at(int index)
-  {
+  void remove_at(int index) {
     if (index < 0) {
       return;
     }
@@ -73,12 +66,11 @@ public:
     heapify();
   }
 
-  T top()
-  {
+  T top() {
     PXD_ASSERT(values.size() > 0);
 
     T last_value = values[values.size() - 1];
-    values.erase(values.end());
+    values.erase(values.end() - 1);
 
     if (values.size() == 0) {
       values.clear();
@@ -92,15 +84,13 @@ public:
     return root_node;
   }
 
-  inline T peek()
-  {
+  inline T peek() {
     PXD_ASSERT(values.size() > 0);
 
     return values[0];
   }
 
-  void update(T& value)
-  {
+  void update(T &value) {
     int index = find_index(values, value);
 
     if (index < 0) {
@@ -116,10 +106,9 @@ public:
       descend(index);
     }
   }
-  inline void update(T&& value) { update(value); }
+  inline void update(T &&value) { update(value); }
 
-  void update_at(int index, T& value)
-  {
+  void update_at(int index, T &value) {
     T old_value = values[index];
     values[index] = value;
 
@@ -130,15 +119,14 @@ public:
     }
   }
 
-  inline int where(T& value) { return find_index(values, value); }
+  inline int where(T &value) { return find_index(values, value); }
 
   inline void shrink() { values.shrink_to_fit(); }
   inline int get_size() const { return values.size(); }
   inline std::vector<T> get_values() { return values; }
 
 private:
-  void heapify()
-  {
+  void heapify() {
     int i = (values.size() - 1) / D;
 
     for (; i >= 0; i--) {
@@ -146,8 +134,7 @@ private:
     }
   }
 
-  void ascend(int index)
-  {
+  void ascend(int index) {
     int current_index = index;
     T current_value = values[index];
 
@@ -165,8 +152,7 @@ private:
     values[current_index] = current_value;
   }
 
-  void descend(int index = 0)
-  {
+  void descend(int index = 0) {
     int current_index = index;
     const int first_leaf_index = get_first_leaf_index();
 
@@ -188,8 +174,7 @@ private:
     values[current_index] = current_value;
   }
 
-  inline int get_highest_priority_leaf(int parent_index)
-  {
+  inline int get_highest_priority_leaf(int parent_index) {
     const int child_index = D * parent_index;
     T child_value = values[child_index];
     int highest_child_index = child_index + 1;
@@ -218,16 +203,13 @@ private:
   }
 
   inline int get_parent_index(int index) noexcept { return (index - 1) / D; }
-  inline int get_first_leaf_index() noexcept
-  {
+  inline int get_first_leaf_index() noexcept {
     return (values.size() - 2) / D + 1;
   }
-  inline bool compare_lower(T& first_val, T& second_val) noexcept
-  {
+  inline bool compare_lower(T &first_val, T &second_val) noexcept {
     return is_max_heap ? first_val < second_val : first_val > second_val;
   }
-  inline bool compare_bigger(T& first_val, T& second_val) noexcept
-  {
+  inline bool compare_bigger(T &first_val, T &second_val) noexcept {
     return is_max_heap ? first_val > second_val : first_val < second_val;
   }
 

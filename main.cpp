@@ -13,9 +13,7 @@
 
 #include "logger.hpp"
 
-void
-do_test()
-{
+void do_test() {
   LOG_WARNING("WARNING");
   LOG_ERROR("ERROR");
   LOG_INFO("Starting tests");
@@ -49,8 +47,4 @@ do_test()
   test_manager.save_results();
 }
 
-int
-main()
-{
-  do_test();
-}
+int main() { do_test(); }
