@@ -54,4 +54,8 @@ void do_test() {
 
 int main() {
   // do_test();
+  String full_str("(((())))");
+
+  pxd::full_match(full_str, re_remove_empty_parantheses);
+  pxd::partial_match(full_str, re_remove_empty_parantheses);
 }
