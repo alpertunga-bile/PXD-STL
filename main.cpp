@@ -13,6 +13,11 @@
 
 #include "logger.hpp"
 
+#include "regex.hpp"
+
+const RE2 re_remove_empty_parantheses("\\(\\s*\\)");
+const RE2 re_remove_multiwhitespaces("\\s+");
+
 void do_test() {
   PXD_LOG_WARNING("WARNING");
   PXD_LOG_ERROR("ERROR");
@@ -47,4 +52,6 @@ void do_test() {
   test_manager.save_results();
 }
 
-int main() { do_test(); }
+int main() {
+  // do_test();
+}
