@@ -10,3 +10,6 @@
 [submodule "third-party/fmt"]
 	path = third-party/fmt
 	url = https://github.com/fmtlib/fmt.git
+[submodule "third-party/simdjson"]
+	path = third-party/simdjson
+	url = https://github.com/simdjson/simdjson.git
