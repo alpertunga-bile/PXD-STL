@@ -1,6 +1,7 @@
 #pragma once
 
 #include "checks.hpp"
+#include <cstring>
 
 namespace pxd {
 template <typename T> class Array {
@@ -206,7 +207,7 @@ private:
     PXD_ASSERT(from != nullptr);
     PXD_ASSERT(to != nullptr);
 
-    memcpy(to, from, size);
+    std::memcpy(to, from, size);
   }
 
   void copy_full(T *from, T *to) { copy(from, to, byte_size); }
