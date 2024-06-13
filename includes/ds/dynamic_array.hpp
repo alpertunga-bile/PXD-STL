@@ -57,6 +57,8 @@ public:
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // DS Functionalities
 
+  /// @brief append the given value to the back of the array
+  /// @param value the given value
   void add(T &value) {
     if (total_capacity == 0) {
       resize(inc_size_count);
@@ -70,12 +72,20 @@ public:
 
     element_count++;
   }
-
-  constexpr int where(T &value) noexcept { return array.where(value); }
-  constexpr int where(T &&value) noexcept { return array.where(value); }
-
+  /// @brief append the given value to the back of the array
+  /// @param value the given value
   constexpr void add(T &&value) { add(value); }
 
+  /// @brief get index of the value
+  /// @param value wanted value to be found
+  /// @return index value if successful, if not INDEX_NONE
+  constexpr int where(T &value) noexcept { return array.where(value); }
+  /// @brief get index of the value
+  /// @param value wanted value to be found
+  /// @return index value if successful, if not INDEX_NONE
+  constexpr int where(T &&value) noexcept { return array.where(value); }
+
+  /// @brief release the array
   inline void release() noexcept {
     array.release();
     element_count = 0;
@@ -83,6 +93,9 @@ public:
     total_byte_size = 0;
   }
 
+  /// @brief recreate the array with the new size
+  /// @param size wanted new size
+  /// @param need_more need to add more size for the total capacity
   void reallocate(int size, bool need_more = false) {
     int new_size = need_more ? size + inc_size_count : size;
 
@@ -93,6 +106,8 @@ public:
     total_byte_size = new_size * sizeof(T);
   }
 
+  /// @brief truncate the non-used parts of the dynamic array and make it like a
+  /// normal array
   void shrink() {
     if (total_capacity == element_count) {
       return;
@@ -104,20 +119,24 @@ public:
     total_byte_size = element_count * sizeof(T);
   }
 
+  /// @brief remove and return the last value of the array
+  /// @return the last value
   T remove_last() {
     if (element_count == 0) {
       return T();
     }
 
-    T last_node = array[element_count - 1];
     element_count--;
+    T last_node = array[element_count];
+
+    shrink();
 
     return last_node;
   }
 
-  // ///////////////////////////////////////////////////////////////////////////////////////////////////
-  // From Functions
-
+  /// @brief expand the array with given raw array's values
+  /// @param given_array the array that contains values
+  /// @param size total value count of the given array
   void expand(T *new_values, int size) {
     array.expand(new_values, size);
 
@@ -126,6 +145,8 @@ public:
     total_byte_size = total_capacity * sizeof(T);
   }
 
+  /// @brief expand the array with given array's values
+  /// @param given_array the array that contains values
   void expand(Array<T> &new_values) {
     int size = new_values.get_length();
     array.expand(new_values);
@@ -138,7 +159,11 @@ public:
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // Inline Member Funcs
 
+  /// @brief get array value
+  /// @return array
   inline Array<T> get_array() const noexcept { return array; }
+  /// @brief get raw array pointer
+  /// @return raw array pointer
   inline T *get_data() const noexcept { return array.get_ptr(); }
   inline int get_element_count() const noexcept { return element_count; }
   inline int get_total_capacity() const noexcept { return total_capacity; }
@@ -148,6 +173,8 @@ public:
   }
   inline int get_increment_count() const noexcept { return inc_size_count; }
 
+  /// @brief the function has to be executed in the move constructors. releasing
+  /// class without deleting
   constexpr inline void exec_move() noexcept {
     array.exec_move();
     element_count = 0;
@@ -156,6 +183,8 @@ public:
     inc_size_count = 5;
   }
 
+  /// @brief set increment size of the capacity
+  /// @param inc_size wanted increment size
   constexpr inline void set_inc_size(int inc_size) noexcept {
     if (inc_size < 1) {
       return;
@@ -164,6 +193,8 @@ public:
     inc_size_count = inc_size;
   }
 
+  /// @brief resize array with contained values
+  /// @param new_size wanted new size
   void resize(int size, bool need_more = false) {
     int new_size = need_more ? size + inc_size_count : size;
 
@@ -175,6 +206,8 @@ public:
   }
 
 private:
+  /// @brief resize to new increased size which is greater than the
+  /// element_count with inc_size_count difference
   void add_capacity() {
     int new_size = total_capacity + inc_size_count;
 
