@@ -9,9 +9,11 @@ Logger::Logger() { errno_t error = fopen_s(&log_file, log_filename, "w"); }
 inline Logger::~Logger() noexcept {
   if (log_file != nullptr) {
     fclose(log_file);
+    log_file = nullptr;
   }
 
   delete instance;
+  instance = nullptr;
 }
 
 void Logger::log_info(const char *msg, const char *filename, int line,

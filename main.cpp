@@ -14,9 +14,9 @@
 #include "logger.hpp"
 
 void do_test() {
-  LOG_WARNING("WARNING");
-  LOG_ERROR("ERROR");
-  LOG_INFO("Starting tests");
+  PXD_LOG_WARNING("WARNING");
+  PXD_LOG_ERROR("ERROR");
+  PXD_LOG_INFO("Starting tests");
 
   pxd::TestManager test_manager;
 
