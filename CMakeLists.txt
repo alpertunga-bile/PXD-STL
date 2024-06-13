@@ -103,6 +103,9 @@ set(COMMON_STD_HEADERS
     <cstdint>
     <vector>
     <algorithm>
+    <cassert>
+    <utility>
+    <cstring>
 
     # Logger is using these headers
     <filesystem>
