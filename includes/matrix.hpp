@@ -73,6 +73,8 @@ public:
     }
 
     delete[] matrix;
+    matrix = nullptr;
+
     row = 0;
     column = 0;
     element_count = 0;
