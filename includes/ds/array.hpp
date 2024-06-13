@@ -1,6 +1,7 @@
 #pragma once
 
 #include "checks.hpp"
+#include "utility.hpp"
 #include <cstring>
 
 namespace pxd {
@@ -69,15 +70,18 @@ public:
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // DS Functionalities
 
-  constexpr inline int where(T &value) noexcept {
-    int index = -1;
-    find(value, 0, length - 1, index);
+  /// @brief get index of the value
+  /// @param value wanted value to be found
+  /// @return index value if successful, if not INDEX_NONE
+  constexpr inline int where(T &value) noexcept { return find(*this, value); }
 
-    return index;
-  }
-
+  /// @brief get index of the value
+  /// @param value wanted value to be found
+  /// @return index value if successful, if not INDEX_NONE
   constexpr inline int where(T &&value) noexcept { return where(value); }
 
+  /// @brief resize array with contained values
+  /// @param new_size wanted new size
   constexpr void resize(int new_size) {
     if (length == 0) {
       allocate(new_size);
@@ -97,16 +101,22 @@ public:
     delete[] temp_array;
   }
 
+  /// @brief recreate the array from given raw array values
+  /// @param given_array array that contains values
+  /// @param size total value count of the given array
   void reallocate(T *given_array, int size) {
     release();
     allocate(given_array, size);
   }
 
+  /// @brief recreate the array with the given size
+  /// @param size wanted new size
   constexpr void reallocate(int size) {
     release();
     allocate(size);
   }
 
+  /// @brief release the array
   inline void release() noexcept {
     if (arr_ptr == nullptr) {
       return;
@@ -119,11 +129,14 @@ public:
     byte_size = 0;
   }
 
+  /// @brief expand the array with given array's values
+  /// @param given_array the array that contains values
   void expand(Array<T> &given_array) {
     if (given_array.get_length() == 0) {
       return;
     }
 
+    // if the array is empty
     if (length == 0) {
       allocate(given_array.get_ptr(), given_array.get_length());
       return;
@@ -138,6 +151,9 @@ public:
     copy(given_array.get_ptr(), arr_ptr + old_length, copy_size);
   }
 
+  /// @brief expand the array with given raw array's values
+  /// @param given_array the array that contains values
+  /// @param size total value count of the given array
   void expand(T *given_array, int size) {
     if (length == 0) {
       allocate(given_array, size);
@@ -155,9 +171,11 @@ public:
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // To Functions
 
+  /// @brief copy the array's values to another array
+  /// @param to recreated array
   void copy_to(Array<T> &to) {
     if (to.get_length() != length) {
-      to.resize(length);
+      to.reallocate(length);
     }
 
     copy_full(arr_ptr, to.get_ptr());
@@ -166,17 +184,24 @@ public:
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // Inline Member Funcs
 
+  /// @brief get array pointer
+  /// @return raw array pointer
   inline T *get_ptr() noexcept { return arr_ptr; }
+  /// @brief const get array pointer
+  /// @return raw array pointer
   inline T *get_ptr() const noexcept { return arr_ptr; }
+  /// @brief get total value count
+  /// @return value count
   inline int get_length() const noexcept { return length; }
+  /// @brief get array's byte size
+  /// @return array's byte size
   inline size_t get_byte_size() const noexcept { return byte_size; }
-  inline float get_mbyte_size() const noexcept {
-    return ((float)byte_size) / 1024.f;
-  }
-  inline float get_gbyte_size() const noexcept {
-    return ((float)byte_size) / (1024.f * 1024.f);
-  }
+  /// @brief get template class's byte size
+  /// @return typename's byte size
   inline size_t get_data_size() const noexcept { return sizeof(T); }
+
+  /// @brief the function has to be executed in the move constructors. releasing
+  /// class without deleting
   constexpr void exec_move() noexcept {
     arr_ptr = nullptr;
     length = 0;
@@ -184,6 +209,8 @@ public:
   }
 
 private:
+  /// @brief create the array and fill the class variables
+  /// @param size wanted size
   constexpr void allocate(int size) {
     PXD_ASSERT(arr_ptr == nullptr);
 
@@ -192,6 +219,10 @@ private:
     byte_size = size * sizeof(T);
   }
 
+  /// @brief create the array and copy the values from a raw array and fill the
+  /// class variables
+  /// @param given_array the array that contains values
+  /// @param size total value count of the given array
   void allocate(T *given_array, int size) {
     PXD_ASSERT(arr_ptr == nullptr);
     PXD_ASSERT(given_array != nullptr);
@@ -203,6 +234,10 @@ private:
     copy_full(given_array, arr_ptr);
   }
 
+  /// @brief copy from array to to array with given size
+  /// @param from source array
+  /// @param to destination array
+  /// @param size wanted copy size
   void copy(T *from, T *to, size_t size) {
     PXD_ASSERT(from != nullptr);
     PXD_ASSERT(to != nullptr);
@@ -210,7 +245,10 @@ private:
     std::memcpy(to, from, size);
   }
 
-  void copy_full(T *from, T *to) { copy(from, to, byte_size); }
+  /// @brief copy all the values of from array to to array
+  /// @param from source array
+  /// @param to destination array
+  inline void copy_full(T *from, T *to) { copy(from, to, byte_size); }
 
   void from(const Array<T> &given_array) noexcept {
     if (length != given_array.get_length()) {
@@ -220,7 +258,10 @@ private:
     copy_full(given_array.get_ptr(), arr_ptr);
   }
 
-  bool compare(Array<T> &other) noexcept {
+  /// @brief compare the values of the array with the given array
+  /// @param other given array
+  /// @return true if all values are equal, false if any values are not equal
+  bool compare(const Array<T> &other) noexcept {
     if (length != other.get_length() || byte_size != other.get_byte_size() ||
         !IS_VALID(other.get_ptr())) {
       return false;
@@ -232,6 +273,12 @@ private:
     return is_same;
   }
 
+  /// @brief compare arrays with divide & conquer
+  /// @param first_array the array
+  /// @param second_array the given array
+  /// @param start start point, 0
+  /// @param end end point, length - 1
+  /// @param result true or false based on the equality of the values
   void compare_arrays(T *first_array, T *second_array, int start, int end,
                       bool &result) noexcept {
     if (start > end) {
@@ -243,20 +290,6 @@ private:
 
     compare_arrays(first_array, second_array, start, mid - 1, result);
     compare_arrays(first_array, second_array, mid + 1, end, result);
-  }
-
-  void find(T &value, int start, int end, int &index) noexcept {
-    if (start > end) {
-      return;
-    }
-
-    int mid = (start + end) / 2;
-    if (arr_ptr[mid] == value) {
-      index = mid;
-    }
-
-    find(value, start, mid - 1, index);
-    find(value, mid + 1, end, index);
   }
 
 private:
