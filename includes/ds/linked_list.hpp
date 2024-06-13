@@ -95,6 +95,7 @@ public:
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // DS Functionalities
 
+  /// @brief delete all the nodes in the linked list
   inline void release() noexcept {
     if (head == nullptr) {
       return;
@@ -113,6 +114,7 @@ public:
     length = 0;
   }
 
+  /// @brief reverse the linked list's direction
   void reverse() noexcept {
     if (is_empty() || length == 1) {
       return;
@@ -141,21 +143,22 @@ public:
   // so this will lead to unwanted situations
   constexpr int where(T &value) noexcept {
     Node *current_node = head;
-    int index = length;
 
     for (int i = 0; i < length; i++) {
       if (current_node->value == value) {
-        index = i;
-        break;
+        return i;
       }
 
       current_node = current_node->next;
     }
 
-    return index;
+    return length;
   }
 
-  // for left values
+  /// @brief add a value to the linked list
+  /// @param new_value value to be added
+  /// @param add_back true add the value to the end, false add the value to the
+  /// head
   inline void add(T &new_value, bool add_back = true) noexcept {
     Node *new_node = new Node();
     new_node->value = new_value;
@@ -178,11 +181,16 @@ public:
     length++;
   }
 
-  // for right values
+  /// @brief add a value to the linked list
+  /// @param new_value value to be added
+  /// @param add_back true add the value to the end, false add the value to the
+  /// head
   inline void add(T &&new_value, bool add_back = true) {
     add(new_value, add_back);
   }
 
+  /// @brief remove a value from the linked list with an index
+  /// @param index the index of the value
   void remove_at(int index) {
     if (head == nullptr) {
       return;
@@ -201,6 +209,8 @@ public:
     remove_node(prev_node, current_node);
   }
 
+  /// @brief remove a value from the linked list
+  /// @param value the value wants to be removed
   void remove(T &value) noexcept {
     if (head == nullptr) {
       return;
@@ -221,6 +231,8 @@ public:
     remove_node(prev_node, current_node);
   }
 
+  /// @brief remove a value from the linked list
+  /// @param value the value wants to be removed
   void remove(T &&value) noexcept { remove(value); }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -317,20 +329,16 @@ public:
   constexpr inline size_t get_byte_size() const noexcept {
     return length * sizeof(T);
   }
-  constexpr inline size_t get_mbyte_size() const noexcept {
-    return (length * sizeof(T)) / 1024.f;
-  }
-  constexpr inline size_t get_gbyte_size() const noexcept {
-    return (length * sizeof(T)) / (1024.f * 1024.f);
-  }
   constexpr inline size_t get_data_size() const noexcept { return sizeof(T); }
-
   constexpr inline int get_length() const noexcept { return length; }
   constexpr inline bool is_empty() const noexcept {
     return head == nullptr && length == 0 ? true : false;
   }
   constexpr inline Node *get_head_node() const noexcept { return head; }
   constexpr inline Node *get_end_node() const noexcept { return end; }
+
+  /// @brief the function has to be executed in the move constructors. releasing
+  /// class without deleting
   constexpr inline void exec_move() noexcept {
     head = nullptr;
     end = nullptr;
@@ -363,6 +371,9 @@ private:
     end = this_current_node;
   }
 
+  /// @brief calculate index for negative and positive indices
+  /// @param index the given index
+  /// @return the calculated valid index
   constexpr inline int get_calc_index(int index) {
     PXD_ASSERT(index < length);
 
@@ -419,6 +430,7 @@ private:
     }
 
     delete current_node;
+    current_node = nullptr;
 
     if (head == nullptr) {
       end = nullptr;
