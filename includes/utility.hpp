@@ -22,6 +22,10 @@ template <typename T> void swap(T &left, T &right) {
   right = temp;
 }
 
+constexpr inline size_t byte2mbyte(size_t size) { return size / 1024; }
+constexpr inline size_t byte2gbyte(size_t size) { return size / (1024 * 1024); }
+constexpr inline size_t mbyte2gbyte(size_t size) { return size / 1024; }
+
 // return the top K elements in ascend order from a raw array
 template <typename T, int D = 4>
 PriorityQueue<T, D, false> topK(T *values, int values_size, int k) {
