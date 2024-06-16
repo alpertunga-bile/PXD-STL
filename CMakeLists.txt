@@ -27,9 +27,9 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     add_compile_options(/arch:AVX2)
 endif()
 
-if(NOT MSVC)
+if(NOT WIN32)
     add_compile_definitions(CMAKE_CXX_INCLUDE_WHAT_YOU_USE="include-what-you-use")
-endif(NOT MSVC)
+endif(NOT WIN32)
 
 option(PXD_STL_BUILD_TEST_EXECUTABLE "Build test executable" ON)
 
@@ -59,6 +59,7 @@ set(HEADER_FILES
     ${PXD_INCLUDE_DIR}/ds/dheap.hpp
     
     ${PXD_INCLUDE_DIR}/regex.hpp
+    ${PXD_INCLUDE_DIR}/json.hpp
     ${PXD_INCLUDE_DIR}/logger.hpp
     ${PXD_INCLUDE_DIR}/checks.hpp
     "${PXD_INCLUDE_DIR}/string.hpp"
@@ -67,10 +68,12 @@ set(HEADER_FILES
     ${PXD_THIRD_PARTY_DIR}/re2/re2/re2.h
     ${PXD_THIRD_PARTY_DIR}/fmt/include/fmt/core.h
     ${PXD_THIRD_PARTY_DIR}/fmt/include/fmt/os.h
+    ${PXD_THIRD_PARTY_DIR}/simdjson/singleheader/simdjson.h
 )
 
 set(LIB_SOURCE_FILES
     ${PXD_THIRD_PARTY_DIR}/SIMDString/SIMDString.cpp
+    ${PXD_THIRD_PARTY_DIR}/simdjson/singleheader/simdjson.cpp
 
     ${PXD_SOURCE_DIR}/ds/array.cpp
     ${PXD_SOURCE_DIR}/ds/linked_list.cpp
@@ -80,6 +83,7 @@ set(LIB_SOURCE_FILES
     ${PXD_SOURCE_DIR}/ds/dynamic_array.cpp
     ${PXD_SOURCE_DIR}/matrix.cpp
     ${PXD_SOURCE_DIR}/regex.cpp
+    ${PXD_SOURCE_DIR}/json.cpp
     ${PXD_SOURCE_DIR}/ds/double_linked_list.cpp
     ${PXD_SOURCE_DIR}/ds/xor_double_linked_list.cpp
     ${PXD_SOURCE_DIR}/ds/priority_queue.cpp
@@ -96,6 +100,7 @@ include_directories(
    ${PXD_THIRD_PARTY_DIR}/fmt/include/fmt
    ${PXD_THIRD_PARTY_DIR}/SIMDString
    ${PXD_THIRD_PARTY_DIR}/re2/re2
+   ${PXD_THIRD_PARTY_DIR}/simdjson/singleheader
 )
 
 set(COMMON_STD_HEADERS
@@ -103,6 +108,9 @@ set(COMMON_STD_HEADERS
     <cstdint>
     <vector>
     <algorithm>
+    <cassert>
+    <utility>
+    <cstring>
 
     # Logger is using these headers
     <filesystem>
@@ -111,6 +119,8 @@ set(COMMON_STD_HEADERS
 
 set(ABSL_PROPAGATE_CXX_STD ON)
 set(ABSL_ENABLE_INSTALL ON)
+
+set(SIMDJSON_BUILD_STATIC_LIB ON)
 
 add_subdirectory(${PXD_THIRD_PARTY_DIR}/abseil-cpp)
 add_subdirectory(${PXD_THIRD_PARTY_DIR}/re2)
@@ -169,7 +179,6 @@ IF(PXD_STL_BUILD_TEST_EXECUTABLE)
         ${PROJECT_NAME} PRIVATE
         ${COMMON_STD_HEADERS}
         <unordered_map>
-        <utility>
         ${TEST_HEADER_FILES}
         ${HEADER_FILES}
     )

@@ -71,6 +71,8 @@
         "cstdint": "cpp",
         "expected": "cpp",
         "future": "cpp",
-        "semaphore": "cpp"
+        "semaphore": "cpp",
+        "cassert": "cpp",
+        "climits": "cpp"
     }
 }

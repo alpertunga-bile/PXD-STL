@@ -8,12 +8,13 @@ template <typename T> class Array;
 template <typename T> class DoubleLinkedList;
 template <typename T> class DynamicArray;
 
-template <typename T> struct LLNode {
-  T value;
-  LLNode<T> *next = nullptr;
-};
-
 template <typename T> class LinkedList {
+public:
+  struct Node {
+    T value;
+    Node *next = nullptr;
+  };
+
 public:
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Constructors
@@ -66,7 +67,7 @@ public:
   T &operator[](int index) noexcept {
     const int calc_index = get_calc_index(index);
 
-    LLNode<T> *current_node = head;
+    Node *current_node = head;
 
     for (int i = 0; i < calc_index; i++) {
       current_node = current_node->next;
@@ -94,15 +95,16 @@ public:
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // DS Functionalities
 
+  /// @brief delete all the nodes in the linked list
   inline void release() noexcept {
     if (head == nullptr) {
       return;
     }
 
-    LLNode<T> *current_node = head;
+    Node *current_node = head;
 
     do {
-      LLNode<T> *prev_node = current_node;
+      Node *prev_node = current_node;
       current_node = current_node->next;
       delete prev_node;
     } while (current_node != nullptr);
@@ -112,18 +114,19 @@ public:
     length = 0;
   }
 
+  /// @brief reverse the linked list's direction
   void reverse() noexcept {
     if (is_empty() || length == 1) {
       return;
     }
 
-    LLNode<T> *current_node = head->next;
+    Node *current_node = head->next;
 
-    LLNode<T> *prev_node = head;
+    Node *prev_node = head;
     prev_node->next = nullptr;
     end = prev_node;
 
-    LLNode<T> *forw_node = nullptr;
+    Node *forw_node = nullptr;
 
     while (current_node != nullptr) {
       forw_node = current_node->next;
@@ -139,24 +142,25 @@ public:
   // returns length because negative indexing is supported
   // so this will lead to unwanted situations
   constexpr int where(T &value) noexcept {
-    LLNode<T> *current_node = head;
-    int index = length;
+    Node *current_node = head;
 
     for (int i = 0; i < length; i++) {
       if (current_node->value == value) {
-        index = i;
-        break;
+        return i;
       }
 
       current_node = current_node->next;
     }
 
-    return index;
+    return length;
   }
 
-  // for left values
+  /// @brief add a value to the linked list
+  /// @param new_value value to be added
+  /// @param add_back true add the value to the end, false add the value to the
+  /// head
   inline void add(T &new_value, bool add_back = true) noexcept {
-    LLNode<T> *new_node = new LLNode<T>();
+    Node *new_node = new Node();
     new_node->value = new_value;
 
     if (head == nullptr) {
@@ -177,11 +181,16 @@ public:
     length++;
   }
 
-  // for right values
+  /// @brief add a value to the linked list
+  /// @param new_value value to be added
+  /// @param add_back true add the value to the end, false add the value to the
+  /// head
   inline void add(T &&new_value, bool add_back = true) {
     add(new_value, add_back);
   }
 
+  /// @brief remove a value from the linked list with an index
+  /// @param index the index of the value
   void remove_at(int index) {
     if (head == nullptr) {
       return;
@@ -189,8 +198,8 @@ public:
 
     int calc_index = get_calc_index(index);
 
-    LLNode<T> *prev_node = nullptr;
-    LLNode<T> *current_node = head;
+    Node *prev_node = nullptr;
+    Node *current_node = head;
 
     for (int i = 0; i < calc_index; i++) {
       prev_node = current_node;
@@ -200,13 +209,15 @@ public:
     remove_node(prev_node, current_node);
   }
 
+  /// @brief remove a value from the linked list
+  /// @param value the value wants to be removed
   void remove(T &value) noexcept {
     if (head == nullptr) {
       return;
     }
 
-    LLNode<T> *prev_node = nullptr;
-    LLNode<T> *current_node = head;
+    Node *prev_node = nullptr;
+    Node *current_node = head;
 
     for (int i = 0; i < length; i++) {
       if (current_node->value == value) {
@@ -220,6 +231,8 @@ public:
     remove_node(prev_node, current_node);
   }
 
+  /// @brief remove a value from the linked list
+  /// @param value the value wants to be removed
   void remove(T &&value) noexcept { remove(value); }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -302,7 +315,7 @@ public:
 
     dll.release();
 
-    LLNode<T> *current_node = head;
+    Node *current_node = head;
 
     for (int i = 0; i < length; i++) {
       dll.add(current_node->value);
@@ -316,20 +329,16 @@ public:
   constexpr inline size_t get_byte_size() const noexcept {
     return length * sizeof(T);
   }
-  constexpr inline size_t get_mbyte_size() const noexcept {
-    return (length * sizeof(T)) / 1024.f;
-  }
-  constexpr inline size_t get_gbyte_size() const noexcept {
-    return (length * sizeof(T)) / (1024.f * 1024.f);
-  }
   constexpr inline size_t get_data_size() const noexcept { return sizeof(T); }
-
   constexpr inline int get_length() const noexcept { return length; }
   constexpr inline bool is_empty() const noexcept {
     return head == nullptr && length == 0 ? true : false;
   }
-  constexpr inline LLNode<T> *get_head_node() const noexcept { return head; }
-  constexpr inline LLNode<T> *get_end_node() const noexcept { return end; }
+  constexpr inline Node *get_head_node() const noexcept { return head; }
+  constexpr inline Node *get_end_node() const noexcept { return end; }
+
+  /// @brief the function has to be executed in the move constructors. releasing
+  /// class without deleting
   constexpr inline void exec_move() noexcept {
     head = nullptr;
     end = nullptr;
@@ -340,8 +349,8 @@ private:
   constexpr void from_linked_list(const LinkedList<T> &other) {
     release();
 
-    LLNode<T> *this_current_node = new LLNode<T>();
-    LLNode<T> *other_current_node = other.get_head_node();
+    Node *this_current_node = new Node();
+    Node *other_current_node = other.get_head_node();
 
     this_current_node->value = other_current_node->value;
     head = this_current_node;
@@ -350,7 +359,7 @@ private:
     length = other.get_length();
 
     for (int i = 1; i < length; i++) {
-      LLNode<T> *new_node = new LLNode<T>();
+      Node *new_node = new Node();
       new_node->value = other_current_node->value;
 
       this_current_node->next = new_node;
@@ -362,6 +371,9 @@ private:
     end = this_current_node;
   }
 
+  /// @brief calculate index for negative and positive indices
+  /// @param index the given index
+  /// @return the calculated valid index
   constexpr inline int get_calc_index(int index) {
     PXD_ASSERT(index < length);
 
@@ -376,7 +388,7 @@ private:
   }
 
   inline void fill_array(T *array) const noexcept {
-    LLNode<T> *current_node = head;
+    Node *current_node = head;
 
     for (int i = 0; i < length; i++) {
       array[i] = current_node->value;
@@ -385,7 +397,7 @@ private:
   }
 
   inline void fill_array(Array<T> &array) noexcept {
-    LLNode<T> *current_node = head;
+    Node *current_node = head;
 
     for (int i = 0; i < length; i++) {
       array[i] = current_node->value;
@@ -394,7 +406,7 @@ private:
   }
 
   inline void fill_array(DynamicArray<T> &array) noexcept {
-    LLNode<T> *current_node = head;
+    Node *current_node = head;
 
     for (int i = 0; i < length; i++) {
       array[i] = current_node->value;
@@ -402,8 +414,7 @@ private:
     }
   }
 
-  inline void remove_node(LLNode<T> *prev_node,
-                          LLNode<T> *current_node) noexcept {
+  inline void remove_node(Node *prev_node, Node *current_node) noexcept {
     if (current_node == nullptr) {
       return;
     }
@@ -419,6 +430,7 @@ private:
     }
 
     delete current_node;
+    current_node = nullptr;
 
     if (head == nullptr) {
       end = nullptr;
@@ -428,8 +440,8 @@ private:
   }
 
 private:
-  LLNode<T> *head = nullptr;
-  LLNode<T> *end = nullptr;
+  Node *head = nullptr;
+  Node *end = nullptr;
   int length = 0;
 };
 } // namespace pxd

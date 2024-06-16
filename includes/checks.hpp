@@ -1,8 +1,5 @@
 #pragma once
 
-#include "core.h"   // fmt/core.h
-#include <stdlib.h> // don't need the math.h lib so not using cstdlib
-
 #ifndef __FUNCTION_NAME__
 #ifdef _WIN32
 #define __FUNCTION_NAME__ __FUNCTION__
@@ -24,47 +21,11 @@
 #define PXD_TODO(msg)
 #endif
 
-inline void assert_func(bool expression, const char *filename, int line,
-                        const char *function_name) {
-  if (expression) {
-    return;
-  }
+void assert_func(bool expression, const char *filename, int line,
+                 const char *function_name);
 
-  fmt::print(
-      "Assertion is FAILED at:\n    Filename : {}\n    Line     : {}\n    "
-      "Function : "
-      "{}\n",
-      filename, line, function_name);
+void todo_func(const char *message, const char *filename, int line,
+               const char *function_name);
 
-  exit(EXIT_FAILURE);
-}
-
-inline void todo_func(const char *message, const char *filename, int line,
-                      const char *function_name) {
-  fmt::print(
-      "TODO message:\n    Message : {}\n    Filename : {}\n    Line     : "
-      "{}\n    "
-      "Function : "
-      "{}\n",
-      message, filename, line, function_name);
-
-  exit(EXIT_FAILURE);
-}
-
-inline void assert_msg_func(const char *message, bool expression,
-                            const char *filename, int line,
-                            const char *function_name) {
-  if (expression) {
-    return;
-  }
-
-  fmt::print(
-      "Assert is FAILED at: message:\n    Message : {}\n    Filename : {}\n "
-      "   Line     : "
-      "{}\n    "
-      "Function : "
-      "{}\n",
-      message, filename, line, function_name);
-
-  exit(EXIT_FAILURE);
-}
+void assert_msg_func(const char *message, bool expression, const char *filename,
+                     int line, const char *function_name);

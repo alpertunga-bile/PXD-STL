@@ -13,12 +13,15 @@
 
 #include "logger.hpp"
 
-void
-do_test()
-{
-  LOG_WARNING("WARNING");
-  LOG_ERROR("ERROR");
-  LOG_INFO("Starting tests");
+#include "regex.hpp"
+
+const RE2 re_remove_empty_parantheses("\\(\\s*\\)");
+const RE2 re_remove_multiwhitespaces("\\s+");
+
+void do_test() {
+  PXD_LOG_WARNING("WARNING");
+  PXD_LOG_ERROR("ERROR");
+  PXD_LOG_INFO("Starting tests");
 
   pxd::TestManager test_manager;
 
@@ -49,8 +52,10 @@ do_test()
   test_manager.save_results();
 }
 
-int
-main()
-{
-  do_test();
+int main() {
+  // do_test();
+  String full_str("(((())))");
+
+  pxd::full_match(full_str, re_remove_empty_parantheses);
+  pxd::partial_match(full_str, re_remove_empty_parantheses);
 }

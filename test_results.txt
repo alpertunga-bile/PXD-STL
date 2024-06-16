@@ -1,129 +1,129 @@
 ---------------------------------------------------------------
-Test Name : Priority Queue Tests
-   remove                         -> Passed
-   update priority                -> Passed
-   top                            -> Passed
-   peek                           -> Passed
----------------------------------------------------------------
-Test Name : Double Linked List Tests
-   where 2                        -> Passed
-   where                          -> Passed
-   remove at                      -> Passed
-   remove end                     -> Passed
-   array ctor                     -> Passed
-   copy ctor                      -> Passed
-   move ctor                      -> Passed
-   add                            -> Passed
-   add reverse                    -> Passed
-   copy assign ctor               -> Passed
-   move assign ctor               -> Passed
-   negative index                 -> Passed
-   reverse                        -> Passed
-   index                          -> Passed
-   from array                     -> Passed
-   remove between                 -> Passed
-   remove head                    -> Passed
----------------------------------------------------------------
-Test Name : XOR Double Linked List Tests
-   remove end                     -> Passed
-   remove head                    -> Passed
-   remove between                 -> Passed
+Test Name : Array Tests
+   init with array                -> Passed
+   copy_to                        -> Passed
+   resize less                    -> Passed
+   resize much                    -> Passed
+   bool compare                   -> Passed
+   expand                         -> Passed
    negative index                 -> Passed
    index                          -> Passed
-   move assign ctor               -> Passed
-   copy assign ctor               -> Passed
-   copy ctor                      -> Passed
-   array ctor                     -> Passed
-   move ctor                      -> Passed
-   add                            -> Passed
----------------------------------------------------------------
-Test Name : Matrix Tests
-   transpose                      -> Passed
-   assign parant double indexing  -> Passed
-   parant double indexing         -> Passed
-   double indexing                -> Passed
-   row indexing 3                 -> Passed
-   row indexing 2                 -> Passed
-   row indexing                   -> Passed
-   assign move ctor               -> Passed
-   assign ctor                    -> Passed
-   move ctor                      -> Passed
-   copy ctor                      -> Passed
-   array ctor                     -> Passed
----------------------------------------------------------------
-Test Name : Dynamic Array Tests
-   resize                         -> Passed
-   negative index                 -> Passed
-   shrink                         -> Passed
-   expand with exist              -> Passed
-   index                          -> Passed
-   expand from 0                  -> Passed
-   assign move ctor               -> Passed
-   add                            -> Passed
-   assign ctor                    -> Passed
-   move ctor                      -> Passed
-   copy ctor                      -> Passed
+   copy constructor               -> Passed
+   move constructor               -> Passed
+   assign move constructor        -> Passed
+   assign constructor             -> Passed
 ---------------------------------------------------------------
 Test Name : Queue Tests
-   reverse                        -> Passed
-   pop                            -> Passed
-   push                           -> Passed
-   peek                           -> Passed
-   assign move ctor               -> Passed
+   array ctor                     -> Passed
    assign ctor                    -> Passed
    move ctor                      -> Passed
    copy ctor                      -> Passed
-   array ctor                     -> Passed
----------------------------------------------------------------
-Test Name : Stack Tests
-   reverse                        -> Passed
-   pop                            -> Passed
-   push                           -> Passed
-   peek                           -> Passed
    assign move ctor               -> Passed
-   assign ctor                    -> Passed
-   move ctor                      -> Passed
-   copy ctor                      -> Passed
-   array ctor                     -> Passed
+   peek                           -> Passed
+   push                           -> Passed
+   pop                            -> Passed
+   reverse                        -> Passed
 ---------------------------------------------------------------
 Test Name : Binary Search Tree Tests
-   remove                         -> Passed
-   min max                        -> Passed
-   is contain                     -> Passed
-   get balanced tree              -> Passed
-   assign move ctor               -> Passed
+   array default ctor             -> Passed
    assign ctor                    -> Passed
    move ctor                      -> Passed
    copy ctor                      -> Passed
-   array default ctor             -> Passed
+   min max                        -> Passed
+   is contain                     -> Passed
+   assign move ctor               -> Passed
+   get balanced tree              -> Passed
+   remove                         -> Passed
+---------------------------------------------------------------
+Test Name : XOR Double Linked List Tests
+   array ctor                     -> Passed
+   add                            -> Passed
+   remove end                     -> Passed
+   negative index                 -> Passed
+   move ctor                      -> Passed
+   copy ctor                      -> Passed
+   move assign ctor               -> Passed
+   copy assign ctor               -> Passed
+   index                          -> Passed
+   remove between                 -> Passed
+   remove head                    -> Passed
 ---------------------------------------------------------------
 Test Name : Linked List Tests
-   remove_between                 -> Passed
-   assign constructor             -> Passed
-   remove_end                     -> Passed
-   move constructor               -> Passed
-   copy constructor               -> Passed
-   remove_head                    -> Passed
-   indexing                       -> Passed
+   normal array init              -> Passed
    negative indexing              -> Passed
    reverse array init             -> Passed
-   assign move constructor        -> Passed
    reverse                        -> Passed
-   normal array init              -> Passed
----------------------------------------------------------------
-Test Name : Array Tests
-   assign constructor             -> Passed
-   assign move constructor        -> Passed
-   resize less                    -> Passed
-   copy constructor               -> Passed
-   index                          -> Passed
-   expand                         -> Passed
-   resize much                    -> Passed
-   bool compare                   -> Failed
-   copy_to                        -> Passed
+   indexing                       -> Passed
    move constructor               -> Passed
-   negative index                 -> Passed
-   init with array                -> Passed
+   copy constructor               -> Passed
+   assign move constructor        -> Passed
+   assign constructor             -> Passed
+   remove_head                    -> Passed
+   remove_end                     -> Passed
+   remove_between                 -> Passed
 ---------------------------------------------------------------
- Passed Tests : 105 | Total Tests : 106 | Passed Ratio : %99.06
+Test Name : Stack Tests
+   array ctor                     -> Passed
+   assign ctor                    -> Passed
+   move ctor                      -> Passed
+   copy ctor                      -> Passed
+   assign move ctor               -> Passed
+   peek                           -> Passed
+   push                           -> Passed
+   pop                            -> Passed
+   reverse                        -> Passed
+---------------------------------------------------------------
+Test Name : Double Linked List Tests
+   from array                     -> Passed
+   add                            -> Passed
+   remove end                     -> Passed
+   array ctor                     -> Passed
+   add reverse                    -> Passed
+   copy ctor                      -> Passed
+   move ctor                      -> Passed
+   move assign ctor               -> Passed
+   copy assign ctor               -> Passed
+   reverse                        -> Passed
+   index                          -> Passed
+   negative index                 -> Passed
+   remove at                      -> Passed
+   remove between                 -> Passed
+   remove head                    -> Passed
+   where                          -> Passed
+   where 2                        -> Passed
+---------------------------------------------------------------
+Test Name : Dynamic Array Tests
+   assign ctor                    -> Passed
+   move ctor                      -> Passed
+   copy ctor                      -> Passed
+   assign move ctor               -> Passed
+   resize                         -> Passed
+   expand from 0                  -> Passed
+   shrink                         -> Passed
+   expand with exist              -> Passed
+   add                            -> Passed
+   index                          -> Passed
+   negative index                 -> Passed
+---------------------------------------------------------------
+Test Name : Matrix Tests
+   array ctor                     -> Passed
+   assign ctor                    -> Passed
+   move ctor                      -> Passed
+   copy ctor                      -> Passed
+   row indexing                   -> Passed
+   assign move ctor               -> Passed
+   row indexing 2                 -> Passed
+   row indexing 3                 -> Passed
+   transpose                      -> Passed
+   double indexing                -> Passed
+   parant double indexing         -> Passed
+   assign parant double indexing  -> Passed
+---------------------------------------------------------------
+Test Name : Priority Queue Tests
+   peek                           -> Passed
+   top                            -> Passed
+   update priority                -> Passed
+   remove                         -> Passed
+---------------------------------------------------------------
+ Passed Tests : 106 | Total Tests : 106 | Passed Ratio : %100.00
 ---------------------------------------------------------------
