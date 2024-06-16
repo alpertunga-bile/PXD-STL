@@ -73,6 +73,8 @@
         "future": "cpp",
         "semaphore": "cpp",
         "cassert": "cpp",
-        "climits": "cpp"
-    }
+        "climits": "cpp",
+        "cstddef": "cpp"
+    },
+    "C_Cpp.default.compilerPath": "/usr/bin/clang++"
 }

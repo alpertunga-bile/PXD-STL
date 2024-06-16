@@ -2,27 +2,35 @@
 
 #include "checks.hpp"
 
+#include <cstddef>
 namespace pxd {
 
-template <typename T> class Array;
+template<typename T>
+class Array;
 
-template <typename T> class Matrix {
+template<typename T>
+class Matrix
+{
 public:
   constexpr Matrix() noexcept = default;
   Matrix(int row, int column) { allocate(row, column); }
-  Matrix(T *values, int row, int column) {
+  Matrix(T* values, int row, int column)
+  {
     allocate(row, column);
     memcpy(matrix, values, get_byte_size());
   }
-  Matrix(Array<T> &values, int row, int column) {
+  Matrix(Array<T>& values, int row, int column)
+  {
     allocate(row, column);
     memcpy(matrix, values.get_ptr(), get_byte_size());
   }
-  Matrix(const Matrix<T> &other) {
+  Matrix(const Matrix<T>& other)
+  {
     allocate(other.get_row(), other.get_column());
     memcpy(matrix, other.get_matrix(), other.get_byte_size());
   }
-  constexpr Matrix(Matrix<T> &&other) noexcept {
+  constexpr Matrix(Matrix<T>&& other) noexcept
+  {
     matrix = other.get_matrix();
     row = other.get_row();
     column = other.get_column();
@@ -31,7 +39,8 @@ public:
 
     other.exec_move();
   }
-  constexpr Matrix &operator=(Matrix<T> &&other) noexcept {
+  constexpr Matrix& operator=(Matrix<T>&& other) noexcept
+  {
     release();
 
     matrix = other.get_matrix();
@@ -44,14 +53,16 @@ public:
 
     return *this;
   }
-  Matrix &operator=(const Matrix<T> &other) {
+  Matrix& operator=(const Matrix<T>& other)
+  {
     allocate(other.get_row(), other.get_column());
     memcpy(matrix, other.get_matrix(), other.get_byte_size());
     return *this;
   }
   inline ~Matrix() noexcept { release(); }
 
-  decltype(auto) operator[](int index) {
+  decltype(auto) operator[](int index)
+  {
     PXD_ASSERT(index < row);
 
     int start_stride = index * column;
@@ -61,13 +72,15 @@ public:
     return row_array;
   }
 
-  decltype(auto) operator()(int row, int column) {
+  decltype(auto) operator()(int row, int column)
+  {
     PXD_ASSERT(row < this->row && column < this->column);
 
     return matrix[row * this->column + column];
   }
 
-  inline void release() noexcept {
+  inline void release() noexcept
+  {
     if (matrix == nullptr) {
       return;
     }
@@ -81,7 +94,8 @@ public:
     b_row_order = true;
   }
 
-  void transpose() noexcept {
+  void transpose() noexcept
+  {
     int current_row = 0;
     int current_col = 0;
     int normal_index = 0;
@@ -110,17 +124,19 @@ public:
 
   inline void change_order() noexcept { transpose(); }
 
-  inline T *get_matrix() noexcept { return matrix; }
-  inline T *get_matrix() const noexcept { return matrix; }
+  inline T* get_matrix() noexcept { return matrix; }
+  inline T* get_matrix() const noexcept { return matrix; }
   inline int get_row() const noexcept { return row; }
   inline int get_column() const noexcept { return column; }
   inline int get_element_count() const noexcept { return element_count; }
-  inline size_t get_byte_size() const noexcept {
+  inline std::size_t get_byte_size() const noexcept
+  {
     return element_count * sizeof(T);
   }
   inline bool is_row_order() const noexcept { return b_row_order; }
 
-  constexpr inline void exec_move() noexcept {
+  constexpr inline void exec_move() noexcept
+  {
     matrix = nullptr;
     row = 0;
     column = 0;
@@ -129,7 +145,8 @@ public:
   }
 
 private:
-  constexpr void allocate(int row, int column) noexcept {
+  constexpr void allocate(int row, int column) noexcept
+  {
     element_count = row * column;
 
     matrix = new T[element_count];
@@ -139,21 +156,24 @@ private:
     b_row_order = true;
   }
 
-  inline void from_array(T *values) {
-    size_t byte_size = element_count * sizeof(T);
+  inline void from_array(T* values)
+  {
+    std::size_t byte_size = element_count * sizeof(T);
     memcpy(matrix, values, byte_size);
   }
 
-  inline void from_matrix(const Matrix<T> &other) {
+  inline void from_matrix(const Matrix<T>& other)
+  {
     memcpy(matrix, other.get_matrix(), other.get_byte_size());
   }
 
-  inline void from_matrix(Matrix<T> &&other) {
+  inline void from_matrix(Matrix<T>&& other)
+  {
     memcpy(matrix, other.get_matrix(), other.get_byte_size());
   }
 
 private:
-  T *matrix = nullptr;
+  T* matrix = nullptr;
   int row = 0;
   int column = 0;
   int element_count = 0;
