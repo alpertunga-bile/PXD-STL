@@ -6,17 +6,13 @@
 #include "test/matrix_tests.hpp"
 #include "test/priority_queue_tests.hpp"
 #include "test/queue_tests.hpp"
+#include "test/regex_tests.hpp"
 #include "test/stack_tests.hpp"
 #include "test/xor_double_linked_list_tests.hpp"
 
 #include "test/test_manager.hpp"
 
 #include "logger.hpp"
-
-#include "regex.hpp"
-
-const RE2 re_remove_empty_parantheses("\\(\\s*\\)");
-const RE2 re_remove_multiwhitespaces("\\s+");
 
 void do_test() {
   PXD_LOG_WARNING("WARNING");
@@ -35,6 +31,7 @@ void do_test() {
   pxd::DoubleLinkedListTests double_linked_list_tests;
   pxd::XORDoubleLinkedListTests xor_double_linked_list_tests;
   pxd::PriorityQueueTests priority_queue_tests;
+  pxd::RegexTests regex_tests;
 
   test_manager.add_test("Array Tests", array_tests);
   test_manager.add_test("Linked List Tests", linked_list_tests);
@@ -47,20 +44,10 @@ void do_test() {
   test_manager.add_test("XOR Double Linked List Tests",
                         xor_double_linked_list_tests);
   test_manager.add_test("Priority Queue Tests", priority_queue_tests);
+  test_manager.add_test("Regex Tests", regex_tests);
 
   test_manager.print_results();
   test_manager.save_results();
 }
 
-int main() {
-  // do_test();
-  String full_str("(((())))");
-
-  pxd::full_match(full_str, re_remove_empty_parantheses);
-  pxd::partial_match(full_str, re_remove_empty_parantheses);
-  pxd::replace_first(re_remove_empty_parantheses, full_str,
-                     pxd::to_string("*"));
-
-  PXD_LOG_INFO(full_str.c_str());
-  PXD_LOG_INFO(pxd::get_escaped_string(pxd::to_string("1.5-2.0?")).c_str());
-}
+int main() { do_test(); }
