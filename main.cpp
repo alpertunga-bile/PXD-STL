@@ -58,4 +58,9 @@ int main() {
 
   pxd::full_match(full_str, re_remove_empty_parantheses);
   pxd::partial_match(full_str, re_remove_empty_parantheses);
+  pxd::replace_first(re_remove_empty_parantheses, full_str,
+                     pxd::to_string("*"));
+
+  PXD_LOG_INFO(full_str.c_str());
+  PXD_LOG_INFO(pxd::get_escaped_string(pxd::to_string("1.5-2.0?")).c_str());
 }

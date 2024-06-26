@@ -39,30 +39,30 @@ set(PXD_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
 
 # check if used with subdirectory or main project
 IF(NOT ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}"))
-    set(PXD_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes PARENT_SCOPE)
+    set(PXD_STL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes PARENT_SCOPE)
 ELSE()
-    set(PXD_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes)
+    set(PXD_STL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes)
 ENDIF()
 
 set(HEADER_FILES
-    ${PXD_INCLUDE_DIR}/ds/array.hpp
-    ${PXD_INCLUDE_DIR}/ds/linked_list.hpp
-    ${PXD_INCLUDE_DIR}/ds/binary_search_tree.hpp
-    ${PXD_INCLUDE_DIR}/ds/stack.hpp
-    ${PXD_INCLUDE_DIR}/ds/queue.hpp
-    ${PXD_INCLUDE_DIR}/handle.hpp
-    ${PXD_INCLUDE_DIR}/ds/dynamic_array.hpp
-    ${PXD_INCLUDE_DIR}/matrix.hpp
-    ${PXD_INCLUDE_DIR}/ds/double_linked_list.hpp
-    ${PXD_INCLUDE_DIR}/ds/xor_double_linked_list.hpp
-    ${PXD_INCLUDE_DIR}/ds/priority_queue.hpp
-    ${PXD_INCLUDE_DIR}/ds/dheap.hpp
+    ${PXD_STL_INCLUDE_DIR}/ds/array.hpp
+    ${PXD_STL_INCLUDE_DIR}/ds/linked_list.hpp
+    ${PXD_STL_INCLUDE_DIR}/ds/binary_search_tree.hpp
+    ${PXD_STL_INCLUDE_DIR}/ds/stack.hpp
+    ${PXD_STL_INCLUDE_DIR}/ds/queue.hpp
+    ${PXD_STL_INCLUDE_DIR}/handle.hpp
+    ${PXD_STL_INCLUDE_DIR}/ds/dynamic_array.hpp
+    ${PXD_STL_INCLUDE_DIR}/matrix.hpp
+    ${PXD_STL_INCLUDE_DIR}/ds/double_linked_list.hpp
+    ${PXD_STL_INCLUDE_DIR}/ds/xor_double_linked_list.hpp
+    ${PXD_STL_INCLUDE_DIR}/ds/priority_queue.hpp
+    ${PXD_STL_INCLUDE_DIR}/ds/dheap.hpp
     
-    ${PXD_INCLUDE_DIR}/regex.hpp
-    ${PXD_INCLUDE_DIR}/json.hpp
-    ${PXD_INCLUDE_DIR}/logger.hpp
-    ${PXD_INCLUDE_DIR}/checks.hpp
-    "${PXD_INCLUDE_DIR}/string.hpp"
+    ${PXD_STL_INCLUDE_DIR}/regex.hpp
+    ${PXD_STL_INCLUDE_DIR}/json.hpp
+    ${PXD_STL_INCLUDE_DIR}/logger.hpp
+    ${PXD_STL_INCLUDE_DIR}/checks.hpp
+    "${PXD_STL_INCLUDE_DIR}/string.hpp"
 
     ${PXD_THIRD_PARTY_DIR}/SIMDString/SIMDString.h
     ${PXD_THIRD_PARTY_DIR}/re2/re2/re2.h
@@ -94,8 +94,8 @@ set(LIB_SOURCE_FILES
 )
 
 include_directories(
-   ${PXD_INCLUDE_DIR} 
-   ${PXD_INCLUDE_DIR}/ds
+   ${PXD_STL_INCLUDE_DIR} 
+   ${PXD_STL_INCLUDE_DIR}/ds
 
    ${PXD_THIRD_PARTY_DIR}/fmt/include/fmt
    ${PXD_THIRD_PARTY_DIR}/SIMDString
