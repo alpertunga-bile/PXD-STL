@@ -50,4 +50,22 @@ void do_test() {
   test_manager.save_results();
 }
 
-int main() { do_test(); }
+#include "json.hpp"
+
+int main() {
+  // do_test();
+
+  pxd::Json json;
+  json.load("test.json");
+
+  auto array = json["nodes"].get_array();
+
+  fmt::print("{}", size_t(array.count_elements()));
+
+  pxd::Json t_json;
+  json.load("test.json");
+
+  auto t_array = t_json["nodes"].get_array();
+
+  fmt::print("{}", size_t(t_array.count_elements()));
+}
