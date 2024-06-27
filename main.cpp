@@ -63,7 +63,11 @@ int main() {
   fmt::print("{}", size_t(array.count_elements()));
 
   pxd::Json t_json;
-  json.load("test.json");
+  bool is_ok = json.load("test.json");
+
+  if (!is_ok) {
+    return 0;
+  }
 
   auto t_array = t_json["nodes"].get_array();
 

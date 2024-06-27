@@ -2,6 +2,8 @@
 
 #include "simdjson.h"
 
+#include "string.hpp"
+
 constexpr size_t TOTAL_JSON_INTIME = 3;
 
 namespace pxd {
@@ -9,6 +11,7 @@ namespace pxd {
 struct ParserInfos {
   simdjson::ondemand::parser parser;
   bool is_occupied = false;
+  String current_file;
 };
 
 static ParserInfos parser_infos[TOTAL_JSON_INTIME];
