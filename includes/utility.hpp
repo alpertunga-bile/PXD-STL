@@ -133,4 +133,10 @@ inline void append(std::vector<T> &&vec, T *array, int arr_size) {
   vec.insert(vec.end(), temp_vec.begin(), temp_vec.end());
 }
 
+template <typename T>
+inline void append(std::vector<T> &&vec, const std::vector<T> &&given_vector) {
+  vec.reserve(vec.size() + given_vector.size());
+  vec.insert(vec.end(), given_vector.begin(), given_vector.end());
+}
+
 } // namespace pxd

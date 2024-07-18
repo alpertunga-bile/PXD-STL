@@ -10,9 +10,6 @@ enum class eBST_ORDER : std::uint8_t {
   POSTORDER,
 };
 
-template <typename T> class Array;
-template <typename T> class LinkedList;
-
 template <typename T> struct BSTNode {
   T value;
   BSTNode<T> *left = nullptr;
@@ -39,12 +36,6 @@ public:
   constexpr BinarySearchTree() noexcept = default;
   BinarySearchTree(T *values, int size, bool is_balance = false) {
     from_array(values, size, is_balance);
-  }
-  BinarySearchTree(Array<T> &array, bool is_balance = false) {
-    from_array(array, is_balance);
-  }
-  BinarySearchTree(LinkedList<T> &linked_list, bool is_balance = false) {
-    from_linked_list(linked_list, is_balance);
   }
   BinarySearchTree(const BinarySearchTree<T> &other) { from_bst(other); }
   constexpr BinarySearchTree(BinarySearchTree<T> &&other) noexcept {
