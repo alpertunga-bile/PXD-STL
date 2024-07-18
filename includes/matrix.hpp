@@ -14,10 +14,6 @@ public:
     allocate(row, column);
     memcpy(matrix, values, get_byte_size());
   }
-  Matrix(Array<T> &values, int row, int column) {
-    allocate(row, column);
-    memcpy(matrix, values.get_ptr(), get_byte_size());
-  }
   Matrix(const Matrix<T> &other) {
     allocate(other.get_row(), other.get_column());
     memcpy(matrix, other.get_matrix(), other.get_byte_size());

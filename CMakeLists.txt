@@ -83,6 +83,7 @@ set(LIB_SOURCE_FILES
     ${PXD_SOURCE_DIR}/ds/dynamic_array.cpp
     ${PXD_SOURCE_DIR}/matrix.cpp
     ${PXD_SOURCE_DIR}/regex.cpp
+    ${PXD_SOURCE_DIR}/string.cpp
     ${PXD_SOURCE_DIR}/json.cpp
     ${PXD_SOURCE_DIR}/ds/double_linked_list.cpp
     ${PXD_SOURCE_DIR}/ds/xor_double_linked_list.cpp
