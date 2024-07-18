@@ -1,10 +1,9 @@
 #pragma once
 
-#include "checks.hpp"
-
 #include "dheap.hpp"
 
 namespace pxd {
+
 template <typename T, int D = 4, bool is_max_heap = true> class PriorityQueue {
 private:
   struct Node {

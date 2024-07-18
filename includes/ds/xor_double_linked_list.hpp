@@ -6,11 +6,6 @@
 
 namespace pxd {
 
-template <typename T> class Array;
-template <typename T> class DynamicArray;
-template <typename T> class LinkedList;
-template <typename T> class DoubleLinkedList;
-
 template <typename T> class XORDoubleLinkedList {
 public:
   struct Node {
@@ -21,15 +16,8 @@ public:
 public:
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Constructors
-
   XORDoubleLinkedList() = default;
   XORDoubleLinkedList(T *array, int size) { from_array(array, size); }
-  XORDoubleLinkedList(Array<T> &array) { from_array(array); }
-  XORDoubleLinkedList(DynamicArray<T> &array) { from_array(array); }
-  XORDoubleLinkedList(LinkedList<T> &ll) { from_linked_list(ll); }
-  XORDoubleLinkedList(DoubleLinkedList<T> &dll) {
-    from_double_linked_list(dll);
-  }
   XORDoubleLinkedList(const XORDoubleLinkedList<T> &other) {
     from_xor_dll(other);
   }
@@ -194,52 +182,6 @@ public:
     }
   }
 
-  inline void from_array(Array<T> &array) {
-    release();
-
-    const int size = array.get_length();
-
-    for (int i = 0; i < size; i++) {
-      add(array[i]);
-    }
-  }
-
-  inline void from_array(DynamicArray<T> &array) {
-    release();
-
-    const int size = array.get_element_count();
-
-    for (int i = 0; i < size; i++) {
-      add(array[i]);
-    }
-  }
-
-  inline void from_linked_list(LinkedList<T> &ll) {
-    release();
-
-    const int size = ll.get_length();
-    T *temp_arr = new T[size];
-
-    ll.to_array(temp_arr);
-
-    from_array(temp_arr, size);
-
-    delete[] temp_arr;
-  }
-
-  inline void from_double_linked_list(DoubleLinkedList<T> &dll) {
-    release();
-
-    const int size = dll.get_length();
-    T *temp_arr = new T[size];
-
-    dll.to_array(temp_arr);
-
-    from_array(temp_arr, size);
-
-    delete[] temp_arr;
-  }
-
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // To Functions
 
@@ -254,86 +196,6 @@ public:
 
     for (int i = 0; i < length; i++) {
       array[i] = current_node->value;
-
-      next_node = XOR(prev_node, current_node->dir);
-      prev_node = current_node;
-      current_node = next_node;
-    }
-  }
-
-  void to_array(Array<T> &array) {
-    if (head == nullptr) {
-      return;
-    }
-
-    array.reallocate(length);
-
-    Node *current_node = head;
-    Node *prev_node = nullptr;
-    Node *next_node = nullptr;
-
-    for (int i = 0; i < length; i++) {
-      array[i] = current_node->value;
-
-      next_node = XOR(prev_node, current_node->dir);
-      prev_node = current_node;
-      current_node = next_node;
-    }
-  }
-
-  void to_array(DynamicArray<T> &array) {
-    if (head == nullptr) {
-      return;
-    }
-
-    array.reallocate(length);
-
-    Node *current_node = head;
-    Node *prev_node = nullptr;
-    Node *next_node = nullptr;
-
-    for (int i = 0; i < length; i++) {
-      array[i] = current_node->value;
-
-      next_node = XOR(prev_node, current_node->dir);
-      prev_node = current_node;
-      current_node = next_node;
-    }
-  }
-
-  void to_linked_list(LinkedList<T> &ll) {
-    if (head == nullptr) {
-      return;
-    }
-
-    ll.release();
-
-    Node *current_node = head;
-    Node *prev_node = nullptr;
-    Node *next_node = nullptr;
-
-    for (int i = 0; i < length; i++) {
-      ll.add(current_node->value);
-
-      next_node = XOR(prev_node, current_node->dir);
-      prev_node = current_node;
-      current_node = next_node;
-    }
-  }
-
-  void to_double_linked_list(DoubleLinkedList<T> &dll) {
-    if (head == nullptr) {
-      return;
-    }
-
-    dll.release();
-
-    Node *current_node = head;
-    Node *prev_node = nullptr;
-    Node *next_node = nullptr;
-
-    for (int i = 0; i < length; i++) {
-      dll.add(current_node->value);
 
       next_node = XOR(prev_node, current_node->dir);
       prev_node = current_node;
