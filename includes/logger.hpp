@@ -5,7 +5,6 @@
 
 namespace pxd {
 class Logger {
-public:
   Logger();
   Logger(const Logger &other) = delete;
   Logger &operator=(const Logger &other) = delete;
@@ -13,6 +12,7 @@ public:
   Logger &operator=(Logger &&other) = delete;
   inline ~Logger() noexcept;
 
+public:
   void log_info(const char *msg, const char *filename, int line,
                 const char *function_name) noexcept;
   void log_warning(const char *msg, const char *filename, int line,
