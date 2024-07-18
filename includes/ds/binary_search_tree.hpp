@@ -253,24 +253,6 @@ public:
     }
   }
 
-  void from_linked_list(LinkedList<T> &linked_list, bool is_balance) {
-    if (linked_list.get_length() == 0) {
-      return;
-    }
-
-    release();
-
-    const int size = linked_list.get_length();
-
-    for (int i = 0; i < size; i++) {
-      add(linked_list[i]);
-    }
-
-    if (is_balance) {
-      balance_self();
-    }
-  }
-
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // To Functions
 

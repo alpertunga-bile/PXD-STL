@@ -4,10 +4,6 @@
 
 namespace pxd {
 
-template <typename T> class LinkedList;
-template <typename T> class Array;
-template <typename T> class DynamicArray;
-
 template <typename T> class DoubleLinkedList {
 public:
   struct Node {
@@ -28,15 +24,6 @@ public:
   DoubleLinkedList(T *array, int size, bool add_back = true) {
     from_array(array, size, add_back);
   }
-  DoubleLinkedList(Array<T> &array, bool add_back = true) {
-    from_array(array, add_back);
-  }
-  DoubleLinkedList(DynamicArray<T> &array, bool add_back = true) {
-    from_array(array, add_back);
-  }
-  DoubleLinkedList(LinkedList<T> &linked_list, bool add_back = true) {
-    from_linked_list(linked_list, add_back);
-  }
   DoubleLinkedList(const DoubleLinkedList<T> &other) {
     from_double_linked_list(other);
   }
@@ -48,6 +35,7 @@ public:
     head = other.get_head_node();
     end = other.get_end_node();
     length = other.get_length();
+
     other.exec_move();
   }
   constexpr DoubleLinkedList &operator=(DoubleLinkedList<T> &&other) {
@@ -267,35 +255,6 @@ public:
     }
   }
 
-  inline void from_array(Array<T> &array, bool add_back = true) noexcept {
-    release();
-    const int size = array.get_length();
-
-    for (int i = 0; i < size; i++) {
-      add(array[i], add_back);
-    }
-  }
-
-  inline void from_array(DynamicArray<T> &array,
-                         bool add_back = true) noexcept {
-    release();
-    const int size = array.get_element_count();
-
-    for (int i = 0; i < size; i++) {
-      add(array[i], add_back);
-    }
-  }
-
-  inline void from_linked_list(LinkedList<T> &linked_list,
-                               bool add_back = true) noexcept {
-    release();
-    const int size = linked_list.get_length();
-
-    for (int i = 0; i < size; i++) {
-      add(linked_list[i], add_back);
-    }
-  }
-
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // To Functions
 
@@ -304,37 +263,6 @@ public:
 
     for (int i = 0; i < length; i++) {
       array[i] = current_node->value;
-      current_node = current_node->next;
-    }
-  }
-
-  inline void to_array(Array<T> &array) noexcept {
-    array.reallocate(length);
-    Node *current_node = head;
-
-    for (int i = 0; i < length; i++) {
-      array[i] = current_node->value;
-      current_node = current_node->next;
-    }
-  }
-
-  inline void to_array(DynamicArray<T> &array) noexcept {
-    array.reallocate(length);
-    Node *current_node = head;
-
-    for (int i = 0; i < length; i++) {
-      array[i] = current_node->value;
-      current_node = current_node->next;
-    }
-  }
-
-  inline void to_linked_list(LinkedList<T> &linked_list) noexcept {
-    linked_list.release();
-
-    Node *current_node = head;
-
-    for (int i = 0; i < length; i++) {
-      linked_list.add(current_node->value);
       current_node = current_node->next;
     }
   }
@@ -356,13 +284,13 @@ public:
 
 private:
   /// @brief calculate the minimum iteration count for the given index. For
-  /// indices that are close to end, iterating backward is more cheapaer. This
-  /// is same for the indices that are close to head, iterating forward is more
-  /// cheaper
+  /// indices that are close to end, iterating backward is more cheaper. This
+  /// is same for the indices that are close to head, iterating forward is
+  /// more cheaper
   /// @param given_index the index
   /// @param is_negative true iterate backward, false iterate forward
   /// @return the iteration count
-  inline int get_calc_min_index(int &given_index,
+  inline int get_calc_min_index(const int &given_index,
                                 bool &is_negative) const noexcept {
     int positive_index = given_index >= 0 ? given_index : length + given_index;
     int negative_index =
@@ -376,7 +304,7 @@ private:
   /// @brief get the node at the given index
   /// @param index the given index
   /// @return the node at the given index
-  inline Node *get_node_at(int &index) noexcept {
+  inline Node *get_node_at(const int &index) noexcept {
     bool is_negative = false;
     int calc_index = get_calc_min_index(index, is_negative);
     Node *current_node = nullptr;
