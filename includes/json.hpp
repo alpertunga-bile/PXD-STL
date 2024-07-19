@@ -1,7 +1,6 @@
 #pragma once
 
 #include "simdjson.h"
-
 #include "string.hpp"
 
 constexpr size_t TOTAL_JSON_INTIME = 3;
@@ -10,8 +9,8 @@ namespace pxd {
 
 struct ParserInfos {
   simdjson::ondemand::parser parser;
+  simdjson::padded_string json;
   bool is_occupied = false;
-  String current_file;
 };
 
 static ParserInfos parser_infos[TOTAL_JSON_INTIME];
@@ -30,11 +29,14 @@ public:
     return parsed_json[node_name];
   }
 
+  decltype(auto) operator[](int index) {
+    return parsed_json.get_array().at(index);
+  }
+
   bool load(const char *filepath);
 
 private:
   int parser_index = -1;
-  simdjson::padded_string json;
   simdjson::ondemand::document parsed_json;
 };
 } // namespace pxd

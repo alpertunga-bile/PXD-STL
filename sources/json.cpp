@@ -28,13 +28,6 @@ bool Json::load(const char *filepath) {
     if (!parser_infos[i].is_occupied) {
       parser_index = i;
       break;
-    } else {
-      if (String(filepath) == parser_infos[i].current_file) {
-        PXD_LOG_WARNING(
-            fmt::format("Another parser is using {} file right now", filepath)
-                .c_str());
-        return false;
-      }
     }
   }
 
@@ -45,10 +38,9 @@ bool Json::load(const char *filepath) {
   }
 
   parser_infos[parser_index].is_occupied = true;
-  parser_infos[parser_index].current_file = filepath;
-
-  json = simdjson::padded_string::load(filepath);
-  parsed_json = parser_infos[parser_index].parser.iterate(json);
+  parser_infos[parser_index].json = simdjson::padded_string::load(filepath);
+  parsed_json = parser_infos[parser_index].parser.iterate(
+      parser_infos[parser_index].json);
 
   return true;
 }

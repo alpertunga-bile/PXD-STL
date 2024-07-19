@@ -55,25 +55,19 @@ void do_test() {
 int main() {
   // do_test();
 
-  fmt::print("{}", pxd::String("temp").center(50, "#").c_str());
+  fmt::println("{}", pxd::String(" temp ").center(50, "b").c_str());
 
-  /*
   pxd::Json json;
   json.load("test.json");
 
   auto array = json["nodes"].get_array();
 
-  fmt::print("{}", size_t(array.count_elements()));
+  fmt::println("{}", size_t(array.count_elements()));
 
   pxd::Json t_json;
-  bool is_ok = json.load("test.json");
+  bool is_ok = t_json.load("test.json");
 
-  if (!is_ok) {
-    return 0;
-  }
+  auto t_array = t_json["nodes"].get_array().at(0)["id"];
 
-  auto t_array = t_json["nodes"].get_array();
-
-  fmt::print("{}", size_t(t_array.count_elements()));
-  */
+  fmt::println("{}", t_array.value());
 }

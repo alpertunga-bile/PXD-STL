@@ -146,6 +146,11 @@ public:
     return std::forward<String>(String("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
   }
 
+  /// @brief get string which value is in the center and sorrunded by the
+  /// fill_char
+  /// @param total_length total length of the string
+  /// @param fill_char the char which is used to fill the empty spaces
+  /// @return
   String &center(int total_length, const char *fill_char);
 
   /// @brief get std::string of the value

@@ -1,3 +1,1 @@
-[WARNING ] /_\ WARNING                                            /_\ main.cpp             /_\    18 /_\ do_test
-[ERROR   ] /_\ ERROR                                              /_\ main.cpp             /_\    19 /_\ do_test
-[INFO    ] /_\ Starting tests                                     /_\ main.cpp             /_\    20 /_\ do_test
+[WARNING ] /_\ Another parser is using test.json file right now   /_\ json.cpp             /_\    35 /_\ pxd::Json::load
