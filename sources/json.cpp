@@ -29,7 +29,7 @@ bool Json::load(const char *filepath) {
       parser_index = i;
       break;
     } else {
-      if (parser_infos[i].current_file == String(filepath)) {
+      if (String(filepath) == parser_infos[i].current_file) {
         PXD_LOG_WARNING(
             fmt::format("Another parser is using {} file right now", filepath)
                 .c_str());
