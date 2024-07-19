@@ -4,14 +4,6 @@
 #include "regex.hpp"
 
 namespace pxd {
-String::String(const SIMDString<64> &str) {
-#ifdef PXD_USE_STD_STRING
-  value = std::string(str);
-#else
-  value = str;
-#endif
-}
-
 String::String(const std::string &str) { value = str; }
 
 String::String(const char *c_str) {
@@ -36,6 +28,15 @@ String &String::operator=(std::string &&other) {
 
 String &String::operator=(const char *other) {
   value = other;
+
+  return *this;
+}
+
+String &String::center(int total_length, const char *fill_char) {
+  auto format_string = fmt::format("{{:{}^{}}}", fill_char, total_length);
+  auto format_args = fmt::make_format_args(value);
+
+  value = fmt::vformat(format_string.c_str(), format_args);
 
   return *this;
 }

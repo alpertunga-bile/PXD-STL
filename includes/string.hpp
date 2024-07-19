@@ -1,13 +1,16 @@
 #pragma once
 
+#ifdef PXD_USE_STD_STRING
+#include <string>
+#else
 #include "SIMDString.h"
+#endif
 
 namespace pxd {
 
 class String {
 public:
   String() = default;
-  String(const SIMDString<64> &str);
   String(const std::string &str);
   String(const char *c_str);
   String(const String &other) = default;
@@ -20,9 +23,10 @@ public:
   ~String() = default;
 
   decltype(auto) operator[](int index) { return value[index]; }
+  inline decltype(auto) get_value() const { return value; }
 
   inline decltype(auto) operator+(const String &other) {
-    return std::forward<String>(String(value + other.get_value()));
+    return std::forward<String>(String(string() + other.string()));
   }
   inline decltype(auto) operator+(const std::string &other) {
     return std::forward<String>(String(string() + other));
@@ -32,15 +36,15 @@ public:
   }
 
   inline decltype(auto) operator-(String &other) {
-    return std::forward<String>(String(value).replace_all(other, ""));
+    return std::forward<String>(String(c_str()).replace_all(other, ""));
   }
 
   inline decltype(auto) operator-(std::string &other) {
-    return std::forward<String>(String(value).replace_all(other.c_str(), ""));
+    return std::forward<String>(String(c_str()).replace_all(other.c_str(), ""));
   }
 
   inline decltype(auto) operator-(const char *other) {
-    return std::forward<String>(String(value).replace_all(other, ""));
+    return std::forward<String>(String(c_str()).replace_all(other, ""));
   }
 
   inline String &operator+=(String &other) {
@@ -142,21 +146,21 @@ public:
     return std::forward<String>(String("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
   }
 
+  String &center(int total_length, const char *fill_char);
+
+  /// @brief get std::string of the value
+  /// @return std::string of the value
+  constexpr inline std::string string() const {
 #ifdef PXD_USE_STD_STRING
-  inline std::string get_value() const { return value; }
-  /// @brief get std::string of the value
-  /// @return std::string of the value
-  constexpr inline std::string string() { return value; }
+    return value;
 #else
-  inline SIMDString<64> get_value() const { return value; }
-  /// @brief get std::string of the value
-  /// @return std::string of the value
-  constexpr inline std::string string() { return std::string(value.c_str()); }
+    return std::string(value.c_str());
 #endif
+  }
 
   /// @brief get string_view of the value
   /// @return string_view of the value
-  inline std::string_view string_view() {
+  inline std::string_view string_view() const {
     return std::string_view(value.c_str());
   }
 
@@ -172,11 +176,11 @@ public:
 
   /// @brief get the length of the value
   /// @return length of the value
-  constexpr inline size_t length() { return value.length(); }
+  constexpr inline size_t length() const { return value.length(); }
 
   /// @brief get the const char* of the value
   /// @return const char* representation of the value
-  constexpr inline const char *c_str() { return value.c_str(); }
+  constexpr inline const char *c_str() const { return value.c_str(); }
 
 private:
   constexpr inline bool compare_str(const std::string &str) {
@@ -206,8 +210,10 @@ private:
 private:
 #ifdef PXD_USE_STD_STRING
   std::string value;
+  const bool is_using_std = true;
 #else
   SIMDString<64> value;
+  const bool is_using_std = false;
 #endif
 };
 

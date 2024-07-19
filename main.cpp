@@ -53,7 +53,9 @@ void do_test() {
 #include "json.hpp"
 
 int main() {
-  do_test();
+  // do_test();
+
+  fmt::print("{}", pxd::String("temp").center(50, "#").c_str());
 
   /*
   pxd::Json json;
