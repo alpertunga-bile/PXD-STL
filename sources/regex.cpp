@@ -18,11 +18,11 @@ void replace_first(const RE2 &regex, String &base_str, String &new_str) {
   }
 
 #ifdef PXD_USE_STD_STRING
-  RE2::Replace(&base_str, regex, new_str.c_str());
+  RE2::Replace(&base_str, regex, new_str);
 #else
-  std::string temp_str(base_str.c_str());
-  RE2::Replace(&temp_str, regex, new_str.c_str());
-  base_str = temp_str;
+  std::string temp_str = base_str;
+  RE2::Replace(&temp_str, regex, new_str);
+  base_str = std::forward<std::string>(temp_str);
 #endif
 }
 
@@ -36,10 +36,10 @@ void replace_all(const RE2 &regex, String &base_str, String &new_str) {
   }
 
 #ifdef PXD_USE_STD_STRING
-  RE2::GlobalReplace(&base_str, regex, new_str.c_str());
+  RE2::GlobalReplace(&base_str, regex, new_str);
 #else
   std::string temp_str(base_str.c_str());
-  RE2::GlobalReplace(&temp_str, regex, new_str.c_str());
+  RE2::GlobalReplace(&temp_str, regex, new_str);
   base_str = temp_str;
 #endif
 }
