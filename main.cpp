@@ -18,7 +18,9 @@
 const RE2 re_remove_empty_parantheses("\\(\\s*\\)");
 const RE2 re_remove_multiwhitespaces("\\s+");
 
-void do_test() {
+void
+do_test()
+{
   PXD_LOG_WARNING("WARNING");
   PXD_LOG_ERROR("ERROR");
   PXD_LOG_INFO("Starting tests");
@@ -52,10 +54,16 @@ void do_test() {
   test_manager.save_results();
 }
 
-int main() {
+int
+main()
+{
   // do_test();
   String full_str("(((())))");
+  String temp("-");
 
-  pxd::full_match(full_str, re_remove_empty_parantheses);
-  pxd::partial_match(full_str, re_remove_empty_parantheses);
+  bool result = pxd::full_match(full_str, re_remove_empty_parantheses);
+  result = pxd::partial_match(full_str, re_remove_empty_parantheses);
+  pxd::replace_first(re_remove_empty_parantheses, full_str, temp);
+
+  fmt::println("{}", full_str.c_str());
 }
