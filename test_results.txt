@@ -13,6 +13,15 @@ Test Name : Array Tests
    assign move constructor        -> Passed
    assign constructor             -> Passed
 ---------------------------------------------------------------
+Test Name : Regex Tests
+   full match                     -> Passed
+   replace first                  -> Passed
+   full match extract             -> Passed
+   partial match                  -> Passed
+   quote                          -> Passed
+   partial match extract          -> Passed
+   replace all                    -> Passed
+---------------------------------------------------------------
 Test Name : Queue Tests
    array ctor                     -> Passed
    assign ctor                    -> Passed
@@ -125,5 +134,5 @@ Test Name : Priority Queue Tests
    update priority                -> Passed
    remove                         -> Passed
 ---------------------------------------------------------------
- Passed Tests : 106 | Total Tests : 106 | Passed Ratio : %100.00
+ Passed Tests : 113 | Total Tests : 113 | Passed Ratio : %100.00
 ---------------------------------------------------------------

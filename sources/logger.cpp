@@ -65,10 +65,12 @@ Logger::log(const char* log_level,
 {
   auto base_filename = std::filesystem::path(filename).filename().string();
 
-  if (!just_log_file) {
-    fmt::print(format_str, log_level, msg, base_filename, line, func_name);
-  }
-  log_file.print(format_str, log_level, msg, base_filename, line, func_name);
+#ifndef PXD_LOG_FILE_ONLY
+  fmt::print(format_str, log_level, msg, base_filename, line, func_name);
+#endif
+
+  fmt::print(
+    log_file, format_str, log_level, msg, base_filename, line, func_name);
 }
 
 } // namespace pxd

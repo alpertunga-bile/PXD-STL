@@ -22,9 +22,18 @@ template <typename T> void swap(T &left, T &right) {
   right = temp;
 }
 
-constexpr inline size_t byte2mbyte(size_t size) { return size / 1024; }
-constexpr inline size_t byte2gbyte(size_t size) { return size / (1024 * 1024); }
-constexpr inline size_t mbyte2gbyte(size_t size) { return size / 1024; }
+constexpr inline double byte2kbyte(size_t size) { return size / 1024.0; }
+constexpr inline double byte2mbyte(size_t size) {
+  return size / (1024.0 * 1024.0);
+}
+constexpr inline double byte2gbyte(size_t size) {
+  return size / (1024.0 * 1024.0 * 1024.0);
+}
+constexpr inline double kbyte2mbyte(size_t size) { return size / 1024.0; }
+constexpr inline double kbyte2gbyte(size_t size) {
+  return size / (1024.0 * 1024.0);
+}
+constexpr inline double mbyte2gbyte(size_t size) { return size / 1024.0; }
 
 // return the top K elements in ascend order from a raw array
 template <typename T, int D = 4>
@@ -122,6 +131,12 @@ inline void append(std::vector<T> &&vec, T *array, int arr_size) {
 
   vec.reserve(vec.size() + arr_size);
   vec.insert(vec.end(), temp_vec.begin(), temp_vec.end());
+}
+
+template <typename T>
+inline void append(std::vector<T> &&vec, const std::vector<T> &&given_vector) {
+  vec.reserve(vec.size() + given_vector.size());
+  vec.insert(vec.end(), given_vector.begin(), given_vector.end());
 }
 
 } // namespace pxd

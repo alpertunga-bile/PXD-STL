@@ -10,9 +10,6 @@ enum class eBST_ORDER : std::uint8_t {
   POSTORDER,
 };
 
-template <typename T> class Array;
-template <typename T> class LinkedList;
-
 template <typename T> struct BSTNode {
   T value;
   BSTNode<T> *left = nullptr;
@@ -39,12 +36,6 @@ public:
   constexpr BinarySearchTree() noexcept = default;
   BinarySearchTree(T *values, int size, bool is_balance = false) {
     from_array(values, size, is_balance);
-  }
-  BinarySearchTree(Array<T> &array, bool is_balance = false) {
-    from_array(array, is_balance);
-  }
-  BinarySearchTree(LinkedList<T> &linked_list, bool is_balance = false) {
-    from_linked_list(linked_list, is_balance);
   }
   BinarySearchTree(const BinarySearchTree<T> &other) { from_bst(other); }
   constexpr BinarySearchTree(BinarySearchTree<T> &&other) noexcept {
@@ -135,25 +126,27 @@ public:
       }
     }
 
-    // when current node has one child
-    remove_from_one_child(current_node, parent_node);
-
-    // when current_node has two children
-    remove_from_two_children(current_node, parent_node);
-
-    // when current_node is root
-    remove_from_root(current_node, parent_node);
-
     if (root == current_node) {
       delete root;
-      total_node_count = 0;
       root = nullptr;
-    } else {
-      delete current_node;
-      current_node = nullptr;
 
-      total_node_count--;
+      total_node_count = 0;
+
+      return;
     }
+
+    if (current_node->has_one_child()) {
+      remove_from_one_child(current_node, parent_node);
+    } else if (current_node->has_two_children()) {
+      remove_from_two_children(current_node, parent_node);
+    } else if (current_node == root) {
+      remove_from_root(current_node, parent_node);
+    }
+
+    delete current_node;
+    current_node = nullptr;
+
+    total_node_count--;
   }
 
   void remove(T &&value) noexcept { remove(value); }
@@ -251,36 +244,6 @@ public:
     }
   }
 
-  void from_array(Array<T> &array, bool is_balance) {
-    if (array.get_length() == 0) {
-      return;
-    }
-
-    construct_from_array(array.get_ptr(), array.get_length());
-
-    if (is_balance) {
-      balance_self();
-    }
-  }
-
-  void from_linked_list(LinkedList<T> &linked_list, bool is_balance) {
-    if (linked_list.get_length() == 0) {
-      return;
-    }
-
-    release();
-
-    const int size = linked_list.get_length();
-
-    for (int i = 0; i < size; i++) {
-      add(linked_list[i]);
-    }
-
-    if (is_balance) {
-      balance_self();
-    }
-  }
-
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // To Functions
 
@@ -301,30 +264,6 @@ public:
       break;
     case eBST_ORDER::POSTORDER:
       postorder(root, array, index);
-      break;
-
-    default:
-      break;
-    }
-  }
-
-  void get_order(Array<T> &array, eBST_ORDER &&order) const {
-    if (root == nullptr) {
-      return;
-    }
-
-    array.reallocate(total_node_count);
-    int index = 0;
-
-    switch (order) {
-    case eBST_ORDER::INORDER:
-      inorder(root, array.get_ptr(), index);
-      break;
-    case eBST_ORDER::PREORDER:
-      preorder(root, array.get_ptr(), index);
-      break;
-    case eBST_ORDER::POSTORDER:
-      postorder(root, array.get_ptr(), index);
       break;
 
     default:
@@ -473,14 +412,13 @@ private:
 
   void remove_from_one_child(BSTNode<T> *current_node,
                              BSTNode<T> *parent_node) noexcept {
-    if (current_node->has_one_child() && parent_node->right == current_node) {
+    if (parent_node->right == current_node) {
       if (current_node->has_left()) {
         parent_node->right = current_node->left;
       } else {
         parent_node->right = current_node->right;
       }
-    } else if (current_node->has_one_child() &&
-               parent_node->left == current_node) {
+    } else if (parent_node->left == current_node) {
       if (current_node->has_left()) {
         parent_node->left = current_node->left;
       } else {
@@ -491,14 +429,12 @@ private:
 
   void remove_from_two_children(BSTNode<T> *current_node,
                                 BSTNode<T> *parent_node) noexcept {
-    if (current_node->has_two_children() && parent_node->left == current_node &&
-        current_node->left->has_right()) {
+    if (parent_node->left == current_node && current_node->left->has_right()) {
       BSTNode<T> *new_node = current_node->left;
       place_new_node(current_node->right, new_node->right);
       new_node->right = current_node->right;
       parent_node->left = new_node;
-    } else if (current_node->has_two_children() &&
-               parent_node->right == current_node &&
+    } else if (parent_node->right == current_node &&
                current_node->right->has_left()) {
       BSTNode<T> *new_node = current_node->right;
       place_new_node(current_node->left, new_node->left);
@@ -509,11 +445,11 @@ private:
 
   void remove_from_root(BSTNode<T> *current_node,
                         BSTNode<T> *parent_node) noexcept {
-    if (current_node == root && current_node->has_two_children()) {
+    if (current_node->has_two_children()) {
       BSTNode<T> *new_node = current_node->right;
       place_new_node(new_node, current_node->left);
       root = new_node;
-    } else if (current_node == root && current_node->has_one_child()) {
+    } else if (current_node->has_one_child()) {
       if (current_node->has_left()) {
         root = current_node->left;
       } else {
