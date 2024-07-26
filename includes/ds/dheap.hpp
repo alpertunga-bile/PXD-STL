@@ -19,11 +19,15 @@ public:
 
   decltype(auto) operator[](int index) { return values[index]; }
 
+  /// @brief insert new element, height of tree affects its performance
+  /// @param element new element
   void insert(T &element) {
     values.push_back(element);
     ascend(values.size() - 1);
   }
 
+  /// @brief insert new element, height of tree affects its performance
+  /// @param element new element
   inline void insert(T &&element) { insert(element); }
 
   void remove(T &value) {
@@ -63,6 +67,8 @@ public:
     heapify();
   }
 
+  /// @brief get the top element, children count affects its performance
+  /// @return the top element
   T top() {
     PXD_ASSERT(values.size() > 0);
 
@@ -103,6 +109,7 @@ public:
       descend(index);
     }
   }
+
   inline void update(T &&value) { update(value); }
 
   void update_at(int index, T &value) {

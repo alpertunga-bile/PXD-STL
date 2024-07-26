@@ -50,8 +50,6 @@ void do_test() {
   test_manager.save_results();
 }
 
-#include "json.hpp"
-
 int main() {
   do_test();
 
