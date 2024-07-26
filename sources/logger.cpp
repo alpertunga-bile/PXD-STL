@@ -69,8 +69,7 @@ Logger::log(const char* log_level,
   fmt::print(format_str, log_level, msg, base_filename, line, func_name);
 #endif
 
-  fmt::print(
-    log_file, format_str, log_level, msg, base_filename, line, func_name);
+  log_file.print(format_str, log_level, msg, base_filename, line, func_name);
 }
 
 } // namespace pxd

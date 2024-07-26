@@ -32,7 +32,7 @@ String &String::operator=(const char *other) {
   return *this;
 }
 
-String &String::center(int total_length, const char *fill_char) {
+String &String::center(int total_length, const char fill_char) {
   auto format_string = fmt::format("{{:{}^{}}}", fill_char, total_length);
   auto format_args = fmt::make_format_args(value);
 

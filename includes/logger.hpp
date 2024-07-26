@@ -37,8 +37,7 @@ private:
            const char* func_name);
 
 private:
-  FILE* log_file = nullptr;
-  const char* log_filename = "app.log";
+  fmt::v10::ostream log_file = fmt::output_file("app.log");
   static Logger* instance;
 };
 } // namespace pxd

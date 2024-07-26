@@ -151,7 +151,7 @@ public:
   /// @param total_length total length of the string
   /// @param fill_char the char which is used to fill the empty spaces
   /// @return
-  String &center(int total_length, const char *fill_char);
+  String &center(int total_length, const char fill_char);
 
   /// @brief get std::string of the value
   /// @return std::string of the value
