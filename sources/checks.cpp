@@ -4,8 +4,8 @@
 #include <cassert>
 #include <stdlib.h> // don't need the math.h lib so not using cstdlib
 
-void assert_func(bool expression, const char *filename, int line,
-                 const char *function_name) {
+constexpr void assert_func(bool expression, const char *filename, int line,
+                           const char *function_name) {
   if (expression) {
     return;
   }
@@ -19,8 +19,8 @@ void assert_func(bool expression, const char *filename, int line,
   assert(false);
 }
 
-void todo_func(const char *message, const char *filename, int line,
-               const char *function_name) {
+constexpr void todo_func(const char *message, const char *filename, int line,
+                         const char *function_name) {
   fmt::print(
       "TODO message:\n    Message : {}\n    Filename : {}\n    Line     : "
       "{}\n    "
@@ -31,8 +31,9 @@ void todo_func(const char *message, const char *filename, int line,
   assert(false);
 }
 
-void assert_msg_func(const char *message, bool expression, const char *filename,
-                     int line, const char *function_name) {
+constexpr void assert_msg_func(const char *message, bool expression,
+                               const char *filename, int line,
+                               const char *function_name) {
   if (expression) {
     return;
   }
