@@ -8,7 +8,7 @@ namespace pxd {
 
 template <typename T> struct TreapNode {
   T key = T();
-  double priority = 0;
+  double priority = 0.0;
   TreapNode<T> *left = nullptr;
   TreapNode<T> *right = nullptr;
   TreapNode<T> *parent = nullptr;
@@ -29,6 +29,8 @@ template <typename T> struct TreapNode {
   }
 };
 
+/// @brief BST and min based heap integrated data structure
+/// @tparam T value type
 template <typename T> class Treap {
 public:
   Treap() = default;
@@ -159,7 +161,8 @@ public:
   }
 
 private:
-  // rotate left node to parent
+  /// @brief rotate left node to parent node
+  /// @param node left node
   void right_rotate(TreapNode<T> *node) {
     PXD_ASSERT(node != nullptr && root != node)
 
@@ -183,6 +186,8 @@ private:
     node->set_right(node_parent);
   }
 
+  /// @brief rotate right node to parent node
+  /// @param node right node
   void left_rotate(TreapNode<T> *node) {
     PXD_ASSERT(node != nullptr && root != node)
 
@@ -206,7 +211,7 @@ private:
     node->set_left(node_parent);
   }
 
-  TreapNode<T> *search_node(TreapNode *node, T &key) {
+  TreapNode<T> *search_node(TreapNode<T> *node, T &key) {
     if (node == nullptr) {
       return nullptr;
     }

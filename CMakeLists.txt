@@ -57,12 +57,15 @@ set(HEADER_FILES
     ${PXD_STL_INCLUDE_DIR}/ds/xor_double_linked_list.hpp
     ${PXD_STL_INCLUDE_DIR}/ds/priority_queue.hpp
     ${PXD_STL_INCLUDE_DIR}/ds/dheap.hpp
+    ${PXD_STL_INCLUDE_DIR}/ds/treap.hpp
+    ${PXD_STL_INCLUDE_DIR}/ds/randomized_treap.hpp
     
     ${PXD_STL_INCLUDE_DIR}/regex.hpp
     ${PXD_STL_INCLUDE_DIR}/json.hpp
     ${PXD_STL_INCLUDE_DIR}/logger.hpp
     ${PXD_STL_INCLUDE_DIR}/checks.hpp
     "${PXD_STL_INCLUDE_DIR}/string.hpp"
+    ${PXD_STL_INCLUDE_DIR}/random_gen.hpp
 
     ${PXD_THIRD_PARTY_DIR}/SIMDString/SIMDString.h
     ${PXD_THIRD_PARTY_DIR}/re2/re2/re2.h
@@ -78,18 +81,22 @@ set(LIB_SOURCE_FILES
     ${PXD_SOURCE_DIR}/ds/array.cpp
     ${PXD_SOURCE_DIR}/ds/linked_list.cpp
     ${PXD_SOURCE_DIR}/ds/binary_search_tree.cpp
+    ${PXD_SOURCE_DIR}/ds/double_linked_list.cpp
+    ${PXD_SOURCE_DIR}/ds/xor_double_linked_list.cpp
+    ${PXD_SOURCE_DIR}/ds/priority_queue.cpp
+    ${PXD_SOURCE_DIR}/ds/dheap.cpp
+    ${PXD_SOURCE_DIR}/ds/treap.cpp
+    ${PXD_SOURCE_DIR}/ds/randomized_treap.cpp
+
     ${PXD_SOURCE_DIR}/logger.cpp
+    ${PXD_SOURCE_DIR}/random_gen.cpp
     ${PXD_SOURCE_DIR}/handle.cpp
     ${PXD_SOURCE_DIR}/ds/dynamic_array.cpp
     ${PXD_SOURCE_DIR}/matrix.cpp
     ${PXD_SOURCE_DIR}/regex.cpp
     ${PXD_SOURCE_DIR}/string.cpp
     ${PXD_SOURCE_DIR}/json.cpp
-    ${PXD_SOURCE_DIR}/ds/double_linked_list.cpp
-    ${PXD_SOURCE_DIR}/ds/xor_double_linked_list.cpp
-    ${PXD_SOURCE_DIR}/ds/priority_queue.cpp
     ${PXD_SOURCE_DIR}/utility.cpp
-    ${PXD_SOURCE_DIR}/ds/dheap.cpp
 
     ${HEADER_FILES}
 )
