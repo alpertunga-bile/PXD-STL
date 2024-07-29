@@ -1,7 +1,6 @@
 #pragma once
 
 #include "checks.hpp"
-#include "os.h"
 
 namespace pxd {
 class Logger {
@@ -27,7 +26,6 @@ private:
            int line, const char *func_name);
 
 private:
-  fmt::v10::ostream log_file = fmt::output_file("app.log");
   static Logger *instance;
 };
 } // namespace pxd

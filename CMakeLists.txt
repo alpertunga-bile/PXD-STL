@@ -71,12 +71,10 @@ set(HEADER_FILES
     ${PXD_THIRD_PARTY_DIR}/re2/re2/re2.h
     ${PXD_THIRD_PARTY_DIR}/fmt/include/fmt/core.h
     ${PXD_THIRD_PARTY_DIR}/fmt/include/fmt/os.h
-    ${PXD_THIRD_PARTY_DIR}/simdjson/singleheader/simdjson.h
 )
 
 set(LIB_SOURCE_FILES
     ${PXD_THIRD_PARTY_DIR}/SIMDString/SIMDString.cpp
-    ${PXD_THIRD_PARTY_DIR}/simdjson/singleheader/simdjson.cpp
 
     ${PXD_SOURCE_DIR}/ds/array.cpp
     ${PXD_SOURCE_DIR}/ds/linked_list.cpp
@@ -108,7 +106,7 @@ include_directories(
    ${PXD_THIRD_PARTY_DIR}/fmt/include/fmt
    ${PXD_THIRD_PARTY_DIR}/SIMDString
    ${PXD_THIRD_PARTY_DIR}/re2/re2
-   ${PXD_THIRD_PARTY_DIR}/simdjson/singleheader
+   ${PXD_THIRD_PARTY_DIR}/rapidjson/include/rapidjson
 )
 
 set(COMMON_STD_HEADERS

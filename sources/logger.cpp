@@ -1,9 +1,14 @@
 #include "logger.hpp"
 
 #include "core.h"
+#include "os.h"
+
 #include <filesystem>
 
 namespace pxd {
+
+fmt::v10::ostream log_file = fmt::output_file("app.log");
+
 inline Logger::~Logger() noexcept {
   log_file.close();
 
