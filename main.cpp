@@ -50,17 +50,8 @@ void do_test() {
   test_manager.save_results();
 }
 
-#include "json.hpp"
-#include "string.hpp"
+#include "random_gen.hpp"
 
 int main() {
   // do_test();
-
-  fmt::println("{}", pxd::String(" temp ").center(50, 'b').c_str());
-
-  auto &&json = pxd::load_json("test.json");
-
-  bool val = json.document["nodes"].IsArray();
-
-  pxd::print_json(json);
 }
