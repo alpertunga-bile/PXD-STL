@@ -58,5 +58,9 @@ int main() {
 
   pxd::Json json = pxd::load_json("test.json");
 
-  printf("%s", pxd::get_file_content_hash_str("main.cpp").c_str());
+  uint8_t values[32];
+
+  pxd::join_and_comp_hash(values, "wololo", "jaskldjas");
+
+  printf("%s", pxd::get_hash_str(values).c_str());
 }

@@ -3,7 +3,6 @@
 #include "logger.hpp"
 #include "string.hpp"
 
-#include "blake3.h"
 #include "core.h"
 
 #include <filesystem>
@@ -73,6 +72,33 @@ String get_file_content_hash_str(const char *filepath) {
   hash_str = std::move(contents.str());
 
   return comp_and_get_hash_str(hash_str.c_str(), hash_str.length());
+}
+
+bool update_hasher_with_file_content(blake3_hasher *hasher,
+                                     const char *filepath) {
+  if (!std::filesystem::exists(filepath)) {
+    PXD_LOG_ERROR(fmt::format("{} is not exists", filepath).c_str());
+    return false;
+  }
+
+  std::ifstream file(filepath, std::ifstream::in);
+
+  if (!file.good() || !file.is_open()) {
+    PXD_LOG_ERROR(fmt::format("{} cannot opened", filepath).c_str());
+    return false;
+  }
+
+  std::stringstream contents;
+
+  contents << file.rdbuf();
+
+  file.close();
+
+  String hash_str = std::move(contents.str());
+
+  blake3_hasher_update(hasher, hash_str.c_str(), hash_str.length());
+
+  return true;
 }
 
 } // namespace pxd
