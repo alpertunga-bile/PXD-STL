@@ -3,6 +3,8 @@
 #include "regex.hpp"
 #include "test_utils.hpp"
 
+#include "string.hpp"
+
 namespace pxd {
 class RegexTests : public ITest {
 public:
