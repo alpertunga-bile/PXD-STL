@@ -50,8 +50,13 @@ void do_test() {
   test_manager.save_results();
 }
 
-#include "random_gen.hpp"
+#include "hash.hpp"
+#include "json.hpp"
 
 int main() {
   // do_test();
+
+  pxd::Json json = pxd::load_json("test.json");
+
+  printf("\n%s", pxd::get_hash_str(json.content_hash).c_str());
 }

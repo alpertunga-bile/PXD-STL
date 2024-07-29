@@ -12,6 +12,8 @@
 #include "rapidjson/prettywriter.h"
 #include "rapidjson/stringbuffer.h"
 
+#include "hash.hpp"
+
 namespace pxd {
 
 Json load_json(const String &filepath) {
@@ -34,7 +36,8 @@ Json load_json(const String &filepath) {
   json_object.document.ParseStream<0, rapidjson::AutoUTF<unsigned>>(eis);
   json_object.filepath = filepath.c_str();
   json_object.utf_type = eis.GetType();
-  json_object.has_bom = eis.HasBOM();
+
+  pxd::comp_hash(readbuffer, sizeof(readbuffer), json_object.content_hash);
 
   fclose(file);
 
@@ -43,7 +46,7 @@ Json load_json(const String &filepath) {
 
 Json load_json(String &&filepath) { return load_json(filepath); }
 
-void write_json(String &&filepath, const Json &json_object) {
+void write_json(const String &filepath, const Json &json_object) {
   FILE *file = nullptr;
 
   fopen_s(&file, filepath.c_str(), "w");
@@ -62,6 +65,10 @@ void write_json(String &&filepath, const Json &json_object) {
   json_object.document.Accept(writer);
 
   fclose(file);
+}
+
+void write_json(String &&filepath, const Json &json_object) {
+  write_json(filepath, json_object);
 }
 
 void print_json(const Json &json_object) {

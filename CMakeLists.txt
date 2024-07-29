@@ -66,11 +66,20 @@ set(HEADER_FILES
     ${PXD_STL_INCLUDE_DIR}/checks.hpp
     "${PXD_STL_INCLUDE_DIR}/string.hpp"
     ${PXD_STL_INCLUDE_DIR}/random_gen.hpp
+    ${PXD_STL_INCLUDE_DIR}/hash.hpp
 
     ${PXD_THIRD_PARTY_DIR}/SIMDString/SIMDString.h
     ${PXD_THIRD_PARTY_DIR}/re2/re2/re2.h
     ${PXD_THIRD_PARTY_DIR}/fmt/include/fmt/core.h
+    ${PXD_THIRD_PARTY_DIR}/fmt/include/fmt/format.h
     ${PXD_THIRD_PARTY_DIR}/fmt/include/fmt/os.h
+    ${PXD_THIRD_PARTY_DIR}/blake3/c/blake3.h
+    ${PXD_THIRD_PARTY_DIR}/rapidjson/include/rapidjson/filereadstream.h
+    ${PXD_THIRD_PARTY_DIR}/rapidjson/include/rapidjson/filewritestream.h
+    ${PXD_THIRD_PARTY_DIR}/rapidjson/include/rapidjson/prettywriter.h
+    ${PXD_THIRD_PARTY_DIR}/rapidjson/include/rapidjson/rapidjson.h
+    ${PXD_THIRD_PARTY_DIR}/rapidjson/include/rapidjson/document.h
+    ${PXD_THIRD_PARTY_DIR}/rapidjson/include/rapidjson/encodedstream.h
 )
 
 set(LIB_SOURCE_FILES
@@ -95,6 +104,7 @@ set(LIB_SOURCE_FILES
     ${PXD_SOURCE_DIR}/string.cpp
     ${PXD_SOURCE_DIR}/json.cpp
     ${PXD_SOURCE_DIR}/utility.cpp
+    ${PXD_SOURCE_DIR}/hash.cpp
 
     ${HEADER_FILES}
 )
@@ -107,6 +117,7 @@ include_directories(
    ${PXD_THIRD_PARTY_DIR}/SIMDString
    ${PXD_THIRD_PARTY_DIR}/re2/re2
    ${PXD_THIRD_PARTY_DIR}/rapidjson/include
+    ${PXD_THIRD_PARTY_DIR}/blake3/c
 )
 
 set(COMMON_STD_HEADERS
@@ -126,15 +137,15 @@ set(COMMON_STD_HEADERS
 set(ABSL_PROPAGATE_CXX_STD ON)
 set(ABSL_ENABLE_INSTALL ON)
 
-set(SIMDJSON_BUILD_STATIC_LIB ON)
-
 add_subdirectory(${PXD_THIRD_PARTY_DIR}/abseil-cpp)
 add_subdirectory(${PXD_THIRD_PARTY_DIR}/re2)
 add_subdirectory(${PXD_THIRD_PARTY_DIR}/fmt)
+add_subdirectory(${PXD_THIRD_PARTY_DIR}/blake3/c)
 
 set(LIBS_TO_LINK
     re2::re2
     fmt::fmt
+    BLAKE3::blake3
 )
 
 # ------------------------------------------------------------------------------------------------------
