@@ -1,42 +1,31 @@
 #pragma once
 
-#include "simdjson.h"
-#include "string.hpp"
+#ifndef RAPIDJSON_SSE2
+#define RAPIDJSON_SSE2
+#endif
 
-constexpr size_t TOTAL_JSON_INTIME = 3;
+#include "rapidjson/rapidjson.h"
+
+#include "rapidjson/document.h"
+
+#include "string.hpp"
 
 namespace pxd {
 
-struct ParserInfos {
-  simdjson::ondemand::parser parser;
-  simdjson::padded_string json;
-  bool is_occupied = false;
+struct Json {
+  String filepath;
+  rapidjson::Document document;
+  rapidjson::UTFType utf_type;
+  bool has_bom = false;
 };
 
-static ParserInfos parser_infos[TOTAL_JSON_INTIME];
+Json load_json(String &&filepath);
+Json load_json(const String &filepath);
 
-class Json {
-public:
-  Json() = default;
-  Json(const char *filepath);
-  Json(const Json &other) = default;
-  Json &operator=(const Json &other) = default;
-  Json(Json &&other) = default;
-  Json &operator=(Json &&other) = default;
-  ~Json();
+void write_json(String &&filepath, const Json &json_object);
 
-  decltype(auto) operator[](const char *node_name) {
-    return parsed_json[node_name];
-  }
+void print_json(const Json &json_object);
 
-  decltype(auto) operator[](int index) {
-    return parsed_json.get_array().at(index);
-  }
+String json_to_string(const Json &json_object);
 
-  bool load(const char *filepath);
-
-private:
-  int parser_index = -1;
-  simdjson::ondemand::document parsed_json;
-};
 } // namespace pxd

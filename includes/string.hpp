@@ -51,7 +51,15 @@ public:
     value += other.get_value();
     return *this;
   }
+  inline String &operator+=(String &&other) {
+    value += other.get_value();
+    return *this;
+  }
   inline String &operator+=(std::string &other) {
+    value += other;
+    return *this;
+  }
+  inline String &operator+=(std::string &&other) {
     value += other;
     return *this;
   }

@@ -20,11 +20,11 @@ endif(NOT MSVC)
 
 # from glm repository's CMakeLists.txt
 if((CMAKE_CXX_COMPILER_ID MATCHES "GNU") OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
-    add_compile_options(-mavx2)
+    add_compile_options(-msse4.2)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "Intel")
-    add_compile_options(/QxAVX2)
+    add_compile_options(/QxSSE4.2)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    add_compile_options(/arch:AVX2)
+    add_compile_options(/arch:SSE2)
 endif()
 
 if(NOT WIN32)
@@ -106,7 +106,7 @@ include_directories(
    ${PXD_THIRD_PARTY_DIR}/fmt/include/fmt
    ${PXD_THIRD_PARTY_DIR}/SIMDString
    ${PXD_THIRD_PARTY_DIR}/re2/re2
-   ${PXD_THIRD_PARTY_DIR}/rapidjson/include/rapidjson
+   ${PXD_THIRD_PARTY_DIR}/rapidjson/include
 )
 
 set(COMMON_STD_HEADERS

@@ -1,47 +1,98 @@
 #include "json.hpp"
 
-#include <filesystem>
-
 #include "logger.hpp"
 
 #include "core.h"
 
-namespace pxd {
-Json::Json(const char *filepath) { load(filepath); }
+#include <filesystem>
 
-Json::~Json() {
-  if (parser_index == -1) {
-    return;
+#include "rapidjson/encodedstream.h"
+#include "rapidjson/filereadstream.h"
+#include "rapidjson/filewritestream.h"
+#include "rapidjson/prettywriter.h"
+#include "rapidjson/stringbuffer.h"
+
+namespace pxd {
+
+Json load_json(const String &filepath) {
+  Json json_object;
+
+  if (!std::filesystem::exists(filepath.c_str())) {
+    PXD_LOG_ERROR(fmt::format("{} is not exists", filepath.c_str()).c_str());
+    return json_object;
   }
 
-  parser_infos[parser_index].is_occupied = false;
-  parser_index = -1;
+  FILE *file = nullptr;
+
+  fopen_s(&file, filepath.c_str(), "r");
+
+  char readbuffer[65536];
+  rapidjson::FileReadStream is(file, readbuffer, sizeof(readbuffer));
+
+  rapidjson::AutoUTFInputStream<unsigned, rapidjson::FileReadStream> eis(is);
+
+  json_object.document.ParseStream<0, rapidjson::AutoUTF<unsigned>>(eis);
+  json_object.filepath = filepath.c_str();
+  json_object.utf_type = eis.GetType();
+  json_object.has_bom = eis.HasBOM();
+
+  fclose(file);
+
+  return json_object;
 }
 
-bool Json::load(const char *filepath) {
-  if (!std::filesystem::exists(filepath)) {
-    PXD_LOG_WARNING(fmt::format("{} is not exists", filepath).c_str());
-    return false;
-  }
+Json load_json(String &&filepath) { return load_json(filepath); }
 
-  for (int i = 0; i < TOTAL_JSON_INTIME; i++) {
-    if (!parser_infos[i].is_occupied) {
-      parser_index = i;
-      break;
-    }
-  }
+void write_json(String &&filepath, const Json &json_object) {
+  FILE *file = nullptr;
 
-  if (parser_index == -1) {
-    PXD_LOG_WARNING(
-        "All parsers are busy. Increase the TOTAL_JSON_TIME variable's value");
-    return false;
-  }
+  fopen_s(&file, filepath.c_str(), "w");
 
-  parser_infos[parser_index].is_occupied = true;
-  parser_infos[parser_index].json = simdjson::padded_string::load(filepath);
-  parsed_json = parser_infos[parser_index].parser.iterate(
-      parser_infos[parser_index].json);
+  char writebuffer[65536];
+  rapidjson::FileWriteStream ostream(file, writebuffer, sizeof(writebuffer));
 
-  return true;
+  rapidjson::AutoUTFOutputStream<unsigned, rapidjson::FileWriteStream> eos(
+      ostream, json_object.utf_type, true);
+
+  rapidjson::PrettyWriter<
+      rapidjson::AutoUTFOutputStream<unsigned, rapidjson::FileWriteStream>,
+      rapidjson::UTF8<>, rapidjson::AutoUTF<unsigned>>
+      writer(eos);
+
+  json_object.document.Accept(writer);
+
+  fclose(file);
+}
+
+void print_json(const Json &json_object) {
+  rapidjson::StringBuffer buffer;
+
+  rapidjson::AutoUTFOutputStream<unsigned, rapidjson::StringBuffer> eos(
+      buffer, json_object.utf_type, false);
+
+  rapidjson::PrettyWriter<
+      rapidjson::AutoUTFOutputStream<unsigned, rapidjson::StringBuffer>,
+      rapidjson::UTF8<>, rapidjson::AutoUTF<unsigned>>
+      writer(eos);
+
+  json_object.document.Accept(writer);
+
+  fmt::println("{}", buffer.GetString());
+}
+
+String json_to_string(const Json &json_object) {
+  rapidjson::StringBuffer buffer;
+
+  rapidjson::AutoUTFOutputStream<unsigned, rapidjson::StringBuffer> eos(
+      buffer, json_object.utf_type, false);
+
+  rapidjson::PrettyWriter<
+      rapidjson::AutoUTFOutputStream<unsigned, rapidjson::StringBuffer>,
+      rapidjson::UTF8<>, rapidjson::AutoUTF<unsigned>>
+      writer(eos);
+
+  json_object.document.Accept(writer);
+
+  return String(buffer.GetString());
 }
 } // namespace pxd
