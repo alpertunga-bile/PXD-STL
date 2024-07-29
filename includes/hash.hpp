@@ -24,4 +24,9 @@ String comp_and_get_hash_str(const void *data, size_t length);
 /// @return string value of the hash based on hex
 String get_hash_str(const uint8_t *hashed_values, size_t length = 32);
 
+/// @brief get the hash string from the file contents
+/// @param filepath filepath to the exists file
+/// @return computed hash string of the file contents
+String get_file_content_hash_str(const char *filepath);
+
 } // namespace pxd

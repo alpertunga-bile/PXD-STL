@@ -1,8 +1,13 @@
 #include "hash.hpp"
 
+#include "logger.hpp"
 #include "string.hpp"
 
 #include "blake3.h"
+#include "core.h"
+
+#include <filesystem>
+#include <fstream>
 
 namespace pxd {
 String uint8_to_string(const uint8_t *computed_hash, const size_t size) {
@@ -42,6 +47,32 @@ void comp_hash(const void *data, size_t length, uint8_t *computed_hash_values) {
 
 String get_hash_str(const uint8_t *hashed_values, size_t length) {
   return uint8_to_string(hashed_values, length);
+}
+
+String get_file_content_hash_str(const char *filepath) {
+  String hash_str;
+
+  if (!std::filesystem::exists(filepath)) {
+    PXD_LOG_ERROR(fmt::format("{} is not exists", filepath).c_str());
+    return hash_str;
+  }
+
+  std::ifstream file(filepath, std::ifstream::in);
+
+  if (!file.good() || !file.is_open()) {
+    PXD_LOG_ERROR(fmt::format("{} cannot opened", filepath).c_str());
+    return hash_str;
+  }
+
+  std::stringstream contents;
+
+  contents << file.rdbuf();
+
+  file.close();
+
+  hash_str = std::move(contents.str());
+
+  return comp_and_get_hash_str(hash_str.c_str(), hash_str.length());
 }
 
 } // namespace pxd
