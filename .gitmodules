@@ -13,3 +13,6 @@
 [submodule "third-party/rapidjson"]
 	path = third-party/rapidjson
 	url = https://github.com/Tencent/rapidjson.git
+[submodule "third-party/blake3"]
+	path = third-party/blake3
+	url = https://github.com/BLAKE3-team/BLAKE3.git
