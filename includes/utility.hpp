@@ -81,13 +81,13 @@ template <typename T> inline int find(DynamicArray<T> &&arr, T &&value) {
 }
 
 template <typename T> inline int find_index(std::vector<T> &&vec, T &&value) {
-  auto it = std::find(vec.begin(), vec.end(), value);
+  auto &&it = std::find(vec.begin(), vec.end(), value);
 
   return it != vec.end() ? it - vec.begin() : INDEX_NONE;
 }
 
 template <typename T> inline int find(LinkedList<T> &&ll, T &&value) {
-  auto current_node = ll.get_head_node();
+  auto &&current_node = ll.get_head_node();
   const int length = ll.get_length();
 
   for (int i = 0; i < length; i++) {
@@ -102,7 +102,7 @@ template <typename T> inline int find(LinkedList<T> &&ll, T &&value) {
 }
 
 template <typename T> inline int find(DoubleLinkedList<T> &&dll, T &&value) {
-  auto current_node = dll.get_head_node();
+  auto &&current_node = dll.get_head_node();
   const int length = dll.get_length();
 
   for (int i = 0; i < length; i++) {
