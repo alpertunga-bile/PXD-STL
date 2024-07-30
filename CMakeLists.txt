@@ -67,6 +67,7 @@ set(HEADER_FILES
     "${PXD_STL_INCLUDE_DIR}/string.hpp"
     ${PXD_STL_INCLUDE_DIR}/random_gen.hpp
     ${PXD_STL_INCLUDE_DIR}/hash.hpp
+    ${PXD_STL_INCLUDE_DIR}/filesystem.hpp
 
     ${PXD_THIRD_PARTY_DIR}/SIMDString/SIMDString.h
     ${PXD_THIRD_PARTY_DIR}/re2/re2/re2.h
@@ -101,10 +102,11 @@ set(LIB_SOURCE_FILES
     ${PXD_SOURCE_DIR}/ds/dynamic_array.cpp
     ${PXD_SOURCE_DIR}/matrix.cpp
     ${PXD_SOURCE_DIR}/regex.cpp
-    ${PXD_SOURCE_DIR}/string.cpp
+    "${PXD_SOURCE_DIR}/string.cpp"
     ${PXD_SOURCE_DIR}/json.cpp
     ${PXD_SOURCE_DIR}/utility.cpp
     ${PXD_SOURCE_DIR}/hash.cpp
+    ${PXD_SOURCE_DIR}/filesystem.cpp
 
     ${HEADER_FILES}
 )
