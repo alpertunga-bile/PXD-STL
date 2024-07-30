@@ -5,7 +5,7 @@ Standard library under the PixelDancer package name.
 ## Features
 
 - Includes tests for the data structure functionalities.
-- ```SIMDString``` as the default string class.
+- ```SIMDString``` library is used for the string class.
 - ```RE2``` library is used as the regex engine.
 - ```Rapidjson``` library is used as the json parser.
 - ```blake3``` library is used as the hasher.

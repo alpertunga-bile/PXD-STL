@@ -50,17 +50,10 @@ void do_test() {
   test_manager.save_results();
 }
 
-#include "hash.hpp"
-#include "json.hpp"
+#include "filesystem.hpp"
 
 int main() {
   // do_test();
 
-  pxd::Json json = pxd::load_json("test.json");
-
-  uint8_t values[32];
-
-  pxd::join_and_comp_hash(values, "wololo", "jaskldjas");
-
-  printf("%s", pxd::get_hash_str(values).c_str());
+  auto &&time = pxd::get_last_modified_time("test.json");
 }

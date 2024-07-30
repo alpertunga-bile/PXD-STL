@@ -4,10 +4,28 @@ namespace pxd {
 
 class String;
 
-inline bool exists(const char *path);
-inline bool is_dir(const char *path);
-inline bool is_file(const char *path);
+bool exists(const char *path);
+bool is_dir(const char *path);
+bool is_file(const char *path);
+void mkdir(const char *path);
+size_t get_file_hash(const char *path);
+String get_relative_path(const char *path);
+String get_absolute_path(const char *path);
+bool create_file_symlink(const char *filepath, const char *symlink);
+bool create_directory_symlink(const char *dirpath, const char *symlink);
+String getcwd();
+String get_last_modified_time(const char *path);
+bool remove_file(const char *path);
+bool remove_folder(const char *path);
+String get_temp_dir_path();
+void copy_dir(const char *from, const char *to, bool is_recursive = true,
+              bool update_existed = true);
+void copy_file(const char *from, const char *to, bool update_existed = true);
 
+/// @brief contenate given paths with OS-based seperator character
+/// @tparam ...P value types that can be allocated by String class
+/// @param ...paths values that want to be concatenated
+/// @return concatenated output string
 template <typename... P> inline String join_paths(const P &...paths) {
   const String values[] = {paths...};
   const int n = sizeof...(paths) - 1;

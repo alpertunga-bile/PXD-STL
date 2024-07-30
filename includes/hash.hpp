@@ -36,7 +36,8 @@ bool update_hasher_with_file_content(blake3_hasher *hasher,
                                      const char *filepath);
 
 template <typename... V>
-void join_and_comp_hash(uint8_t *computed_hash_values, const V &...strings) {
+inline void join_and_comp_hash(uint8_t *computed_hash_values,
+                               const V &...strings) {
   const String values[] = {strings...};
   const int n = sizeof...(strings);
 
