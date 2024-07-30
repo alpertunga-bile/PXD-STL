@@ -31,16 +31,24 @@ public:
   String operator+(std::string &&other);
   String operator+(const char *other);
 
-  inline decltype(auto) operator-(String &other) {
-    return std::forward<String>(String(c_str()).replace_all(other, ""));
+  inline String operator-(const String &other) {
+    return String(c_str()).replace_all(other.c_str(), "");
   }
 
-  inline decltype(auto) operator-(std::string &other) {
-    return std::forward<String>(String(c_str()).replace_all(other.c_str(), ""));
+  inline String operator-(String &&other) {
+    return String(c_str()).replace_all(other, "");
   }
 
-  inline decltype(auto) operator-(const char *other) {
-    return std::forward<String>(String(c_str()).replace_all(other, ""));
+  inline String operator-(const std::string &other) {
+    return String(c_str()).replace_all(other.c_str(), "");
+  }
+
+  inline String operator-(std::string &&other) {
+    return String(c_str()).replace_all(other.c_str(), "");
+  }
+
+  inline String operator-(const char *other) {
+    return String(c_str()).replace_all(other, "");
   }
 
   inline String &operator+=(const String &other) {
@@ -224,20 +232,30 @@ private:
 #endif
 };
 
-inline decltype(auto) operator+(const String &self, const String &other) {
-  return std::forward<String>(String(self.string() + other.string()));
+String operator+(const String &self, const String &other);
+String operator+(const String &self, String &&other);
+String operator+(const String &self, const std::string &other);
+String operator+(const String &self, std::string &&other);
+String operator+(const String &self, const char *other);
+
+inline String operator-(const String &self, const String &other) {
+  return String(self.c_str()).replace_all(other.c_str(), "");
 }
-inline decltype(auto) operator+(const String &self, String &&other) {
-  return std::forward<String>(String(self.string() + other.string()));
+
+inline String operator-(const String &self, String &&other) {
+  return String(self.c_str()).replace_all(other, "");
 }
-inline decltype(auto) operator+(const String &self, const std::string &other) {
-  return std::forward<String>(String(self.string() + other));
+
+inline String operator-(const String &self, const std::string &other) {
+  return String(self.c_str()).replace_all(other.c_str(), "");
 }
-inline decltype(auto) operator+(const String &self, std::string &&other) {
-  return std::forward<String>(String(self.string() + other));
+
+inline String operator-(const String &self, std::string &&other) {
+  return String(self.c_str()).replace_all(other.c_str(), "");
 }
-inline decltype(auto) operator+(const String &self, const char *other) {
-  return std::forward<String>(String(self.string() + other));
+
+inline String operator-(const String &self, const char *other) {
+  return String(self.c_str()).replace_all(other, "");
 }
 
 inline String to_string(const char *char_arr) { return String(char_arr); }

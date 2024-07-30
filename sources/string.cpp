@@ -137,4 +137,44 @@ inline String &String::replace_all(const char *old_val, const char *new_val) {
   return *this;
 }
 
+String operator+(const String &self, const String &other) {
+#ifdef PXD_USE_STD_STRING
+  return String(self.get_value() + other.get_value());
+#else
+  return String((self.get_value() + other.get_value()).c_str());
+#endif
+}
+
+String operator+(const String &self, String &&other) {
+#ifdef PXD_USE_STD_STRING
+  return String(self.get_value() + other.get_value());
+#else
+  return String((self.get_value() + other.get_value()).c_str());
+#endif
+}
+
+String operator+(const String &self, const std::string &other) {
+#ifdef PXD_USE_STD_STRING
+  return String(self.get_value() + other);
+#else
+  return String((self.get_value() + other.c_str()).c_str());
+#endif
+}
+
+String operator+(const String &self, std::string &&other) {
+#ifdef PXD_USE_STD_STRING
+  return String(self.get_value() + other);
+#else
+  return String((self.get_value() + other.c_str()).c_str());
+#endif
+}
+
+String operator+(const String &self, const char *other) {
+#ifdef PXD_USE_STD_STRING
+  return String(self.get_value() + other);
+#else
+  return String((self.get_value() + other).c_str());
+#endif
+}
+
 } // namespace pxd
