@@ -158,4 +158,16 @@ void copy_file(const char *from, const char *to, bool update_existed) {
   std::filesystem::copy_file(from, to, copy_ops);
 }
 
+void rename(const char *_old, const char *_new) {
+  if (!exists(_old)) {
+    return;
+  }
+
+  if (exists(_new)) {
+    return;
+  }
+
+  std::filesystem::rename(_old, _new);
+}
+
 } // namespace pxd

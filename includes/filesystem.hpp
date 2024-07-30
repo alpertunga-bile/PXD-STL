@@ -21,6 +21,7 @@ String get_temp_dir_path();
 void copy_dir(const char *from, const char *to, bool is_recursive = true,
               bool update_existed = true);
 void copy_file(const char *from, const char *to, bool update_existed = true);
+void rename(const char *_old, const char *_new);
 
 /// @brief contenate given paths with OS-based seperator character
 /// @tparam ...P value types that can be allocated by String class
