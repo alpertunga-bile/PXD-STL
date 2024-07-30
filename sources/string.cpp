@@ -14,8 +14,28 @@ String::String(const char *c_str) {
 #endif
 }
 
+String &String::operator=(const String &other) {
+#ifdef PXD_USE_STD_STRING
+  value = other.get_value();
+#else
+  value = other.c_str();
+#endif
+
+  return *this;
+}
+
 String &String::operator=(const std::string &other) {
   value = other;
+
+  return *this;
+}
+
+String &String::operator=(String &&other) {
+#ifdef PXD_USE_STD_STRING
+  value = std::move(other.string());
+#else
+  value = other.c_str();
+#endif
 
   return *this;
 }
@@ -30,6 +50,46 @@ String &String::operator=(const char *other) {
   value = other;
 
   return *this;
+}
+
+String String::operator+(const String &other) {
+#ifdef PXD_USE_STD_STRING
+  return String(value + other.get_value());
+#else
+  return String((value + other.get_value()).c_str());
+#endif
+}
+
+String String::operator+(String &&other) {
+#ifdef PXD_USE_STD_STRING
+  return String(value + other.get_value());
+#else
+  return String((value + other.get_value()).c_str());
+#endif
+}
+
+String String::operator+(const std::string &other) {
+#ifdef PXD_USE_STD_STRING
+  return String(value + other);
+#else
+  return String((value + other.c_str()).c_str());
+#endif
+}
+
+String String::operator+(std::string &&other) {
+#ifdef PXD_USE_STD_STRING
+  return String(value + other);
+#else
+  return String((value + other.c_str()).c_str());
+#endif
+}
+
+String String::operator+(const char *other) {
+#ifdef PXD_USE_STD_STRING
+  return String(value + other);
+#else
+  return String((value + other).c_str());
+#endif
 }
 
 String &String::center(int total_length, const char fill_char) {

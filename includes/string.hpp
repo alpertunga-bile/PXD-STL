@@ -14,10 +14,10 @@ public:
   String(const std::string &str);
   String(const char *c_str);
   String(const String &other) = default;
-  String &operator=(const String &other) = default;
+  String &operator=(const String &other);
   String &operator=(const std::string &other);
   String(String &&other) = default;
-  String &operator=(String &&other) = default;
+  String &operator=(String &&other);
   String &operator=(std::string &&other);
   String &operator=(const char *other);
   ~String() = default;
@@ -25,15 +25,11 @@ public:
   decltype(auto) operator[](int index) { return value[index]; }
   inline decltype(auto) get_value() const { return value; }
 
-  inline decltype(auto) operator+(const String &other) {
-    return std::forward<String>(String(string() + other.string()));
-  }
-  inline decltype(auto) operator+(const std::string &other) {
-    return std::forward<String>(String(string() + other));
-  }
-  inline decltype(auto) operator+(const char *other) {
-    return std::forward<String>(String(string() + std::string(other)));
-  }
+  String operator+(const String &other);
+  String operator+(String &&other);
+  String operator+(const std::string &other);
+  String operator+(std::string &&other);
+  String operator+(const char *other);
 
   inline decltype(auto) operator-(String &other) {
     return std::forward<String>(String(c_str()).replace_all(other, ""));
@@ -47,7 +43,7 @@ public:
     return std::forward<String>(String(c_str()).replace_all(other, ""));
   }
 
-  inline String &operator+=(String &other) {
+  inline String &operator+=(const String &other) {
     value += other.get_value();
     return *this;
   }
@@ -55,7 +51,7 @@ public:
     value += other.get_value();
     return *this;
   }
-  inline String &operator+=(std::string &other) {
+  inline String &operator+=(const std::string &other) {
     value += other;
     return *this;
   }
@@ -223,12 +219,26 @@ private:
 private:
 #ifdef PXD_USE_STD_STRING
   std::string value;
-  const bool is_using_std = true;
 #else
   SIMDString<64> value;
-  const bool is_using_std = false;
 #endif
 };
+
+inline decltype(auto) operator+(const String &self, const String &other) {
+  return std::forward<String>(String(self.string() + other.string()));
+}
+inline decltype(auto) operator+(const String &self, String &&other) {
+  return std::forward<String>(String(self.string() + other.string()));
+}
+inline decltype(auto) operator+(const String &self, const std::string &other) {
+  return std::forward<String>(String(self.string() + other));
+}
+inline decltype(auto) operator+(const String &self, std::string &&other) {
+  return std::forward<String>(String(self.string() + other));
+}
+inline decltype(auto) operator+(const String &self, const char *other) {
+  return std::forward<String>(String(self.string() + other));
+}
 
 inline String to_string(const char *char_arr) { return String(char_arr); }
 } // namespace pxd
