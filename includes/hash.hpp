@@ -1,6 +1,6 @@
 #pragma once
 
-#include "blake3.h"
+#include "../third-party/blake3/c/blake3.h"
 
 #include <cstdint>
 
@@ -44,10 +44,7 @@ void join_and_comp_hash(uint8_t *computed_hash_values, const V &...strings) {
   blake3_hasher_init(&hasher);
 
   for (int i = 0; i < n; ++i) {
-    const bool is_file_update =
-        update_hasher_with_file_content(hasher, values[i].c_str());
-
-    if (is_file_update) {
+    if (update_hasher_with_file_content(&hasher, values[i].c_str())) {
       continue;
     }
 

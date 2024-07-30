@@ -6,9 +6,9 @@
 
 #include "string.hpp"
 
-#include "rapidjson/rapidjson.h"
+#include "../third-party/rapidjson/include/rapidjson/rapidjson.h"
 
-#include "rapidjson/document.h"
+#include "../third-party/rapidjson/include/rapidjson/document.h"
 
 namespace pxd {
 

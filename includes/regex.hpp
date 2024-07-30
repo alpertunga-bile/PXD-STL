@@ -1,6 +1,6 @@
 #pragma once
 
-#include "re2.h"
+#include "../third-party/re2/re2/re2.h"
 
 namespace pxd {
 

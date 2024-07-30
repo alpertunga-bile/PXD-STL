@@ -3,7 +3,7 @@
 #ifdef PXD_USE_STD_STRING
 #include <string>
 #else
-#include "SIMDString.h"
+#include "../third-party/SIMDString/SIMDString.h"
 #endif
 
 namespace pxd {

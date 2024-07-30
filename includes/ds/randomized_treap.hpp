@@ -1,9 +1,9 @@
 #pragma once
 
-#include "checks.hpp"
+#include "../checks.hpp"
 #include "treap.hpp"
 
-#include "random_gen.hpp"
+#include "../random_gen.hpp"
 
 namespace pxd {
 /// @brief Randomized treap to use as (most possibly) balanced BST
