@@ -10,11 +10,13 @@
 #include "core.h"
 
 namespace pxd::fs {
-bool exists(const char *path) { return std::filesystem::exists(path); }
+auto exists(const char *path) -> bool { return std::filesystem::exists(path); }
 
-bool is_dir(const char *path) { return std::filesystem::is_directory(path); }
+auto is_dir(const char *path) -> bool {
+  return std::filesystem::is_directory(path);
+}
 
-bool is_file(const char *path) {
+auto is_file(const char *path) -> bool {
   return std::filesystem::is_regular_file(path);
 }
 
@@ -26,7 +28,7 @@ void mkdir(const char *path) {
   std::filesystem::create_directory(path);
 }
 
-size_t get_file_hash(const char *path) {
+auto get_file_hash(const char *path) -> size_t {
   if (!exists(path)) {
     return 0;
   }
@@ -34,15 +36,15 @@ size_t get_file_hash(const char *path) {
   return std::filesystem::hash_value(path);
 }
 
-String get_relative_path(const char *path) {
+auto get_relative_path(const char *path) -> String {
   return String(std::filesystem::relative(path).string());
 }
 
-String get_absolute_path(const char *path) {
+auto get_absolute_path(const char *path) -> String {
   return String(std::filesystem::absolute(path).string());
 }
 
-bool create_file_symlink(const char *filepath, const char *symlink) {
+auto create_file_symlink(const char *filepath, const char *symlink) -> bool {
   if (!exists(filepath)) {
     return false;
   }
@@ -60,7 +62,8 @@ bool create_file_symlink(const char *filepath, const char *symlink) {
   return true;
 }
 
-bool create_directory_symlink(const char *dirpath, const char *symlink) {
+auto create_directory_symlink(const char *dirpath,
+                              const char *symlink) -> bool {
   if (!exists(dirpath)) {
     return false;
   }
@@ -78,11 +81,13 @@ bool create_directory_symlink(const char *dirpath, const char *symlink) {
   return true;
 }
 
-String getcwd() { return String(std::filesystem::current_path().string()); }
+auto getcwd() -> String {
+  return String(std::filesystem::current_path().string());
+}
 
-String get_last_modified_time(const char *path) {
+auto get_last_modified_time(const char *path) -> String {
   if (!exists(path)) {
-    return String();
+    return {};
   }
 
   auto modified_time = std::filesystem::last_write_time(path);
@@ -94,10 +99,10 @@ String get_last_modified_time(const char *path) {
     std::cerr << e.what() << '\n';
   }
 
-  return String();
+  return {};
 }
 
-bool remove_file(const char *path) {
+auto remove_file(const char *path) -> bool {
   if (!exists(path)) {
     return false;
   }
@@ -109,7 +114,7 @@ bool remove_file(const char *path) {
   return std::filesystem::remove(path);
 }
 
-bool remove_folder(const char *path) {
+auto remove_folder(const char *path) -> bool {
   if (!exists(path)) {
     return false;
   }
@@ -121,13 +126,13 @@ bool remove_folder(const char *path) {
   return std::filesystem::remove_all(path) > 0 ? true : false;
 }
 
-String get_temp_dir_path() {
+auto get_temp_dir_path() -> String {
   return String(std::filesystem::temp_directory_path().string());
 }
 
-void copy_dir(const char *from, const char *to, bool is_recursive,
+void copy_dir(const char *from_dir, const char *to_dir, bool is_recursive,
               bool update_existed) {
-  if (!exists(from)) {
+  if (!exists(from_dir)) {
     return;
   }
 
@@ -141,11 +146,12 @@ void copy_dir(const char *from, const char *to, bool is_recursive,
     copy_ops |= std::filesystem::copy_options::update_existing;
   }
 
-  std::filesystem::copy(from, to, copy_ops);
+  std::filesystem::copy(from_dir, to_dir, copy_ops);
 }
 
-void copy_file(const char *from, const char *to, bool update_existed) {
-  if (!exists(from)) {
+void copy_file(const char *from_file, const char *to_file,
+               bool update_existed) {
+  if (!exists(from_file)) {
     return;
   }
 
@@ -155,7 +161,7 @@ void copy_file(const char *from, const char *to, bool update_existed) {
     copy_ops |= std::filesystem::copy_options::update_existing;
   }
 
-  std::filesystem::copy_file(from, to, copy_ops);
+  std::filesystem::copy_file(from_file, to_file, copy_ops);
 }
 
 void rename(const char *_old, const char *_new) {
@@ -173,49 +179,49 @@ void rename(const char *_old, const char *_new) {
 } // namespace pxd::fs
 
 namespace pxd::fs::path {
-String remove_filename(const char *path) {
+auto remove_filename(const char *path) -> String {
   return String(std::filesystem::path(path).remove_filename().string());
 }
 
-String replace_filename(const char *path, const char *new_filename) {
+auto replace_filename(const char *path, const char *new_filename) -> String {
   return String(
       std::filesystem::path(path).replace_filename(new_filename).string());
 }
 
-String replace_extension(const char *path, const char *new_ext) {
+auto replace_extension(const char *path, const char *new_ext) -> String {
   return String(
       std::filesystem::path(path).replace_extension(new_ext).string());
 }
 
-String get_root_name(const char *path) {
+auto get_root_name(const char *path) -> String {
   return String(std::filesystem::path(path).root_name().string());
 }
 
-String get_root_directory(const char *path) {
+auto get_root_directory(const char *path) -> String {
   return String(std::filesystem::path(path).root_directory().string());
 }
 
-String get_root_path(const char *path) {
+auto get_root_path(const char *path) -> String {
   return String(std::filesystem::path(path).root_path().string());
 }
 
-String get_relative_path(const char *path) {
+auto get_relative_path(const char *path) -> String {
   return String(std::filesystem::path(path).relative_path().string());
 }
 
-String get_parent_path(const char *path) {
+auto get_parent_path(const char *path) -> String {
   return String(std::filesystem::path(path).parent_path().string());
 }
 
-String get_filename(const char *path) {
+auto get_filename(const char *path) -> String {
   return String(std::filesystem::path(path).filename().string());
 }
 
-String get_filename_wo_ext(const char *path) {
+auto get_filename_wo_ext(const char *path) -> String {
   return String(std::filesystem::path(path).stem().string());
 }
 
-String get_extension_w_dot(const char *path) {
+auto get_extension_w_dot(const char *path) -> String {
   return String(std::filesystem::path(path).stem().string());
 }
 
