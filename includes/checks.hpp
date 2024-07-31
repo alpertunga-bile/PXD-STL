@@ -8,9 +8,9 @@
 #endif
 #endif
 
-#define IS_VALID(obj) (obj == nullptr ? false : true)
+constexpr auto IS_VALID(void *obj) -> bool { return obj != nullptr; }
 
-#ifdef PXD_ENABLE_ASSERTS
+#ifdef PXD_ENABLE_ASSERTS || defined(_DEBUG)
 #define PXD_ASSERT(exp) assert_func(exp, __FILE__, __LINE__, __FUNCTION_NAME__)
 #define PXD_ASSERT_MSG(exp, msg)                                               \
   assert_msg_func(msg, exp, __FILE__, __LINE__, __FUNCTION_NAME__)
@@ -21,12 +21,12 @@
 #define PXD_TODO(msg)
 #endif
 
-constexpr inline void assert_func(bool expression, const char *filename,
-                                  int line, const char *function_name);
+constexpr void assert_func(bool expression, const char *filename, int line,
+                           const char *function_name);
 
-constexpr inline void todo_func(const char *message, const char *filename,
-                                int line, const char *function_name);
+inline void todo_func(const char *message, const char *filename, int line,
+                      const char *function_name);
 
-constexpr inline void assert_msg_func(const char *message, bool expression,
-                                      const char *filename, int line,
-                                      const char *function_name);
+constexpr void assert_msg_func(const char *message, bool expression,
+                               const char *filename, int line,
+                               const char *function_name);

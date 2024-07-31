@@ -2,7 +2,7 @@
 
 #include "core.h" // fmt/core.h
 #include <cassert>
-#include <stdlib.h> // don't need the math.h lib so not using cstdlib
+#include <cstdlib>
 
 constexpr void assert_func(bool expression, const char *filename, int line,
                            const char *function_name) {
@@ -19,8 +19,8 @@ constexpr void assert_func(bool expression, const char *filename, int line,
   assert(false);
 }
 
-constexpr void todo_func(const char *message, const char *filename, int line,
-                         const char *function_name) {
+void todo_func(const char *message, const char *filename, int line,
+               const char *function_name) {
   fmt::print(
       "TODO message:\n    Message : {}\n    Filename : {}\n    Line     : "
       "{}\n    "

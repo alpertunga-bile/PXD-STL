@@ -123,7 +123,7 @@ include_directories(
 )
 
 set(COMMON_STD_HEADERS
-    <stdlib.h>
+    <cstdlib>
     <cstdint>
     <vector>
     <algorithm>
