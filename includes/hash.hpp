@@ -2,6 +2,7 @@
 
 #include "../third-party/blake3/c/blake3.h"
 
+#include <array>
 #include <cstdint>
 
 namespace pxd {
@@ -12,28 +13,29 @@ class String;
 /// @param data given input values
 /// @param length length of the data value
 /// @param computed_hash_values output of the hash of the data value
-void comp_hash(const void *data, size_t length, uint8_t *computed_hash_values);
+void comp_hash(const void *data, size_t data_length,
+               uint8_t *computed_hash_values);
 
 /// @brief compute the hash value of the data and get string value of the hash
 /// @param data given input values
 /// @param length length of the data value
 /// @return string value of the hash based on hex
-String comp_and_get_hash_str(const void *data, size_t length);
+auto comp_and_get_hash_str(const void *data, size_t data_length) -> String;
 
 /// @brief get the string value from the computed hashed values
 /// @param hashed_values precomputed hash values
 /// @param length length of the hashed_values, default to 32
 /// @return string value of the hash based on hex
-String get_hash_str(const uint8_t *hashed_values,
-                    size_t length = BLAKE3_OUT_LEN);
+auto get_hash_str(const std::array<uint8_t, BLAKE3_OUT_LEN> &hashed_values)
+    -> String;
 
 /// @brief get the hash string from the file contents
 /// @param filepath filepath to the exists file
 /// @return computed hash string of the file contents
-String get_file_content_hash_str(const char *filepath);
+auto get_file_content_hash_str(const char *filepath) -> String;
 
-bool update_hasher_with_file_content(blake3_hasher *hasher,
-                                     const char *filepath);
+auto update_hasher_with_file_content(blake3_hasher *hasher,
+                                     const char *filepath) -> bool;
 
 template <typename... V>
 inline void join_and_comp_hash(uint8_t *computed_hash_values,

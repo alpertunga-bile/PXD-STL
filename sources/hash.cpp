@@ -1,57 +1,63 @@
 #include "hash.hpp"
 
+#include "filesystem.hpp"
 #include "logger.hpp"
 #include "string.hpp"
 
 #include "core.h"
 
-#include <filesystem>
 #include <fstream>
+#include <sstream>
 
 namespace pxd {
-String uint8_to_string(const uint8_t *computed_hash, const size_t size) {
+auto uint8_to_string(const std::array<uint8_t, BLAKE3_OUT_LEN> &computed_hashes)
+    -> String {
   String str;
 
-  for (int i = 0; i < size; ++i) {
-    char temp[3];
-    sprintf_s(temp, "%02x", computed_hash[i]);
+  for (auto &&hash : computed_hashes) {
+    std::array<char, 3> temp;
 
-    str += temp;
+    sprintf(temp.data(), "%02x", hash);
+
+    str += temp.data();
   }
 
   return str;
 }
 
-String pxd::comp_and_get_hash_str(const void *data, size_t length) {
+auto pxd::comp_and_get_hash_str(const void *data,
+                                size_t data_length) -> String {
   blake3_hasher hasher;
   blake3_hasher_init(&hasher);
 
-  blake3_hasher_update(&hasher, data, length);
+  blake3_hasher_update(&hasher, data, data_length);
 
-  uint8_t output[BLAKE3_OUT_LEN];
+  std::array<uint8_t, BLAKE3_OUT_LEN> output;
 
-  blake3_hasher_finalize(&hasher, output, BLAKE3_OUT_LEN);
+  blake3_hasher_finalize(&hasher, output.data(), BLAKE3_OUT_LEN);
 
-  return uint8_to_string(output, BLAKE3_OUT_LEN);
+  return uint8_to_string(output);
 }
 
-void comp_hash(const void *data, size_t length, uint8_t *computed_hash_values) {
+void comp_hash(const void *data, size_t data_length,
+               uint8_t *computed_hash_values) {
   blake3_hasher hasher;
   blake3_hasher_init(&hasher);
 
-  blake3_hasher_update(&hasher, data, length);
+  blake3_hasher_update(&hasher, data, data_length);
 
   blake3_hasher_finalize(&hasher, computed_hash_values, BLAKE3_OUT_LEN);
 }
 
-String get_hash_str(const uint8_t *hashed_values, size_t length) {
-  return uint8_to_string(hashed_values, length);
+auto get_hash_str(const std::array<uint8_t, BLAKE3_OUT_LEN> &hashed_values)
+    -> String {
+  return uint8_to_string(hashed_values);
 }
 
-String get_file_content_hash_str(const char *filepath) {
+auto get_file_content_hash_str(const char *filepath) -> String {
   String hash_str;
 
-  if (!std::filesystem::exists(filepath)) {
+  if (!pxd::fs::exists(filepath)) {
     PXD_LOG_ERROR(fmt::format("{} is not exists", filepath).c_str());
     return hash_str;
   }
@@ -74,9 +80,9 @@ String get_file_content_hash_str(const char *filepath) {
   return comp_and_get_hash_str(hash_str.c_str(), hash_str.length());
 }
 
-bool update_hasher_with_file_content(blake3_hasher *hasher,
-                                     const char *filepath) {
-  if (!std::filesystem::exists(filepath)) {
+auto update_hasher_with_file_content(blake3_hasher *hasher,
+                                     const char *filepath) -> bool {
+  if (!pxd::fs::exists(filepath)) {
     PXD_LOG_ERROR(fmt::format("{} is not exists", filepath).c_str());
     return false;
   }
