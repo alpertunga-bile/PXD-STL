@@ -3,7 +3,8 @@
 #include "core.h"
 #include "os.h"
 
-#include <filesystem>
+#include "filesystem.hpp"
+#include "string.hpp"
 
 namespace pxd {
 
@@ -11,6 +12,10 @@ fmt::v10::ostream log_file = fmt::output_file("app.log");
 
 inline Logger::~Logger() noexcept {
   log_file.close();
+
+  if (instance == nullptr) {
+    return;
+  }
 
   delete instance;
   instance = nullptr;
@@ -33,9 +38,13 @@ void Logger::log_error(const char *msg, const char *filename, int line,
 
 Logger *Logger::instance = nullptr;
 
-Logger *Logger::get_instance() noexcept {
+auto Logger::get_instance() noexcept -> Logger * {
   if (instance == nullptr) {
-    instance = new Logger();
+    try {
+      instance = new Logger();
+    } catch (const std::exception &e) {
+      return nullptr;
+    }
   }
 
   return instance;
@@ -46,7 +55,7 @@ constexpr const char *format_str =
 
 void Logger::log(const char *log_level, const char *msg, const char *filename,
                  int line, const char *func_name) {
-  auto base_filename = std::filesystem::path(filename).filename().string();
+  auto base_filename = pxd::fs::path::get_filename(filename).c_str();
 
 #ifndef PXD_LOG_FILE_ONLY
   fmt::print(format_str, log_level, msg, base_filename, line, func_name);

@@ -5,13 +5,14 @@
 namespace pxd {
 class Logger {
   Logger() = default;
-  Logger(const Logger &other) = delete;
-  Logger &operator=(const Logger &other) = delete;
-  Logger(Logger &&other) = delete;
-  Logger &operator=(Logger &&other) = delete;
   inline ~Logger() noexcept;
 
 public:
+  Logger(const Logger &other) = delete;
+  auto operator=(const Logger &other) -> Logger & = delete;
+  Logger(Logger &&other) = delete;
+  auto operator=(Logger &&other) -> Logger & = delete;
+
   void log_info(const char *msg, const char *filename, int line,
                 const char *function_name) noexcept;
   void log_warning(const char *msg, const char *filename, int line,
@@ -19,7 +20,7 @@ public:
   void log_error(const char *msg, const char *filename, int line,
                  const char *function_name) noexcept;
 
-  static Logger *get_instance() noexcept;
+  static auto get_instance() noexcept -> Logger *;
 
 private:
   void log(const char *log_level, const char *msg, const char *filename,
@@ -34,17 +35,17 @@ private:
 #define PXD_LOG_INFO(msg)                                                      \
   {                                                                            \
     pxd::Logger *logger = pxd::Logger::get_instance();                         \
-    logger->log_info(msg, __FILE__, __LINE__, __FUNCTION_NAME__);              \
+    logger->log_info(msg, __FILE__, __LINE__, PXD_CHECKS_FUNCTION_NAME);       \
   }
 #define PXD_LOG_WARNING(msg)                                                   \
   {                                                                            \
     pxd::Logger *logger = pxd::Logger::get_instance();                         \
-    logger->log_warning(msg, __FILE__, __LINE__, __FUNCTION_NAME__);           \
+    logger->log_warning(msg, __FILE__, __LINE__, PXD_CHECKS_FUNCTION_NAME);    \
   }
 #define PXD_LOG_ERROR(msg)                                                     \
   {                                                                            \
     pxd::Logger *logger = pxd::Logger::get_instance();                         \
-    logger->log_error(msg, __FILE__, __LINE__, __FUNCTION_NAME__);             \
+    logger->log_error(msg, __FILE__, __LINE__, PXD_CHECKS_FUNCTION_NAME);      \
   }
 #else
 #define PXD_LOG_INFO(msg)
