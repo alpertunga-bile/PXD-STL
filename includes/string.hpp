@@ -125,7 +125,7 @@ public:
 
   /// @brief return as std::string_view
   constexpr inline operator std::string_view() {
-    return std::string_view(value.c_str());
+    return std::string_view(c_str());
   }
 
   /// @brief return as const char*
@@ -158,7 +158,7 @@ public:
     return std::forward<String>(String("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
   }
 
-  /// @brief get string which value is in the center and sorrunded by the
+  /// @brief get string which value is in the center and surrounded by the
   /// fill_char
   /// @param total_length total length of the string
   /// @param fill_char the char which is used to fill the empty spaces
@@ -201,26 +201,18 @@ public:
 
 private:
   constexpr inline bool compare_str(const std::string &str) {
-#ifdef PXD_USE_STD_STRING
     return value.compare(str);
-#else
-    return value == str;
-#endif
   }
 
   constexpr inline bool compare_str(std::string &&str) {
-#ifdef PXD_USE_STD_STRING
     return value.compare(str);
-#else
-    return value == str;
-#endif
   }
 
   constexpr inline bool compare_cstr(const char *cstr) {
 #ifdef PXD_USE_STD_STRING
     return value.compare(std::string(cstr));
 #else
-    return value == cstr;
+    return value.compare(cstr);
 #endif
   }
 

@@ -31,11 +31,7 @@ String &String::operator=(const std::string &other) {
 }
 
 String &String::operator=(String &&other) {
-#ifdef PXD_USE_STD_STRING
   value = std::move(other.string());
-#else
-  value = other.c_str();
-#endif
 
   return *this;
 }
