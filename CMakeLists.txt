@@ -126,11 +126,12 @@ set(COMMON_STD_HEADERS
     <cstdlib>
     <cstdint>
     <vector>
+    <array>
     <algorithm>
     <cassert>
     <utility>
     <cstring>
-
+    <sstream>
     # Logger is using these headers
     <filesystem>
     <fstream>

@@ -1,6 +1,6 @@
 ---
 Checks:          'clang-diagnostic-*,clang-analyzer-*,-*,abseil-*,clang-diagnostic-*,clang-analyzer-*,cppcoreguidelines-*,modernize-*,performance-*,portability-*,readability-*,bugprone-*,cert-*,hicpp-*,google-*,llvm-*'
-WarningsAsErrors: ''
+WarningsAsErrors: 'false'
 HeaderFileExtensions:
   - h
   - hh

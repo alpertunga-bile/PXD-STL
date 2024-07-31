@@ -1,10 +1,9 @@
 #include "json.hpp"
 
+#include "filesystem.hpp"
 #include "logger.hpp"
 
 #include "core.h"
-
-#include <filesystem>
 
 #include "rapidjson/encodedstream.h"
 #include "rapidjson/filereadstream.h"
@@ -16,10 +15,12 @@
 
 namespace pxd {
 
-Json load_json(const String &filepath) {
+constexpr int MAX_FILE_BUFFER_SIZE = 65536;
+
+auto load_json(String filepath) -> Json {
   Json json_object;
 
-  if (!std::filesystem::exists(filepath.c_str())) {
+  if (!pxd::fs::exists(filepath.c_str())) {
     PXD_LOG_ERROR(fmt::format("{} is not exists", filepath.c_str()).c_str());
     return json_object;
   }
@@ -28,8 +29,8 @@ Json load_json(const String &filepath) {
 
   fopen_s(&file, filepath.c_str(), "r");
 
-  char readbuffer[65536];
-  rapidjson::FileReadStream is(file, readbuffer, sizeof(readbuffer));
+  std::array<char, MAX_FILE_BUFFER_SIZE> readbuffer;
+  rapidjson::FileReadStream is(file, readbuffer.data(), MAX_FILE_BUFFER_SIZE);
 
   rapidjson::AutoUTFInputStream<unsigned, rapidjson::FileReadStream> eis(is);
 
@@ -37,22 +38,22 @@ Json load_json(const String &filepath) {
   json_object.filepath = filepath.c_str();
   json_object.utf_type = eis.GetType();
 
-  pxd::comp_hash(readbuffer, sizeof(readbuffer), json_object.content_hash);
+  pxd::comp_hash(readbuffer.data(), MAX_FILE_BUFFER_SIZE,
+                 json_object.content_hash.data());
 
   fclose(file);
 
   return json_object;
 }
 
-Json load_json(String &&filepath) { return load_json(filepath); }
-
-void write_json(const String &filepath, const Json &json_object) {
+void write_json(String filepath, const Json &json_object) {
   FILE *file = nullptr;
 
   fopen_s(&file, filepath.c_str(), "w");
 
-  char writebuffer[65536];
-  rapidjson::FileWriteStream ostream(file, writebuffer, sizeof(writebuffer));
+  std::array<char, MAX_FILE_BUFFER_SIZE> writebuffer;
+  rapidjson::FileWriteStream ostream(file, writebuffer.data(),
+                                     MAX_FILE_BUFFER_SIZE);
 
   rapidjson::AutoUTFOutputStream<unsigned, rapidjson::FileWriteStream> eos(
       ostream, json_object.utf_type, true);
@@ -65,10 +66,6 @@ void write_json(const String &filepath, const Json &json_object) {
   json_object.document.Accept(writer);
 
   fclose(file);
-}
-
-void write_json(String &&filepath, const Json &json_object) {
-  write_json(filepath, json_object);
 }
 
 void print_json(const Json &json_object) {
@@ -87,7 +84,7 @@ void print_json(const Json &json_object) {
   fmt::println("{}", buffer.GetString());
 }
 
-String json_to_string(const Json &json_object) {
+auto json_to_string(const Json &json_object) -> String {
   rapidjson::StringBuffer buffer;
 
   rapidjson::AutoUTFOutputStream<unsigned, rapidjson::StringBuffer> eos(
