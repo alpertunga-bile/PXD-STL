@@ -3,39 +3,31 @@
 #include "checks.hpp"
 
 #include <cstddef>
+#include <memory>
+
 namespace pxd {
 
-template<typename T>
-class Array;
+template <typename T> class Array;
 
-template<typename T>
-class Matrix
-{
+template <typename T> class Matrix {
 public:
   constexpr Matrix() noexcept = default;
   Matrix(int row, int column) { allocate(row, column); }
-  Matrix(T* values, int row, int column)
-  {
+  Matrix(T *values, int row, int column) {
     allocate(row, column);
-    memcpy(matrix, values, get_byte_size());
+    memcpy(matrix.get(), values, get_byte_size());
   }
-  Matrix(const Matrix<T>& other)
-  {
+  Matrix(const Matrix<T> &other) {
     allocate(other.get_row(), other.get_column());
-    memcpy(matrix, other.get_matrix(), other.get_byte_size());
+    memcpy(matrix.get(), other.get_matrix(), other.get_byte_size());
   }
-  constexpr Matrix(Matrix<T>&& other) noexcept
-  {
-    matrix = other.get_matrix();
-    row = other.get_row();
-    column = other.get_column();
-    element_count = other.get_element_count();
-    b_row_order = other.is_row_order();
-
+  constexpr Matrix(Matrix<T> &&other) noexcept
+      : matrix(other.get_matrix()), row(other.get_row()),
+        column(other.get_column()), element_count(other.get_element_count()),
+        b_row_order(other.is_row_order()) {
     other.exec_move();
   }
-  constexpr Matrix& operator=(Matrix<T>&& other) noexcept
-  {
+  constexpr auto operator=(Matrix<T> &&other) noexcept -> Matrix & {
     release();
 
     matrix = other.get_matrix();
@@ -48,40 +40,42 @@ public:
 
     return *this;
   }
-  Matrix& operator=(const Matrix<T>& other)
-  {
+  Matrix &operator=(const Matrix<T> &other) {
     allocate(other.get_row(), other.get_column());
     memcpy(matrix, other.get_matrix(), other.get_byte_size());
+
+    row = other.get_row();
+    column = other.get_column();
+    element_count = other.get_element_count();
+    b_row_order = other.is_row_order();
+
     return *this;
   }
-  inline ~Matrix() noexcept { release(); }
 
-  decltype(auto) operator[](int index)
-  {
+  ~Matrix() noexcept { release(); }
+
+  auto operator[](int index) -> decltype(auto) {
     PXD_ASSERT(index < row);
 
     int start_stride = index * column;
 
-    Array<T> row_array(matrix + start_stride, column);
+    Array<T> row_array(matrix.get() + start_stride, column);
 
     return row_array;
   }
 
-  decltype(auto) operator()(int row, int column)
-  {
+  auto operator()(int row, int column) -> decltype(auto) {
     PXD_ASSERT(row < this->row && column < this->column);
 
-    return matrix[row * this->column + column];
+    return matrix.get()[row * this->column + column];
   }
 
-  inline void release() noexcept
-  {
+  void release() noexcept {
     if (matrix == nullptr) {
       return;
     }
 
-    delete[] matrix;
-    matrix = nullptr;
+    matrix.reset();
 
     row = 0;
     column = 0;
@@ -89,8 +83,7 @@ public:
     b_row_order = true;
   }
 
-  void transpose() noexcept
-  {
+  void transpose() noexcept {
     int current_row = 0;
     int current_col = 0;
     int normal_index = 0;
@@ -109,29 +102,28 @@ public:
         continue;
       }
 
-      temp = matrix[normal_index];
-      matrix[normal_index] = matrix[transpose_index];
-      matrix[transpose_index] = temp;
+      temp = matrix.get()[normal_index];
+      matrix.get()[normal_index] = matrix.get()[transpose_index];
+      matrix.get()[transpose_index] = temp;
     }
 
     b_row_order = !b_row_order;
   }
 
-  inline void change_order() noexcept { transpose(); }
+  void change_order() noexcept { transpose(); }
 
-  inline T* get_matrix() noexcept { return matrix; }
-  inline T* get_matrix() const noexcept { return matrix; }
-  inline int get_row() const noexcept { return row; }
-  inline int get_column() const noexcept { return column; }
-  inline int get_element_count() const noexcept { return element_count; }
-  inline std::size_t get_byte_size() const noexcept
-  {
+  auto get_matrix() noexcept -> T * { return matrix.get(); }
+  auto get_matrix() const noexcept -> T * { return matrix.get(); }
+  auto get_row() const noexcept -> int { return row; }
+  auto get_column() const noexcept -> int { return column; }
+  auto get_element_count() const noexcept -> int { return element_count; }
+  auto get_byte_size() const noexcept -> std::size_t {
     return element_count * sizeof(T);
   }
-  inline bool is_row_order() const noexcept { return b_row_order; }
 
-  constexpr inline void exec_move() noexcept
-  {
+  auto is_row_order() const noexcept -> bool { return b_row_order; }
+
+  constexpr void exec_move() noexcept {
     matrix = nullptr;
     row = 0;
     column = 0;
@@ -140,35 +132,31 @@ public:
   }
 
 private:
-  constexpr void allocate(int row, int column) noexcept
-  {
+  constexpr void allocate(int row, int column) noexcept {
     element_count = row * column;
 
-    matrix = new T[element_count];
+    matrix = std::make_shared<T>(new T[element_count]);
 
     this->row = row;
     this->column = column;
     b_row_order = true;
   }
 
-  inline void from_array(T* values)
-  {
+  void from_array(T *values) {
     std::size_t byte_size = element_count * sizeof(T);
     memcpy(matrix, values, byte_size);
   }
 
-  inline void from_matrix(const Matrix<T>& other)
-  {
+  void from_matrix(const Matrix<T> &other) {
     memcpy(matrix, other.get_matrix(), other.get_byte_size());
   }
 
-  inline void from_matrix(Matrix<T>&& other)
-  {
+  void from_matrix(Matrix<T> other) {
     memcpy(matrix, other.get_matrix(), other.get_byte_size());
   }
 
 private:
-  T* matrix = nullptr;
+  std::shared_ptr<T> matrix;
   int row = 0;
   int column = 0;
   int element_count = 0;
