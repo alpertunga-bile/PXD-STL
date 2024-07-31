@@ -5,7 +5,6 @@ class String;
 }
 
 namespace pxd::fs {
-
 bool exists(const char *path);
 bool is_dir(const char *path);
 bool is_file(const char *path);
@@ -26,7 +25,19 @@ void copy_file(const char *from, const char *to, bool update_existed = true);
 void rename(const char *_old, const char *_new);
 } // namespace pxd::fs
 
-namespace pxd::path {
+namespace pxd::fs::path {
+String remove_filename(const char *path);
+String replace_filename(const char *path, const char *new_filename);
+String replace_extension(const char *path, const char *new_ext);
+String get_root_name(const char *path);
+String get_root_directory(const char *path);
+String get_root_path(const char *path);
+String get_relative_path(const char *path);
+String get_parent_path(const char *path);
+String get_filename(const char *path);
+String get_filename_wo_ext(const char *path);
+String get_extension_w_dot(const char *path);
+
 /// @brief contenate given paths with OS-based seperator character
 /// @tparam ...P value types that can be allocated by String class
 /// @param ...paths values that want to be concatenated
@@ -51,4 +62,4 @@ template <typename... P> inline String join(const P &...paths) {
 
   return path;
 }
-} // namespace pxd::path
+} // namespace pxd::fs::path

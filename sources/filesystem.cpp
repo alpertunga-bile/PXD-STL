@@ -34,12 +34,12 @@ size_t get_file_hash(const char *path) {
   return std::filesystem::hash_value(path);
 }
 
-pxd::String get_relative_path(const char *path) {
-  return pxd::String(std::filesystem::relative(path).string());
+String get_relative_path(const char *path) {
+  return String(std::filesystem::relative(path).string());
 }
 
-pxd::String get_absolute_path(const char *path) {
-  return pxd::String(std::filesystem::absolute(path).string());
+String get_absolute_path(const char *path) {
+  return String(std::filesystem::absolute(path).string());
 }
 
 bool create_file_symlink(const char *filepath, const char *symlink) {
@@ -78,13 +78,11 @@ bool create_directory_symlink(const char *dirpath, const char *symlink) {
   return true;
 }
 
-pxd::String getcwd() {
-  return pxd::String(std::filesystem::current_path().string());
-}
+String getcwd() { return String(std::filesystem::current_path().string()); }
 
-pxd::String get_last_modified_time(const char *path) {
+String get_last_modified_time(const char *path) {
   if (!exists(path)) {
-    return pxd::String();
+    return String();
   }
 
   auto modified_time = std::filesystem::last_write_time(path);
@@ -96,7 +94,7 @@ pxd::String get_last_modified_time(const char *path) {
     std::cerr << e.what() << '\n';
   }
 
-  return pxd::String();
+  return String();
 }
 
 bool remove_file(const char *path) {
@@ -123,8 +121,8 @@ bool remove_folder(const char *path) {
   return std::filesystem::remove_all(path) > 0 ? true : false;
 }
 
-pxd::String get_temp_dir_path() {
-  return pxd::String(std::filesystem::temp_directory_path().string());
+String get_temp_dir_path() {
+  return String(std::filesystem::temp_directory_path().string());
 }
 
 void copy_dir(const char *from, const char *to, bool is_recursive,
@@ -173,3 +171,52 @@ void rename(const char *_old, const char *_new) {
 }
 
 } // namespace pxd::fs
+
+namespace pxd::fs::path {
+String remove_filename(const char *path) {
+  return String(std::filesystem::path(path).remove_filename().string());
+}
+
+String replace_filename(const char *path, const char *new_filename) {
+  return String(
+      std::filesystem::path(path).replace_filename(new_filename).string());
+}
+
+String replace_extension(const char *path, const char *new_ext) {
+  return String(
+      std::filesystem::path(path).replace_extension(new_ext).string());
+}
+
+String get_root_name(const char *path) {
+  return String(std::filesystem::path(path).root_name().string());
+}
+
+String get_root_directory(const char *path) {
+  return String(std::filesystem::path(path).root_directory().string());
+}
+
+String get_root_path(const char *path) {
+  return String(std::filesystem::path(path).root_path().string());
+}
+
+String get_relative_path(const char *path) {
+  return String(std::filesystem::path(path).relative_path().string());
+}
+
+String get_parent_path(const char *path) {
+  return String(std::filesystem::path(path).parent_path().string());
+}
+
+String get_filename(const char *path) {
+  return String(std::filesystem::path(path).filename().string());
+}
+
+String get_filename_wo_ext(const char *path) {
+  return String(std::filesystem::path(path).stem().string());
+}
+
+String get_extension_w_dot(const char *path) {
+  return String(std::filesystem::path(path).stem().string());
+}
+
+} // namespace pxd::fs::path
