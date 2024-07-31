@@ -9,7 +9,7 @@
 
 #include "core.h"
 
-namespace pxd {
+namespace pxd::fs {
 bool exists(const char *path) { return std::filesystem::exists(path); }
 
 bool is_dir(const char *path) { return std::filesystem::is_directory(path); }
@@ -34,12 +34,12 @@ size_t get_file_hash(const char *path) {
   return std::filesystem::hash_value(path);
 }
 
-String get_relative_path(const char *path) {
-  return String(std::filesystem::relative(path).string());
+pxd::String get_relative_path(const char *path) {
+  return pxd::String(std::filesystem::relative(path).string());
 }
 
-String get_absolute_path(const char *path) {
-  return String(std::filesystem::absolute(path).string());
+pxd::String get_absolute_path(const char *path) {
+  return pxd::String(std::filesystem::absolute(path).string());
 }
 
 bool create_file_symlink(const char *filepath, const char *symlink) {
@@ -78,11 +78,13 @@ bool create_directory_symlink(const char *dirpath, const char *symlink) {
   return true;
 }
 
-String getcwd() { return String(std::filesystem::current_path().string()); }
+pxd::String getcwd() {
+  return pxd::String(std::filesystem::current_path().string());
+}
 
-String get_last_modified_time(const char *path) {
+pxd::String get_last_modified_time(const char *path) {
   if (!exists(path)) {
-    return String();
+    return pxd::String();
   }
 
   auto modified_time = std::filesystem::last_write_time(path);
@@ -94,7 +96,7 @@ String get_last_modified_time(const char *path) {
     std::cerr << e.what() << '\n';
   }
 
-  return String();
+  return pxd::String();
 }
 
 bool remove_file(const char *path) {
@@ -121,8 +123,8 @@ bool remove_folder(const char *path) {
   return std::filesystem::remove_all(path) > 0 ? true : false;
 }
 
-String get_temp_dir_path() {
-  return String(std::filesystem::temp_directory_path().string());
+pxd::String get_temp_dir_path() {
+  return pxd::String(std::filesystem::temp_directory_path().string());
 }
 
 void copy_dir(const char *from, const char *to, bool is_recursive,
@@ -170,4 +172,4 @@ void rename(const char *_old, const char *_new) {
   std::filesystem::rename(_old, _new);
 }
 
-} // namespace pxd
+} // namespace pxd::fs

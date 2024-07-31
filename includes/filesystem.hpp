@@ -1,8 +1,10 @@
 #pragma once
 
 namespace pxd {
-
 class String;
+}
+
+namespace pxd::fs {
 
 bool exists(const char *path);
 bool is_dir(const char *path);
@@ -22,12 +24,14 @@ void copy_dir(const char *from, const char *to, bool is_recursive = true,
               bool update_existed = true);
 void copy_file(const char *from, const char *to, bool update_existed = true);
 void rename(const char *_old, const char *_new);
+} // namespace pxd::fs
 
+namespace pxd::path {
 /// @brief contenate given paths with OS-based seperator character
 /// @tparam ...P value types that can be allocated by String class
 /// @param ...paths values that want to be concatenated
 /// @return concatenated output string
-template <typename... P> inline String join_paths(const P &...paths) {
+template <typename... P> inline String join(const P &...paths) {
   const String values[] = {paths...};
   const int n = sizeof...(paths) - 1;
 
@@ -47,4 +51,4 @@ template <typename... P> inline String join_paths(const P &...paths) {
 
   return path;
 }
-} // namespace pxd
+} // namespace pxd::path

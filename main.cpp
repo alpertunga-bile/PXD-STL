@@ -54,6 +54,4 @@ void do_test() {
 
 int main() {
   // do_test();
-
-  auto &&time = pxd::get_last_modified_time("test.json");
 }
