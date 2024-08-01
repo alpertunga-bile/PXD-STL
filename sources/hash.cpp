@@ -100,7 +100,7 @@ auto update_hasher_with_file_content(blake3_hasher *hasher,
 
   file.close();
 
-  String hash_str = std::move(contents.str());
+  String hash_str = std::move(String(contents.str()));
 
   blake3_hasher_update(hasher, hash_str.c_str(), hash_str.length());
 

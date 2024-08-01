@@ -14,7 +14,7 @@ String::String(const char *c_str) {
 #endif
 }
 
-String &String::operator=(const String &other) {
+auto String::operator=(const String &other) -> String & {
 #ifdef PXD_USE_STD_STRING
   value = other.get_value();
 #else
@@ -24,31 +24,31 @@ String &String::operator=(const String &other) {
   return *this;
 }
 
-String &String::operator=(const std::string &other) {
+auto String::operator=(const std::string &other) -> String & {
   value = other;
 
   return *this;
 }
 
-String &String::operator=(String &&other) {
+auto String::operator=(String &&other) noexcept -> String & {
   value = std::move(other.string());
 
   return *this;
 }
 
-String &String::operator=(std::string &&other) {
+auto String::operator=(std::string &&other) noexcept -> String & {
   value = std::move(other);
 
   return *this;
 }
 
-String &String::operator=(const char *other) {
+auto String::operator=(const char *other) -> String & {
   value = other;
 
   return *this;
 }
 
-String String::operator+(const String &other) {
+auto String::operator+(const String &other) -> String {
 #ifdef PXD_USE_STD_STRING
   return String(value + other.get_value());
 #else
@@ -56,7 +56,7 @@ String String::operator+(const String &other) {
 #endif
 }
 
-String String::operator+(String &&other) {
+auto String::operator+(String &&other) -> String {
 #ifdef PXD_USE_STD_STRING
   return String(value + other.get_value());
 #else
@@ -64,7 +64,7 @@ String String::operator+(String &&other) {
 #endif
 }
 
-String String::operator+(const std::string &other) {
+auto String::operator+(const std::string &other) -> String {
 #ifdef PXD_USE_STD_STRING
   return String(value + other);
 #else
@@ -72,7 +72,7 @@ String String::operator+(const std::string &other) {
 #endif
 }
 
-String String::operator+(std::string &&other) {
+auto String::operator+(std::string &&other) -> String {
 #ifdef PXD_USE_STD_STRING
   return String(value + other);
 #else
@@ -80,7 +80,7 @@ String String::operator+(std::string &&other) {
 #endif
 }
 
-String String::operator+(const char *other) {
+auto String::operator+(const char *other) -> String {
 #ifdef PXD_USE_STD_STRING
   return String(value + other);
 #else
@@ -88,7 +88,7 @@ String String::operator+(const char *other) {
 #endif
 }
 
-String &String::center(int total_length, const char fill_char) {
+auto String::center(int total_length, const char fill_char) -> String & {
   auto format_string = fmt::format("{{:{}^{}}}", fill_char, total_length);
   auto format_args = fmt::make_format_args(value);
 
@@ -97,7 +97,8 @@ String &String::center(int total_length, const char fill_char) {
   return *this;
 }
 
-inline String &String::replace_first(const char *old_val, const char *new_val) {
+auto String::replace_first(const char *old_val,
+                           const char *new_val) -> String & {
   RE2 regex(fmt::format(".*(\\b{}\\b).*", old_val));
 
   if (!check_regex(regex)) {
@@ -115,7 +116,7 @@ inline String &String::replace_first(const char *old_val, const char *new_val) {
   return *this;
 }
 
-inline String &String::replace_all(const char *old_val, const char *new_val) {
+auto String::replace_all(const char *old_val, const char *new_val) -> String & {
   RE2 regex(fmt::format(".*(\\b{}\\b).*", old_val));
 
   if (!check_regex(regex)) {
@@ -133,7 +134,7 @@ inline String &String::replace_all(const char *old_val, const char *new_val) {
   return *this;
 }
 
-String operator+(const String &self, const String &other) {
+auto operator+(const String &self, const String &other) -> String {
 #ifdef PXD_USE_STD_STRING
   return String(self.get_value() + other.get_value());
 #else
@@ -141,7 +142,7 @@ String operator+(const String &self, const String &other) {
 #endif
 }
 
-String operator+(const String &self, String &&other) {
+auto operator+(const String &self, String &&other) -> String {
 #ifdef PXD_USE_STD_STRING
   return String(self.get_value() + other.get_value());
 #else
@@ -149,7 +150,7 @@ String operator+(const String &self, String &&other) {
 #endif
 }
 
-String operator+(const String &self, const std::string &other) {
+auto operator+(const String &self, const std::string &other) -> String {
 #ifdef PXD_USE_STD_STRING
   return String(self.get_value() + other);
 #else
@@ -157,7 +158,7 @@ String operator+(const String &self, const std::string &other) {
 #endif
 }
 
-String operator+(const String &self, std::string &&other) {
+auto operator+(const String &self, std::string &&other) -> String {
 #ifdef PXD_USE_STD_STRING
   return String(self.get_value() + other);
 #else
@@ -165,12 +166,14 @@ String operator+(const String &self, std::string &&other) {
 #endif
 }
 
-String operator+(const String &self, const char *other) {
+auto operator+(const String &self, const char *other) -> String {
 #ifdef PXD_USE_STD_STRING
   return String(self.get_value() + other);
 #else
   return String((self.get_value() + other).c_str());
 #endif
 }
+
+auto to_string(const char *char_arr) -> String { return String(char_arr); }
 
 } // namespace pxd

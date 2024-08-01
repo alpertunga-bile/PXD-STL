@@ -18,7 +18,7 @@ inline auto do_it(Func func, Str str, const RE2 &regex,
 
 template <typename Func, typename Str>
 inline auto do_it(Func func, Str str, const RE2 &regex) -> bool {
-  return fun(str, regex, NULL, 0);
+  return func(str, regex, NULL, 0);
 }
 
 template <typename T, typename... A>
