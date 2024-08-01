@@ -5,25 +5,29 @@
 namespace pxd {
 template <typename T> class Stack {
 public:
-  Stack() : stack(){};
-  Stack(T *array, int size) : stack(array, size, true){};
-  Stack(const Stack<T> &other) : stack(other.get_stack()){};
-  Stack(Stack<T> &&other) { stack = std::move(other.get_stack()); };
-  Stack &operator=(Stack<T> &&other) {
+  Stack() : stack() {};
+  Stack(T *array, int size) : stack(array, size, true) {};
+  Stack(const Stack<T> &other) : stack(other.get_stack()) {};
+  Stack(Stack<T> &&other) noexcept { stack = std::move(other.get_stack()); };
+  auto operator=(Stack<T> &&other) noexcept -> Stack & {
     stack = std::move(other.get_stack());
     return *this;
   }
-  Stack &operator=(const Stack<T> &other) {
+  auto operator=(const Stack<T> &other) -> Stack & {
+    if (other.get_stack().get_head_node() == stack.get_head_node()) {
+      return *this;
+    }
+
     LinkedList<T> temp_ll(other);
     stack = temp_ll;
     return temp_ll;
   };
   ~Stack() { stack.release(); };
 
-  inline void push(T &value) { stack.add(value, false); }
-  inline void push(T &&value) { stack.add(value, false); }
+  void push(const T &value) { stack.add(value, false); }
+  void push(T &&value) { stack.add(value, false); }
 
-  inline T pop() {
+  auto pop() -> T {
     PXD_ASSERT(!is_empty());
 
     T top_value = stack[0];
@@ -32,21 +36,21 @@ public:
     return top_value;
   }
 
-  inline T peek() {
+  auto peek() -> T {
     PXD_ASSERT(!is_empty());
 
     return stack[0];
   }
 
-  inline void release() { stack.release(); }
+  void release() { stack.release(); }
 
-  inline void to_array(T *array) { stack.to_array(array); }
+  void to_array(T *array) { stack.to_array(array); }
 
-  inline void reverse() { stack.reverse(); }
+  void reverse() { stack.reverse(); }
 
-  inline bool is_empty() const { return stack.is_empty(); }
-  inline LinkedList<T> get_stack() const { return stack; }
-  inline int get_length() const { return stack.get_length(); }
+  auto is_empty() const -> bool { return stack.is_empty(); }
+  auto get_stack() const -> LinkedList<T> { return stack; }
+  auto get_length() const -> int { return stack.get_length(); }
 
 private:
   LinkedList<T> stack;
