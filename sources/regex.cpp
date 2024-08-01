@@ -5,7 +5,7 @@
 #include "logger.hpp"
 
 namespace pxd {
-bool check_regex(const RE2 &regex) {
+auto check_regex(const RE2 &regex) -> bool {
   if (!regex.ok()) {
     PXD_LOG_ERROR(regex.error().c_str());
     return false;
@@ -50,7 +50,7 @@ void replace_all(const RE2 &regex, String &base_str, String &&new_str) {
   replace_all(regex, base_str, new_str);
 }
 
-String get_escaped_string(String &base_str) {
+auto get_escaped_string(String &base_str) -> String {
 #ifdef PXD_USE_STD_STRING
   return RE2::QuoteMeta(base_str.c_str());
 #else
@@ -58,7 +58,7 @@ String get_escaped_string(String &base_str) {
 #endif
 }
 
-String get_escaped_string(String &&base_str) {
+auto get_escaped_string(String &&base_str) -> String {
   return get_escaped_string(base_str);
 }
 } // namespace pxd

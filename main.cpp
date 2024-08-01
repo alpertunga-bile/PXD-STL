@@ -50,4 +50,15 @@ void do_test() {
   test_manager.save_results();
 }
 
-int main() { do_test(); }
+#include "random_gen.hpp"
+
+auto main() -> int {
+  // do_test();
+  constexpr int N_VAL = 10;
+
+  for (int i = 0; i < N_VAL; ++i) {
+    printf("%f\n", pxd::random::random_value<double>(0.0, 1.0));
+  }
+
+  return 0;
+}

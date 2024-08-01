@@ -6,47 +6,48 @@ namespace pxd {
 
 class String;
 
-bool check_regex(const RE2 &regex);
+auto check_regex(const RE2 &regex) -> bool;
 
 template <typename Func, typename Str, typename... A>
-inline bool do_it(Func f, Str str, const RE2 &regex, const A &...a) {
-  const RE2::Arg *const args[] = {&a...};
-  const int n = sizeof...(a);
-  return f(str, regex, args, n);
+inline auto do_it(Func func, Str str, const RE2 &regex,
+                  const A &...kwargs) -> bool {
+  const RE2::Arg *const args[] = {&kwargs...};
+  const int n = sizeof...(kwargs);
+  return func(str, regex, args, n);
 }
 
 template <typename Func, typename Str>
-inline bool do_it(Func f, Str str, const RE2 &regex) {
-  return f(str, regex, NULL, 0);
+inline auto do_it(Func func, Str str, const RE2 &regex) -> bool {
+  return fun(str, regex, NULL, 0);
 }
 
 template <typename T, typename... A>
-bool full_match(T &full_str, const RE2 &regex, A &&...a) {
+auto full_match(T &full_str, const RE2 &regex, A &&...kwargs) -> bool {
   if (!check_regex(regex)) {
     return false;
   }
 
   return do_it(RE2::FullMatchN, full_str.c_str(), regex,
-               RE2::Arg(std::forward<A>(a))...);
+               RE2::Arg(std::forward<A>(kwargs))...);
 }
 
 template <typename T, typename... A>
-bool partial_match(T &full_str, const RE2 &regex, A &&...a) {
+auto partial_match(T &full_str, const RE2 &regex, A &&...kwargs) -> bool {
   if (!check_regex(regex)) {
     return false;
   }
 
   return do_it(RE2::PartialMatchN, full_str.c_str(), regex,
-               RE2::Arg(std::forward<A>(a))...);
+               RE2::Arg(std::forward<A>(kwargs))...);
 }
 
 template <typename T, typename... A>
-bool loop_it(T *input, const RE2 &regex, A &&...a) {
+auto loop_it(T *input, const RE2 &regex, A &&...kwargs) -> bool {
   if (!check_regex(regex)) {
     return false;
   }
 
-  return do_it(RE2::ConsumeN, input, regex, Arg(std::forward<A>(a))...);
+  return do_it(RE2::ConsumeN, input, regex, Arg(std::forward<A>(kwargs))...);
 }
 
 void replace_first(const RE2 &regex, String &base_str, String &new_str);
@@ -55,6 +56,6 @@ void replace_first(const RE2 &regex, String &base_str, String &&new_str);
 void replace_all(const RE2 &regex, String &base_str, String &new_str);
 void replace_all(const RE2 &regex, String &base_str, String &&new_str);
 
-String get_escaped_string(String &base_str);
-String get_escaped_string(String &&base_str);
+auto get_escaped_string(String &base_str) -> String;
+auto get_escaped_string(String &&base_str) -> String;
 } // namespace pxd
