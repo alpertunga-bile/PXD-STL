@@ -1,10 +1,12 @@
 #pragma once
 
-#ifdef PXD_USE_STD_STRING
-#include <string>
-#else
+#ifndef PXD_USE_STD_STRING
 #include "../third-party/SIMDString/SIMDString.h"
 #endif
+
+#include "absl/str_cat.hpp"
+#include "absl/str_join.hpp"
+#include <array>
 
 #include <string_view>
 
@@ -26,6 +28,15 @@ public:
 
   decltype(auto) operator[](int index) { return value[index]; }
   decltype(auto) get_value() const { return value; }
+
+  template <typename... Str>
+  static auto join(const char *seperator,
+                   const Str &...given_values) -> String {
+    const size_t given_values_count = sizeof...(given_values);
+    std::array<absl::string_view, given_values_count> values({given_values...});
+
+    return absl::StrJoin(values, seperator);
+  }
 
   auto operator+(const String &other) -> String;
   auto operator+(String &&other) -> String;

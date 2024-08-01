@@ -49,11 +49,7 @@ auto String::operator=(const char *other) -> String & {
 }
 
 auto String::operator+(const String &other) -> String {
-#ifdef PXD_USE_STD_STRING
-  return String(value + other.get_value());
-#else
-  return String((value + other.get_value()).c_str());
-#endif
+  return absl::StrCat(value.c_str(), other.c_str());
 }
 
 auto String::operator+(String &&other) -> String {

@@ -4,10 +4,8 @@
 #include <array>
 
 namespace pxd {
-class String;
-} // namespace pxd
 
-namespace pxd {
+class String;
 
 // pxd::fs
 namespace fs {
