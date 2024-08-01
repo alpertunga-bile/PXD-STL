@@ -6,6 +6,8 @@
 #include "../third-party/SIMDString/SIMDString.h"
 #endif
 
+#include <string_view>
+
 namespace pxd {
 
 class String {

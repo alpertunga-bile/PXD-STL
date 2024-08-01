@@ -23,12 +23,11 @@ constexpr auto IS_VALID_PTR(void *obj) -> bool { return obj != nullptr; }
 #define PXD_TODO(msg)
 #endif
 
-constexpr void assert_func(bool expression, const char *filename, int line,
-                           const char *function_name);
+void assert_func(bool expression, const char *filename, int line,
+                 const char *function_name);
 
-inline void todo_func(const char *message, const char *filename, int line,
-                      const char *function_name);
+void todo_func(const char *message, const char *filename, int line,
+               const char *function_name);
 
-constexpr void assert_msg_func(const char *message, bool expression,
-                               const char *filename, int line,
-                               const char *function_name);
+void assert_msg_func(const char *message, bool expression, const char *filename,
+                     int line, const char *function_name);

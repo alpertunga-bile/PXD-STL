@@ -13,7 +13,7 @@ template <typename T> struct TreapNode {
   TreapNode<T> *right = nullptr;
   TreapNode<T> *parent = nullptr;
 
-  TreapNode(T &_key, double _priority) {
+  TreapNode(const T &_key, double _priority) {
     key = _key;
     priority = _priority;
   }
@@ -35,10 +35,10 @@ template <typename T> class Treap {
 public:
   Treap() = default;
   Treap(const Treap<T> &other) = default;
-  Treap &operator=(const Treap<T> &other) = default;
+  auto operator=(const Treap<T> &other) -> Treap & = default;
   Treap(Treap<T> &&other) = default;
-  Treap &operator=(Treap<T> &&other) = default;
-  inline ~Treap() noexcept {}
+  auto operator=(Treap<T> &&other) -> Treap & = default;
+  ~Treap() noexcept {}
 
   void insert(T &key, double priority) {
     TreapNode<T> *node = root;
@@ -115,7 +115,7 @@ public:
     }
   }
 
-  T top() {
+  auto top() -> T {
     PXD_ASSERT(root == nullptr);
     T key = root->key;
 
@@ -124,13 +124,13 @@ public:
     return key;
   }
 
-  T peek() {
+  auto peek() -> T {
     PXD_ASSERT(root == nullptr);
 
     return root->key;
   }
 
-  T min() {
+  auto min() -> T {
     PXD_ASSERT(root == nullptr);
 
     TreapNode<T> *node = root;
@@ -142,7 +142,7 @@ public:
     return node->key;
   }
 
-  T max() {
+  auto max() -> T {
     PXD_ASSERT(root == nullptr);
 
     TreapNode<T> *node = root;
@@ -154,7 +154,7 @@ public:
     return node->key;
   }
 
-  bool contains(const T &key) {
+  auto contains(const T &key) -> bool {
     PXD_ASSERT(root != nullptr);
 
     return search_node(root, key) != nullptr ? true : false;
@@ -164,7 +164,7 @@ private:
   /// @brief rotate left node to parent node
   /// @param node left node
   void right_rotate(TreapNode<T> *node) {
-    PXD_ASSERT(node != nullptr && root != node)
+    PXD_ASSERT(node != nullptr && root != node);
 
     TreapNode<T> *node_parent = node->parent;
 
@@ -189,7 +189,7 @@ private:
   /// @brief rotate right node to parent node
   /// @param node right node
   void left_rotate(TreapNode<T> *node) {
-    PXD_ASSERT(node != nullptr && root != node)
+    PXD_ASSERT(node != nullptr && root != node);
 
     TreapNode<T> *node_parent = node->parent;
 

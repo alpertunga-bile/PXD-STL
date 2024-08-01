@@ -19,6 +19,19 @@ inline bool check_arrays(T *first_array, T *second_array, int size) {
 }
 
 template <typename T>
+inline bool check_arrays(T *first_array, const T *second_array, int size) {
+  for (int i = 0; i < size; i++) {
+    T first_value = first_array[i];
+    T second_value = second_array[i];
+    if (first_value != second_value) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+template <typename T>
 inline bool check_arrays(T *first_array, int first_start, T *second_array,
                          int second_start, int size) {
   int second_index = second_start;

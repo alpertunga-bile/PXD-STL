@@ -57,10 +57,7 @@ public:
   constexpr bool operator!=(Array<T> &other) noexcept { return compare(other); }
 
   decltype(auto) operator[](int index) {
-    PXD_ASSERT(index < length);
-
     if (index < 0) {
-      PXD_ASSERT(length + index >= 0);
       return arr_ptr[length + index];
     }
 
@@ -261,9 +258,9 @@ private:
   /// @brief compare the values of the array with the given array
   /// @param other given array
   /// @return true if all values are equal, false if any values are not equal
-  bool compare(const Array<T> &other) noexcept {
+  auto compare(const Array<T> &other) noexcept -> bool {
     if (length != other.get_length() || byte_size != other.get_byte_size() ||
-        !IS_VALID(other.get_ptr())) {
+        !IS_VALID_PTR(other.get_ptr())) {
       return false;
     }
 

@@ -15,17 +15,17 @@ template <typename T> struct BSTNode {
   BSTNode<T> *left = nullptr;
   BSTNode<T> *right = nullptr;
 
-  inline bool has_one_child() noexcept {
+  auto has_one_child() noexcept -> bool {
     return (left != nullptr && right == nullptr) ||
            (left == nullptr && right != nullptr);
   }
 
-  inline bool has_two_children() noexcept {
+  auto has_two_children() noexcept -> bool {
     return left != nullptr && right != nullptr;
   }
 
-  inline bool has_left() noexcept { return left != nullptr; }
-  inline bool has_right() noexcept { return right != nullptr; }
+  auto has_left() noexcept -> bool { return left != nullptr; }
+  auto has_right() noexcept -> bool { return right != nullptr; }
 };
 
 template <typename T> class BinarySearchTree {
@@ -38,12 +38,11 @@ public:
     from_array(values, size, is_balance);
   }
   BinarySearchTree(const BinarySearchTree<T> &other) { from_bst(other); }
-  constexpr BinarySearchTree(BinarySearchTree<T> &&other) noexcept {
-    root = other.get_root();
-    total_node_count = other.get_total_node_count();
+  constexpr BinarySearchTree(BinarySearchTree<T> &&other) noexcept
+      : root(other.get_root()), total_node_count(other.get_total_node_count()) {
     other.exec_move();
   }
-  constexpr BinarySearchTree &operator=(BinarySearchTree<T> &&other) {
+  constexpr auto operator=(BinarySearchTree<T> &&other) -> BinarySearchTree & {
     release();
 
     root = other.get_root();
@@ -52,26 +51,30 @@ public:
 
     return *this;
   }
-  BinarySearchTree &operator=(const BinarySearchTree<T> &other) {
+  auto operator=(const BinarySearchTree<T> &other) -> BinarySearchTree & {
+    if (other.get_root() == root) {
+      return *this;
+    }
+
     from_bst(other);
     return *this;
   }
-  inline ~BinarySearchTree() noexcept { release(); }
+  ~BinarySearchTree() noexcept { release(); }
 
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // Operator Overloads
 
-  constexpr inline bool operator==(BinarySearchTree<T> &other) noexcept {
+  constexpr auto operator==(BinarySearchTree<T> &other) noexcept -> bool {
     return other.get_root() == root;
   }
-  constexpr inline bool operator!=(BinarySearchTree<T> &other) noexcept {
+  constexpr auto operator!=(BinarySearchTree<T> &other) noexcept -> bool {
     return other.get_root() != root;
   }
 
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // DS Functionalities
 
-  inline void release() noexcept {
+  void release() noexcept {
     if (root == nullptr) {
       return;
     }
@@ -82,8 +85,8 @@ public:
     total_node_count = 0;
   };
 
-  void add(T &value) {
-    if (!IS_VALID(root)) {
+  void add(const T &value) {
+    if (!IS_VALID_PTR(root)) {
       root = new BSTNode<T>();
       root->value = value;
       total_node_count++;
@@ -104,7 +107,7 @@ public:
 
   void add(T &&value) { add(value); }
 
-  void remove(T &value) noexcept {
+  void remove(const T &value) noexcept {
     if (root == nullptr) {
       return;
     }
@@ -151,7 +154,7 @@ public:
 
   void remove(T &&value) noexcept { remove(value); }
 
-  BinarySearchTree<T> get_balanced_tree() {
+  auto get_balanced_tree() -> BinarySearchTree<T> {
     if (root == nullptr && total_node_count < 3) {
       return *this;
     }
@@ -183,7 +186,7 @@ public:
     delete[] values;
   }
 
-  bool is_contain(T &value) noexcept {
+  auto is_contain(const T &value) noexcept -> bool {
     if (root == nullptr) {
       return false;
     }
@@ -203,9 +206,11 @@ public:
     return false;
   }
 
-  constexpr bool is_contain(T &&value) noexcept { return is_contain(value); }
+  constexpr auto is_contain(T &&value) noexcept -> bool {
+    return is_contain(value);
+  }
 
-  T get_min_value() noexcept {
+  auto get_min_value() noexcept -> T {
     if (root == nullptr) {
       return T();
     }
@@ -219,7 +224,7 @@ public:
     return current_node->value;
   }
 
-  T get_max_value() noexcept {
+  auto get_max_value() noexcept -> T {
     if (root == nullptr) {
       return T();
     }
@@ -247,7 +252,7 @@ public:
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // To Functions
 
-  void get_order(T *array, eBST_ORDER &&order) const {
+  void get_order(T *array, eBST_ORDER order) const {
     if (root == nullptr) {
       return;
     }
@@ -274,9 +279,9 @@ public:
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
   // Inline Member Funcs
 
-  inline BSTNode<T> *get_root() const noexcept { return root; }
-  inline int get_total_node_count() const noexcept { return total_node_count; }
-  inline void exec_move() noexcept {
+  auto get_root() const noexcept -> BSTNode<T> * { return root; }
+  auto get_total_node_count() const noexcept -> int { return total_node_count; }
+  constexpr void exec_move() noexcept {
     root = nullptr;
     total_node_count = 0;
   }

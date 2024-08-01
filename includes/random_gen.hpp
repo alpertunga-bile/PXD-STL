@@ -9,7 +9,7 @@ namespace pxd {
 
 namespace random {
 
-absl::BitGen bitgen;
+static absl::BitGen bitgen;
 
 enum class RandomClosureTypes : uint8_t {
   CLOSED,
@@ -20,7 +20,7 @@ enum class RandomClosureTypes : uint8_t {
   CLOSED_CLOSED
 };
 
-template <typename T = double>
+template <typename T>
 auto random_value(
     T min, T max,
     RandomClosureTypes closure_type = RandomClosureTypes::CLOSED_OPEN) -> T {

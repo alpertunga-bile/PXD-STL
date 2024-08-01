@@ -4,8 +4,8 @@
 #include <cassert>
 #include <cstdlib>
 
-constexpr void assert_func(bool expression, const char *filename, int line,
-                           const char *function_name) {
+void assert_func(bool expression, const char *filename, int line,
+                 const char *function_name) {
   if (expression) {
     return;
   }
@@ -31,9 +31,8 @@ void todo_func(const char *message, const char *filename, int line,
   assert(false);
 }
 
-constexpr void assert_msg_func(const char *message, bool expression,
-                               const char *filename, int line,
-                               const char *function_name) {
+void assert_msg_func(const char *message, bool expression, const char *filename,
+                     int line, const char *function_name) {
   if (expression) {
     return;
   }

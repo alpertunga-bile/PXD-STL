@@ -50,6 +50,4 @@ void do_test() {
   test_manager.save_results();
 }
 
-int main() {
-  // do_test();
-}
+int main() { do_test(); }

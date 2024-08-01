@@ -96,6 +96,7 @@ set(LIB_SOURCE_FILES
     ${PXD_SOURCE_DIR}/ds/treap.cpp
     ${PXD_SOURCE_DIR}/ds/randomized_treap.cpp
 
+    ${PXD_SOURCE_DIR}/checks.cpp
     ${PXD_SOURCE_DIR}/logger.cpp
     ${PXD_SOURCE_DIR}/random_gen.cpp
     ${PXD_SOURCE_DIR}/handle.cpp
@@ -149,6 +150,14 @@ set(LIBS_TO_LINK
     re2::re2
     fmt::fmt
     BLAKE3::blake3
+    absl::random_random
+    absl::hash
+    absl::btree
+    absl::flat_hash_map
+    absl::flat_hash_set
+    absl::node_hash_map
+    absl::node_hash_set
+    absl::strings
 )
 
 # ------------------------------------------------------------------------------------------------------

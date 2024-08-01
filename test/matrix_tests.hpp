@@ -27,62 +27,62 @@ public:
 
 private:
   void start_array_ctor_tests(int *temp_arr) {
-    Matrix<int> matrix(temp_arr, row, column);
+    Matrix<int, 4, 4> matrix(temp_arr);
 
     test_results["array ctor"] =
-        check_arrays<int>(temp_arr, matrix.get_matrix(), N);
+        check_arrays<int>(temp_arr, matrix.get_matrix().data(), N);
   }
 
   void start_copy_ctor_tests(int *temp_arr) {
-    Matrix<int> matrix(temp_arr, row, column);
-    Matrix<int> temp(matrix);
+    Matrix<int, 4, 4> matrix(temp_arr);
+    Matrix<int, 4, 4> temp(matrix);
 
     test_results["copy ctor"] =
-        check_arrays<int>(temp_arr, matrix.get_matrix(), N);
+        check_arrays<int>(temp_arr, temp.get_matrix().data(), N);
   }
 
   void start_move_ctor_tests(int *temp_arr) {
-    Matrix<int> matrix(temp_arr, row, column);
-    Matrix<int> temp(std::move(matrix));
+    Matrix<int, 4, 4> matrix(temp_arr);
+    Matrix<int, 4, 4> temp(std::move(matrix));
 
     test_results["move ctor"] =
-        check_arrays<int>(temp_arr, temp.get_matrix(), N);
+        check_arrays<int>(temp_arr, temp.get_matrix().data(), N);
 
-    Matrix<int> temp_2 = std::move(temp);
+    Matrix<int, 4, 4> temp_2 = std::move(temp);
 
     test_results["assign move ctor"] =
-        check_arrays<int>(temp_arr, temp_2.get_matrix(), N);
+        check_arrays<int>(temp_arr, temp_2.get_matrix().data(), N);
   }
 
   void start_assign_ctor_tests(int *temp_arr) {
-    Matrix<int> matrix(temp_arr, row, column);
-    Matrix<int> temp = matrix;
+    Matrix<int, 4, 4> matrix(temp_arr);
+    Matrix<int, 4, 4> temp = matrix;
 
     test_results["assign ctor"] =
-        check_arrays<int>(temp_arr, temp.get_matrix(), N);
+        check_arrays<int>(temp_arr, temp.get_ptr(), N);
   }
 
   void start_row_index_tests(int *temp_arr) {
-    Matrix<int> matrix(temp_arr, row, column);
+    Matrix<int, 4, 4> matrix(temp_arr);
 
     auto temp_row = matrix[0];
 
     test_results["row indexing"] =
-        check_arrays<int>(temp_row.get_ptr(), temp_arr, column);
+        check_arrays<int>(temp_row.get_ptr(), temp_arr, 4);
 
     temp_row = matrix[1];
 
     test_results["row indexing 2"] =
-        check_arrays<int>(temp_row.get_ptr(), 0, temp_arr, 1 * column, column);
+        check_arrays<int>(temp_row.get_ptr(), 0, temp_arr, 1 * 4, 4);
 
     temp_row = matrix[3];
 
     test_results["row indexing 3"] =
-        check_arrays<int>(temp_row.get_ptr(), 0, temp_arr, 3 * column, column);
+        check_arrays<int>(temp_row.get_ptr(), 0, temp_arr, 3 * 4, 4);
   }
 
   void start_double_indexing_tests(int *temp_arr) {
-    Matrix<int> matrix(temp_arr, row, column);
+    Matrix<int, 4, 4> matrix(temp_arr);
 
     test_results["double indexing"] = matrix[0][2] == temp_arr[2] &&
                                       matrix[1][2] == temp_arr[6] &&
@@ -90,7 +90,7 @@ private:
   }
 
   void start_parant_double_indexing_tests(int *temp_arr) {
-    Matrix<int> matrix(temp_arr, row, column);
+    Matrix<int, 4, 4> matrix(temp_arr);
 
     test_results["parant double indexing"] = matrix(0, 2) == temp_arr[2] &&
                                              matrix(1, 2) == temp_arr[6] &&
@@ -102,7 +102,7 @@ private:
   }
 
   void start_transpose_tests(int *temp_arr) {
-    Matrix<int> matrix(temp_arr, row, column);
+    Matrix<int, 4, 4> matrix(temp_arr);
 
     matrix.transpose();
 
@@ -110,12 +110,10 @@ private:
                           3, 7, 11, 15, 4, 8, 12, 16};
 
     test_results["transpose"] =
-        check_arrays<int>(matrix.get_matrix(), transposed, 16);
+        check_arrays<int>(matrix.get_matrix().data(), transposed, 16);
   }
 
 private:
   int N = 16;
-  int row = 4;
-  int column = 4;
 };
 } // namespace pxd
