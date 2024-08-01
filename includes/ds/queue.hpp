@@ -5,25 +5,29 @@
 namespace pxd {
 template <typename T> class Queue {
 public:
-  Queue() : queue(){};
-  Queue(T *array, int size) : queue(array, size){};
+  Queue() : queue() {};
+  Queue(T *array, int size) : queue(array, size) {};
   Queue(const Queue<T> &other) : queue(other.get_queue()) {}
-  Queue(Queue<T> &&other) { queue = std::move(other.get_queue()); }
-  Queue &operator=(Queue<T> &&other) {
+  Queue(Queue<T> &&other) noexcept { queue = std::move(other.get_queue()); }
+  auto operator=(Queue<T> &&other) noexcept -> Queue & {
     queue = std::move(other.get_queue());
     return *this;
   }
-  Queue &operator=(const Queue<T> &other) {
+  auto operator=(const Queue<T> &other) -> Queue & {
+    if (other.get_queue().get_head_node() == queue.get_head_node()) {
+      return *this;
+    }
+
     LinkedList<T> q(other.get_queue);
     queue = q;
     return q;
   }
   ~Queue() { queue.release(); }
 
-  inline void push(T &value) { queue.add(value); }
-  inline void push(T &&value) { queue.add(value); }
+  void push(const T &value) { queue.add(value); }
+  void push(T &&value) { queue.add(value); }
 
-  inline T pop() {
+  auto pop() -> T {
     PXD_ASSERT(!is_empty());
 
     T top_value = queue[0];
@@ -32,21 +36,21 @@ public:
     return top_value;
   }
 
-  inline T peek() {
+  auto peek() -> T {
     PXD_ASSERT(!is_empty());
 
     return queue[0];
   }
 
-  inline void to_array(int *array) { queue.to_array(array); }
+  void to_array(int *array) { queue.to_array(array); }
 
-  inline void release() { queue.release(); }
+  void release() { queue.release(); }
 
-  inline void reverse() { queue.reverse(); }
+  void reverse() { queue.reverse(); }
 
-  inline bool is_empty() const { return queue.is_empty(); }
-  inline LinkedList<T> get_queue() const { return queue; }
-  inline int get_length() const { return queue.get_length(); }
+  auto is_empty() const -> bool { return queue.is_empty(); }
+  auto get_queue() const -> LinkedList<T> { return queue; }
+  auto get_length() const -> int { return queue.get_length(); }
 
 private:
   LinkedList<T> queue;
