@@ -50,10 +50,14 @@ void do_test() {
   test_manager.save_results();
 }
 
-#include "random_gen.hpp"
+#include "filesystem.hpp"
 
 auto main() -> int {
-  do_test();
+  // do_test();
+
+  auto value = pxd::fs::path::join("my", "dog", "is", "best");
+
+  printf("%s\n", value.c_str());
 
   return 0;
 }

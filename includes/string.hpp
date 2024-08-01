@@ -13,8 +13,8 @@ namespace pxd {
 class String {
 public:
   String() = default;
-  explicit String(const std::string &str);
-  explicit String(const char *c_str);
+  String(const std::string &str);
+  String(const char *c_str);
   String(const String &other) = default;
   auto operator=(const String &other) -> String &;
   auto operator=(const std::string &other) -> String &;

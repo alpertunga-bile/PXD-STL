@@ -1,5 +1,8 @@
 #pragma once
 
+#include "absl/str_join.hpp"
+#include <array>
+
 namespace pxd {
 class String;
 } // namespace pxd
@@ -47,24 +50,16 @@ auto get_extension_w_dot(const char *path) -> String;
 /// @param ...paths values that want to be concatenated
 /// @return concatenated output string
 template <typename... P> inline auto join(const P &...paths) -> String {
-  const String values[] = {paths...};
-  const int n = sizeof...(paths) - 1;
+  const size_t total_paths = sizeof...(paths);
+  std::array<absl::string_view, total_paths> values({paths...});
 
 #if defined(__WIN32__) || defined(_WIN32)
-  const String path_sep = "\\";
+  const absl::string_view path_sep = "\\";
 #else
-  const String path_sep = "/";
+  const absl::string_view path_sep = "/";
 #endif
 
-  String path = "";
-
-  for (int i = 0; i < n; ++i) {
-    path += (values[i] + path_sep);
-  }
-
-  path += values[n];
-
-  return path;
+  return absl::StrJoin(values, path_sep);
 }
 } // namespace path
 
