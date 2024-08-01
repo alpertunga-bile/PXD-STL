@@ -21,12 +21,16 @@ public:
   XORDoubleLinkedList(const XORDoubleLinkedList<T> &other) {
     from_xor_dll(other);
   }
-  XORDoubleLinkedList &operator=(const XORDoubleLinkedList<T> &other) {
+  auto operator=(const XORDoubleLinkedList<T> &other) -> XORDoubleLinkedList & {
+    if (other.get_head_node() == head) {
+      return *this;
+    }
+
     from_xor_dll(other);
 
     return *this;
   }
-  XORDoubleLinkedList(XORDoubleLinkedList<T> &&other) {
+  XORDoubleLinkedList(XORDoubleLinkedList<T> &&other) noexcept {
     release();
 
     head = other.get_head_node();
@@ -35,7 +39,8 @@ public:
 
     other.exec_move();
   }
-  XORDoubleLinkedList &operator=(XORDoubleLinkedList<T> &&other) {
+  auto
+  operator=(XORDoubleLinkedList<T> &&other) noexcept -> XORDoubleLinkedList & {
     release();
 
     head = other.get_head_node();
@@ -46,12 +51,12 @@ public:
 
     return *this;
   }
-  inline ~XORDoubleLinkedList() noexcept { release(); }
+  ~XORDoubleLinkedList() noexcept { release(); }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Operator Overloads
 
-  T &operator[](int index) noexcept {
+  auto operator[](int index) noexcept -> T & {
     bool is_negative = false;
     int calc_index = get_calc_min_index(index, is_negative);
 
@@ -84,7 +89,7 @@ public:
   // DS Functionalities
 
   /// @brief delete all the nodes
-  inline void release() noexcept {
+  void release() noexcept {
     if (head == nullptr) {
       return;
     }
@@ -143,13 +148,11 @@ public:
   /// @brief add the given value to the xor double linked list
   /// @param value the value wants to be added
   /// @param add_back true add to the end, false add at to the head
-  inline void add(T &&value, bool add_back = true) noexcept {
-    add(value, add_back);
-  }
+  void add(T &&value, bool add_back = true) noexcept { add(value, add_back); }
 
   /// @brief remove the given value
   /// @param value the given value
-  inline void remove(T &value) {
+  void remove(T &value) {
     Node *current_node = head;
     Node *prev_node = nullptr;
     Node *next_node = nullptr;
@@ -174,7 +177,7 @@ public:
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // From Functions
 
-  inline void from_array(T *array, int size) {
+  void from_array(T *array, int size) {
     release();
 
     for (int i = 0; i < size; i++) {
@@ -206,9 +209,9 @@ public:
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Inline Member Funcs
 
-  inline Node *get_head_node() const noexcept { return head; }
-  inline Node *get_end_node() const noexcept { return end; }
-  inline int get_length() const noexcept { return length; }
+  auto get_head_node() const noexcept -> Node * { return head; }
+  auto get_end_node() const noexcept -> Node * { return end; }
+  auto get_length() const noexcept -> int { return length; }
 
   /// @brief the function has to be executed in the move constructors. releasing
   /// class without deleting
@@ -223,7 +226,7 @@ private:
   /// @param prev previous node
   /// @param next next node
   /// @return a direction value
-  inline Node *XOR(Node *prev, Node *next) {
+  auto XOR(Node *prev, Node *next) -> Node * {
     return (Node *)(reinterpret_cast<std::uintptr_t>(prev) ^
                     reinterpret_cast<std::uintptr_t>(next));
   }
@@ -235,7 +238,7 @@ private:
   /// @param given_index the index
   /// @param is_negative true iterate backward, false iterate forward
   /// @return the iteration count
-  inline int get_calc_min_index(int &given_index, bool &is_negative) noexcept {
+  auto get_calc_min_index(int &given_index, bool &is_negative) noexcept -> int {
     int positive_index = given_index >= 0 ? given_index : length + given_index;
     int negative_index =
         given_index < 0 ? given_index * -1 : length - given_index;
@@ -245,7 +248,7 @@ private:
     return is_negative ? negative_index : positive_index;
   }
 
-  inline void from_xor_dll(const XORDoubleLinkedList<T> &other) {
+  void from_xor_dll(const XORDoubleLinkedList<T> &other) {
     release();
 
     const int other_length = other.get_length();
@@ -262,7 +265,7 @@ private:
     }
   }
 
-  inline void remove_node(Node *current_node, Node *prev_node) noexcept {
+  void remove_node(Node *current_node, Node *prev_node) noexcept {
     if (current_node == nullptr) {
       return;
     }

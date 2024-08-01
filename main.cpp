@@ -53,12 +53,7 @@ void do_test() {
 #include "random_gen.hpp"
 
 auto main() -> int {
-  // do_test();
-  constexpr int N_VAL = 10;
-
-  for (int i = 0; i < N_VAL; ++i) {
-    printf("%f\n", pxd::random::random_value<double>(0.0, 1.0));
-  }
+  do_test();
 
   return 0;
 }
