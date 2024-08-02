@@ -38,7 +38,7 @@ set(PXD_THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third-party)
 set(PXD_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
 
 # set the variable to global space
-set(PXD_STL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes CACHE INTERNAL "")
+set(PXD_STL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes)
 
 set(HEADER_FILES
     ${PXD_STL_INCLUDE_DIR}/ds/array.hpp
