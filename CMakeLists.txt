@@ -37,12 +37,8 @@ set(PXD_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/sources)
 set(PXD_THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third-party)
 set(PXD_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
 
-# check if used with subdirectory or main project
-IF(NOT ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}"))
-    set(PXD_STL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes PARENT_SCOPE)
-ELSE()
-    set(PXD_STL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes)
-ENDIF()
+# set the variable to global space
+set(PXD_STL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes CACHE INTERNAL "")
 
 set(HEADER_FILES
     ${PXD_STL_INCLUDE_DIR}/ds/array.hpp
