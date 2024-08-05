@@ -57,13 +57,13 @@ private:
     String test_str("yabba dabba doo");
     RE2 regex("b+");
 
-    pxd::replace_first(regex, test_str, pxd::to_string("d"));
+    pxd::replace_first(regex, test_str, "d");
 
     test_results["replace first"] = test_str == "yada dabba doo";
 
     test_str = "yabba dabba doo";
 
-    pxd::replace_all(regex, test_str, pxd::to_string("d"));
+    pxd::replace_all(regex, test_str, "d");
 
     test_results["replace all"] = test_str == "yada dada doo";
   }

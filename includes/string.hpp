@@ -28,13 +28,9 @@ public:
   auto operator=(const std::string &other) -> String &;
   String(String &&other) noexcept = default;
 
-#ifndef PXD_USE_STD_STRING
-  String(SIMDString<PXD_SIMDSTRING_ALIGNMENT> &&other);
-#endif
-
   auto operator=(String &&other) noexcept -> String &;
   auto operator=(std::string &&other) noexcept -> String &;
-  auto operator=(const char *other) noexcept -> String &;
+  auto operator=(const char *other) -> String &;
 
   ~String() = default;
 
@@ -47,50 +43,17 @@ public:
   auto operator+(std::string &&other) -> String;
   auto operator+(const char *other) -> String;
 
-  auto operator-(const String &other) -> String {
-    return String(c_str()).replace_all(other.c_str(), "");
-  }
+  auto operator-(const String &other) -> String;
+  auto operator-(String &&other) -> String;
+  auto operator-(const std::string &other) -> String;
+  auto operator-(std::string &&other) -> String;
+  auto operator-(const char *other) -> String;
 
-  auto operator-(String &&other) -> String {
-    return String(c_str()).replace_all(other, "");
-  }
-
-  auto operator-(const std::string &other) -> String {
-    return String(c_str()).replace_all(other.c_str(), "");
-  }
-
-  auto operator-(std::string &&other) -> String {
-    return String(c_str()).replace_all(other.c_str(), "");
-  }
-
-  auto operator-(const char *other) -> String {
-    return String(c_str()).replace_all(other, "");
-  }
-
-  auto operator+=(const String &other) -> String & {
-    value += other.get_value();
-    return *this;
-  }
-
-  auto operator+=(String &&other) -> String & {
-    value += other.get_value();
-    return *this;
-  }
-
-  auto operator+=(const std::string &other) -> String & {
-    value += other;
-    return *this;
-  }
-
-  auto operator+=(std::string &&other) -> String & {
-    value += other;
-    return *this;
-  }
-
-  auto operator+=(const char *other) -> String & {
-    value += other;
-    return *this;
-  }
+  auto operator+=(const String &other) -> String &;
+  auto operator+=(String &&other) -> String &;
+  auto operator+=(const std::string &other) -> String &;
+  auto operator+=(std::string &&other) -> String &;
+  auto operator+=(const char *other) -> String &;
 
   auto operator-=(String &other) -> String & { return replace_all(other, ""); }
   auto operator-=(std::string &other) -> String & {
@@ -214,9 +177,9 @@ private:
 
 private:
 #ifdef PXD_USE_STD_STRING
-  std::string value;
+  std::string value = {};
 #else
-  SIMDString<PXD_SIMDSTRING_ALIGNMENT> value;
+  SIMDString<PXD_SIMDSTRING_ALIGNMENT> value = {};
 #endif
 };
 
