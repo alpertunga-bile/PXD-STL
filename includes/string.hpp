@@ -60,26 +60,24 @@ public:
   auto operator-=(const char *other) -> String &;
 
   auto operator==(const char *c_str) -> bool { return compare_cstr(c_str); }
-
   auto operator==(String &other) -> bool { return value == other.get_value(); }
-
   auto operator==(String &&other) -> bool {
     return value == std::forward<String>(other).get_value();
   }
-
   auto operator==(const std::string &str) -> bool { return compare_str(str); }
-
-  auto operator==(std::string &&str) -> bool { return compare_str(str); }
+  auto operator==(std::string &&str) -> bool {
+    return compare_str(std::forward<std::string>(str));
+  }
 
   auto operator!=(const char *c_str) -> bool { return !compare_cstr(c_str); }
-
   auto operator!=(String &other) -> bool { return value != other.get_value(); }
-
-  auto operator!=(String &&other) -> bool { return value != other.get_value(); }
-
+  auto operator!=(String &&other) -> bool {
+    return value != std::forward<String>(other).get_value();
+  }
   auto operator!=(const std::string &str) -> bool { return !compare_str(str); }
-
-  auto operator!=(std::string &&str) -> bool { return !compare_str(str); }
+  auto operator!=(std::string &&str) -> bool {
+    return !compare_str(std::forward<std::string>(str));
+  }
 
   /// @brief return as std::string
   operator std::string() { return string(); }
@@ -140,6 +138,10 @@ public:
     return std::string_view(value.c_str());
   }
 
+  /// @brief get the const char* of the value
+  /// @return const char* representation of the value
+  auto c_str() const -> const char * { return value.c_str(); }
+
   /// @brief replace the first occurence of the old_val with the new_val
   /// @param old_val wanted to be replaced
   /// @param new_val wanted to be replaced with
@@ -154,24 +156,20 @@ public:
   /// @return length of the value
   auto length() const -> size_t { return value.length(); }
 
-  /// @brief get the const char* of the value
-  /// @return const char* representation of the value
-  auto c_str() const -> const char * { return value.c_str(); }
-
 private:
   auto compare_str(const std::string &str) -> bool {
-    return value.compare(str);
+    return value.compare(str) == 0;
   }
 
   auto compare_str(std::string &&str) -> bool {
-    return value.compare(std::forward<std::string>(str));
+    return value.compare(std::forward<std::string>(str)) == 0;
   }
 
   auto compare_cstr(const char *cstr) -> bool {
 #ifdef PXD_USE_STD_STRING
-    return value.compare(std::string(cstr));
+    return value.compare(std::string(cstr)) == 0;
 #else
-    return value.compare(cstr);
+    return value.compare(cstr) == 0;
 #endif
   }
 

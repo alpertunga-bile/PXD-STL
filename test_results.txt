@@ -15,12 +15,12 @@ Test Name : Array Tests
 ---------------------------------------------------------------
 Test Name : Regex Tests
    full match                     -> Passed
-   replace first                  -> Failed
+   replace first                  -> Passed
    full match extract             -> Passed
    partial match                  -> Passed
-   quote                          -> Failed
+   quote                          -> Passed
    partial match extract          -> Passed
-   replace all                    -> Failed
+   replace all                    -> Passed
 ---------------------------------------------------------------
 Test Name : Queue Tests
    array ctor                     -> Passed
@@ -134,5 +134,5 @@ Test Name : Priority Queue Tests
    update priority                -> Passed
    remove                         -> Passed
 ---------------------------------------------------------------
- Passed Tests : 110 | Total Tests : 113 | Passed Ratio : %97.35
+ Passed Tests : 113 | Total Tests : 113 | Passed Ratio : %100.00
 ---------------------------------------------------------------
