@@ -10,8 +10,12 @@ String::String(const char *c_str) {
 #ifdef PXD_USE_STD_STRING
   value = std::string(c_str);
 #else
-  value = SIMDString<64>(c_str);
+  value = SIMDString<PXD_SIMDSTRING_ALIGNMENT>(c_str);
 #endif
+}
+
+String::String(const SIMDString<PXD_SIMDSTRING_ALIGNMENT> &other) {
+  value = other;
 }
 
 auto String::operator=(const String &other) -> String & {
@@ -30,8 +34,12 @@ auto String::operator=(const std::string &other) -> String & {
   return *this;
 }
 
+String::String(SIMDString<PXD_SIMDSTRING_ALIGNMENT> &&other) {
+  value = std::forward<SIMDString<PXD_SIMDSTRING_ALIGNMENT>>(other);
+}
+
 auto String::operator=(String &&other) noexcept -> String & {
-  value = std::move(other.string());
+  value = std::move(std::forward<String>(other).get_value());
 
   return *this;
 }
@@ -49,38 +57,42 @@ auto String::operator=(const char *other) -> String & {
 }
 
 auto String::operator+(const String &other) -> String {
-  return absl::StrCat(value.c_str(), other.c_str());
+#ifdef PXD_USE_STD_STRING
+  return absl::StrCat(value, other.get_value());
+#endif
+  return value + other.get_value();
+#endif
 }
 
 auto String::operator+(String &&other) -> String {
 #ifdef PXD_USE_STD_STRING
-  return String(value + other.get_value());
+  return abls::StrCat(value, std::forward<String>(other).get_value());
 #else
-  return String((value + other.get_value()).c_str());
+  return value + std::forward<String>(other).get_value();
 #endif
 }
 
 auto String::operator+(const std::string &other) -> String {
 #ifdef PXD_USE_STD_STRING
-  return String(value + other);
+  return absl::StrCat(value + other);
 #else
-  return String((value + other.c_str()).c_str());
+  return value + other;
 #endif
 }
 
 auto String::operator+(std::string &&other) -> String {
 #ifdef PXD_USE_STD_STRING
-  return String(value + other);
+  return absl::StrCat(value + std::forward<std::string>(other));
 #else
-  return String((value + other.c_str()).c_str());
+  return value + std::forward<std::string>(other);
 #endif
 }
 
 auto String::operator+(const char *other) -> String {
 #ifdef PXD_USE_STD_STRING
-  return String(value + other);
+  return absl::StrCat(value, other);
 #else
-  return String((value + other).c_str());
+  return value + other;
 #endif
 }
 
@@ -131,45 +143,28 @@ auto String::replace_all(const char *old_val, const char *new_val) -> String & {
 }
 
 auto operator+(const String &self, const String &other) -> String {
-#ifdef PXD_USE_STD_STRING
-  return String(self.get_value() + other.get_value());
-#else
-  return String((self.get_value() + other.get_value()).c_str());
-#endif
+  return self + other;
 }
 
 auto operator+(const String &self, String &&other) -> String {
-#ifdef PXD_USE_STD_STRING
-  return String(self.get_value() + other.get_value());
-#else
-  return String((self.get_value() + other.get_value()).c_str());
-#endif
+  return self + std::forward<String>(other);
 }
 
 auto operator+(const String &self, const std::string &other) -> String {
-#ifdef PXD_USE_STD_STRING
-  return String(self.get_value() + other);
-#else
-  return String((self.get_value() + other.c_str()).c_str());
-#endif
+  return self + other;
 }
 
 auto operator+(const String &self, std::string &&other) -> String {
-#ifdef PXD_USE_STD_STRING
-  return String(self.get_value() + other);
-#else
-  return String((self.get_value() + other.c_str()).c_str());
-#endif
+  return self + std::forward<std::string>(other);
 }
 
 auto operator+(const String &self, const char *other) -> String {
-#ifdef PXD_USE_STD_STRING
-  return String(self.get_value() + other);
-#else
-  return String((self.get_value() + other).c_str());
-#endif
+  return self + other;
 }
 
+namespace str {
 auto to_string(const char *char_arr) -> String { return String(char_arr); }
+
+} // namespace str
 
 } // namespace pxd

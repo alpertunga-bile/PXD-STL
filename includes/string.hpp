@@ -2,6 +2,7 @@
 
 #ifndef PXD_USE_STD_STRING
 #include "../third-party/SIMDString/SIMDString.h"
+constexpr int PXD_SIMDSTRING_ALIGNMENT = 64;
 #endif
 
 #include "absl/str_cat.hpp"
@@ -18,25 +19,27 @@ public:
   String(const std::string &str);
   String(const char *c_str);
   String(const String &other) = default;
+
+#ifndef PXD_USE_STD_STRING
+  String(const SIMDString<PXD_SIMDSTRING_ALIGNMENT> &other);
+#endif
+
   auto operator=(const String &other) -> String &;
   auto operator=(const std::string &other) -> String &;
-  String(String &&other) = default;
+  String(String &&other) noexcept = default;
+
+#ifndef PXD_USE_STD_STRING
+  String(SIMDString<PXD_SIMDSTRING_ALIGNMENT> &&other);
+#endif
+
   auto operator=(String &&other) noexcept -> String &;
   auto operator=(std::string &&other) noexcept -> String &;
-  auto operator=(const char *other) -> String &;
+  auto operator=(const char *other) noexcept -> String &;
+
   ~String() = default;
 
   decltype(auto) operator[](int index) { return value[index]; }
   decltype(auto) get_value() const { return value; }
-
-  template <typename... Str>
-  static auto join(const char *seperator,
-                   const Str &...given_values) -> String {
-    const size_t given_values_count = sizeof...(given_values);
-    std::array<absl::string_view, given_values_count> values({given_values...});
-
-    return absl::StrJoin(values, seperator);
-  }
 
   auto operator+(const String &other) -> String;
   auto operator+(String &&other) -> String;
@@ -213,7 +216,7 @@ private:
 #ifdef PXD_USE_STD_STRING
   std::string value;
 #else
-  SIMDString<64> value;
+  SIMDString<PXD_SIMDSTRING_ALIGNMENT> value;
 #endif
 };
 
@@ -223,5 +226,17 @@ auto operator+(const String &self, const std::string &other) -> String;
 auto operator+(const String &self, std::string &&other) -> String;
 auto operator+(const String &self, const char *other) -> String;
 
+namespace str {
 auto to_string(const char *char_arr) -> String;
+
+template <typename... Str>
+static auto join(const char *seperator, const Str &...given_values) -> String {
+  const size_t given_values_count = sizeof...(given_values);
+  std::array<absl::string_view, given_values_count> values({given_values...});
+
+  return absl::StrJoin(values, seperator);
+}
+
+} // namespace str
+
 } // namespace pxd
