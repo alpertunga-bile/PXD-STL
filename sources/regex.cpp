@@ -7,7 +7,7 @@
 namespace pxd {
 auto check_regex(const RE2 &regex) -> bool {
   if (!regex.ok()) {
-    PXD_LOG_ERROR(regex.error().c_str());
+    PXD_LOG_ERROR("{}", regex.error().c_str());
     return false;
   }
 

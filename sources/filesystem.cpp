@@ -52,10 +52,9 @@ auto create_file_symlink(const char *filepath, const char *symlink) -> bool {
   try {
     std::filesystem::create_symlink(filepath, symlink);
   } catch (const std::exception &e) {
-    PXD_LOG_ERROR(fmt::format("Creating {} symlink for {} file is failed",
-                              symlink, filepath)
-                      .c_str());
-    PXD_LOG_ERROR(e.what());
+    PXD_LOG_ERROR("Creating {} symlink for {} file is failed", symlink,
+                  filepath);
+    PXD_LOG_ERROR("{}", e.what());
     return false;
   }
 
@@ -71,10 +70,9 @@ auto create_directory_symlink(const char *dirpath,
   try {
     std::filesystem::create_directory_symlink(dirpath, symlink);
   } catch (const std::exception &e) {
-    PXD_LOG_ERROR(fmt::format("Creating {} symlink for {} directory is failed",
-                              symlink, dirpath)
-                      .c_str());
-    PXD_LOG_ERROR(e.what());
+    PXD_LOG_ERROR("Creating {} symlink for {} directory is failed", symlink,
+                  dirpath);
+    PXD_LOG_ERROR("{}", e.what());
     return false;
   }
 

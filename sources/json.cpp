@@ -21,7 +21,7 @@ auto load_json(String filepath) -> Json {
   Json json_object;
 
   if (!pxd::fs::exists(filepath.c_str())) {
-    PXD_LOG_ERROR(fmt::format("{} is not exists", filepath.c_str()).c_str());
+    PXD_LOG_ERROR("{} is not exists", filepath.c_str());
     return json_object;
   }
 

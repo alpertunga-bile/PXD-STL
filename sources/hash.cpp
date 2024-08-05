@@ -58,14 +58,14 @@ auto get_file_content_hash_str(const char *filepath) -> String {
   String hash_str;
 
   if (!pxd::fs::exists(filepath)) {
-    PXD_LOG_ERROR(fmt::format("{} is not exists", filepath).c_str());
+    PXD_LOG_ERROR("{} is not exists", filepath);
     return hash_str;
   }
 
   std::ifstream file(filepath, std::ifstream::in);
 
   if (!file.good() || !file.is_open()) {
-    PXD_LOG_ERROR(fmt::format("{} cannot opened", filepath).c_str());
+    PXD_LOG_ERROR("{} cannot opened", filepath);
     return hash_str;
   }
 
@@ -83,14 +83,14 @@ auto get_file_content_hash_str(const char *filepath) -> String {
 auto update_hasher_with_file_content(blake3_hasher *hasher,
                                      const char *filepath) -> bool {
   if (!pxd::fs::exists(filepath)) {
-    PXD_LOG_ERROR(fmt::format("{} is not exists", filepath).c_str());
+    PXD_LOG_ERROR("{} is not exists", filepath);
     return false;
   }
 
   std::ifstream file(filepath, std::ifstream::in);
 
   if (!file.good() || !file.is_open()) {
-    PXD_LOG_ERROR(fmt::format("{} cannot opened", filepath).c_str());
+    PXD_LOG_ERROR("{} is not exists", filepath);
     return false;
   }
 
