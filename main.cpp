@@ -53,11 +53,7 @@ void do_test() {
 #include "filesystem.hpp"
 
 auto main() -> int {
-  // do_test();
-
-  auto value = pxd::fs::path::join("my", "dog", "is", "best");
-
-  printf("%s\n", value.c_str());
+  do_test();
 
   return 0;
 }

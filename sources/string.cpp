@@ -163,6 +163,18 @@ auto String::operator+=(const char *other) -> String & {
   return *this;
 }
 
+auto String::operator-=(const String &other) -> String & {
+  return replace_all(other.c_str(), "");
+}
+
+auto String::operator-=(const std::string &other) -> String & {
+  return replace_all(other.c_str(), "");
+}
+
+auto String::operator-=(const char *other) -> String & {
+  return replace_all(other, "");
+}
+
 auto String::center(int total_length, const char fill_char) -> String & {
   auto format_string = fmt::format("{{:{}^{}}}", fill_char, total_length);
   auto format_args = fmt::make_format_args(value);

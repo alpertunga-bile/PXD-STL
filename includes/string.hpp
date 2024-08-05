@@ -55,19 +55,17 @@ public:
   auto operator+=(std::string &&other) -> String &;
   auto operator+=(const char *other) -> String &;
 
-  auto operator-=(String &other) -> String & { return replace_all(other, ""); }
-  auto operator-=(std::string &other) -> String & {
-    return replace_all(other.c_str(), "");
-  }
-  auto operator-=(const char *other) -> String & {
-    return replace_all(other, "");
-  }
+  auto operator-=(const String &other) -> String &;
+  auto operator-=(const std::string &other) -> String &;
+  auto operator-=(const char *other) -> String &;
 
   auto operator==(const char *c_str) -> bool { return compare_cstr(c_str); }
 
   auto operator==(String &other) -> bool { return value == other.get_value(); }
 
-  auto operator==(String &&other) -> bool { return value == other.get_value(); }
+  auto operator==(String &&other) -> bool {
+    return value == std::forward<String>(other).get_value();
+  }
 
   auto operator==(const std::string &str) -> bool { return compare_str(str); }
 
@@ -165,7 +163,9 @@ private:
     return value.compare(str);
   }
 
-  auto compare_str(std::string &&str) -> bool { return value.compare(str); }
+  auto compare_str(std::string &&str) -> bool {
+    return value.compare(std::forward<std::string>(str));
+  }
 
   auto compare_cstr(const char *cstr) -> bool {
 #ifdef PXD_USE_STD_STRING
