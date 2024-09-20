@@ -51,7 +51,7 @@ private:
     auto absl_hash_value = absl::Hash<T>{}(value);
     auto std_hash_value = std::hash<T>{}(value);
 
-    auto temp_str = std::to_string(value);
+    auto temp_str = std::to_string(absl_hash_value);
     uint8_t blake_comp_hashes[32];
     comp_hash(temp_str.c_str(), temp_str.length(), blake_comp_hashes);
 
@@ -60,13 +60,9 @@ private:
       blake_hash_value += blake_comp_hashes[i] * std::pow(2, i);
     }
 
-    int absl_index = absl_hash_value % N;
-    int std_index = std_hash_value % N;
-    int blake_index = blake_hash_value % N;
-
-    indices[0] = absl_index;
-    indices[1] = std_index;
-    indices[2] = blake_index;
+    indices[0] = absl_hash_value % N;
+    indices[1] = std_hash_value % N;
+    indices[2] = blake_hash_value % N;
   }
 
 private:
