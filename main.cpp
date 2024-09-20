@@ -50,21 +50,19 @@ void do_test() {
   test_manager.save_results();
 }
 
-#include "includes/random_gen.hpp"
+#include "includes/ds/bloom_filter.hpp"
 
 auto main() -> int {
   // do_test();
 
-  std::array<int, 10> arr;
+  pxd::BloomFilter bloom;
 
-  for (int i = 0; i < 10; ++i) {
-    arr[i] = i + 1;
-  }
+  bloom.add(10);
+  bloom.add(5453);
+  bloom.add(23.5);
 
-  pxd::random::shuffle<int, 10>(arr);
-
-  for (int i = 0; i < 10; ++i) {
-    fmt::println("Val : {}", arr[i]);
+  if (bloom.contains(23.5)) {
+    PXD_LOG_INFO("Contains is succeeded");
   }
 
   return 0;
