@@ -5,12 +5,13 @@
 #include "../absl/hash.hpp"
 
 #include <array>
+#include <bitset>
 #include <math.h>
 #include <string>
 
 namespace pxd {
 
-constexpr int BLOOM_FILTER_MAX_SIZE = 128;
+constexpr int BLOOM_FILTER_MAX_SIZE = 1028;
 
 template <int N = BLOOM_FILTER_MAX_SIZE> class BloomFilter {
 public:
@@ -66,6 +67,6 @@ private:
   }
 
 private:
-  std::array<bool, N> filter = {false};
+  std::bitset<N> filter;
 };
 } // namespace pxd
