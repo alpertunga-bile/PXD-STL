@@ -156,6 +156,10 @@ public:
   /// @return length of the value
   auto length() const -> size_t { return value.length(); }
 
+  template <typename H> friend H AbslHashValue(H hasher, const String &str) {
+    return H::combine(std::move(hasher), str.string());
+  }
+
 private:
   auto compare_str(const std::string &str) -> bool {
     return value.compare(str) == 0;
@@ -186,6 +190,18 @@ auto operator+(const String &self, String &&other) -> String;
 auto operator+(const String &self, const std::string &other) -> String;
 auto operator+(const String &self, std::string &&other) -> String;
 auto operator+(const String &self, const char *other) -> String;
+
+auto operator==(const String &self, const String &other) -> bool;
+auto operator==(const String &self, String &&other) -> bool;
+auto operator==(const String &self, const std::string &other) -> bool;
+auto operator==(const String &self, std::string &&other) -> bool;
+auto operator==(const String &self, const char *other) -> bool;
+
+auto operator!=(const String &self, const String &other) -> bool;
+auto operator!=(const String &self, String &&other) -> bool;
+auto operator!=(const String &self, const std::string &other) -> bool;
+auto operator!=(const String &self, std::string &&other) -> bool;
+auto operator!=(const String &self, const char *other) -> bool;
 
 namespace str {
 auto to_string(const char *char_arr) -> String;

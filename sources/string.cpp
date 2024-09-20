@@ -258,6 +258,54 @@ auto operator+(const String &self, const char *other) -> String {
   return self.get_value() + other;
 }
 
+auto operator==(const String &self, const String &other) -> bool {
+  return self.get_value() == other.get_value();
+}
+
+auto operator==(const String &self, String &&other) -> bool {
+  return self.get_value() == other.get_value();
+}
+
+auto operator==(const String &self, const std::string &other) -> bool {
+  return self.get_value().compare(other) == 0;
+}
+
+auto operator==(const String &self, std::string &&other) -> bool {
+  return self.get_value().compare(std::forward<std::string>(other)) == 0;
+}
+
+auto operator==(const String &self, const char *other) -> bool {
+#ifdef PXD_USE_STD_STRING
+  return self.get_value().compare(std::string(other)) == 0;
+#else
+  return self.get_value().compare(other) == 0;
+#endif
+}
+
+auto operator!=(const String &self, const String &other) -> bool {
+  return self.get_value() != other.get_value();
+}
+
+auto operator!=(const String &self, String &&other) -> bool {
+  return self.get_value() != other.get_value();
+}
+
+auto operator!=(const String &self, const std::string &other) -> bool {
+  return self.get_value().compare(other) != 0;
+}
+
+auto operator!=(const String &self, std::string &&other) -> bool {
+  return self.get_value().compare(std::forward<std::string>(other)) != 0;
+}
+
+auto operator!=(const String &self, const char *other) -> bool {
+#ifdef PXD_USE_STD_STRING
+  return self.get_value().compare(std::string(other)) != 0;
+#else
+  return self.get_value().compare(other) != 0;
+#endif
+}
+
 namespace str {
 auto to_string(const char *char_arr) -> String { return String(char_arr); }
 
