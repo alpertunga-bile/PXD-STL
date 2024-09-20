@@ -61,9 +61,8 @@ auto main() -> int {
   bloom.add(5453);
   bloom.add(23.5);
 
-  if (bloom.contains(23.5) && bloom.contains(5453) && bloom.contains(10)) {
-    PXD_LOG_INFO("Contains is succeeded");
-  }
+  if (bloom.contains(23.5) && bloom.contains(5453) && bloom.contains(10))
+    &&!bloom.contains(123456) { PXD_LOG_INFO("Contains is succeeded"); }
 
   return 0;
 }

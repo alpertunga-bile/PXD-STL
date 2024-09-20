@@ -11,9 +11,9 @@
 
 namespace pxd {
 
-constexpr int BLOOM_FILTER_MAX_SIZE = 1028;
+constexpr int BLOOM_FILTER_MAX_BIT_SIZE = 1028;
 
-template <int N = BLOOM_FILTER_MAX_SIZE> class BloomFilter {
+template <int N = BLOOM_FILTER_MAX_BIT_SIZE> class BloomFilter {
 public:
   BloomFilter() = default;
   BloomFilter(const BloomFilter &other) = default;
