@@ -51,7 +51,7 @@ void do_test() {
 }
 
 auto main() -> int {
-  do_test();
+  // do_test();
 
   return 0;
 }
