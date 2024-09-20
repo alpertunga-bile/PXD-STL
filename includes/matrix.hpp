@@ -75,7 +75,7 @@ public:
   }
 
   void release() noexcept {
-    matrix.empty();
+    auto is_empty = matrix.empty();
 
     row = 0;
     column = 0;

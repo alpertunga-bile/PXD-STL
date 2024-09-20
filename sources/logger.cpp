@@ -9,6 +9,9 @@
 namespace pxd {
 
 fmt::v10::ostream log_file = fmt::output_file("app.log");
+Logger *Logger::instance = nullptr;
+constexpr const char *format_str =
+    "[{:8s}] /_\\ {:50s} /_\\ {:20s} /_\\ {:5d} /_\\ {}\n";
 
 inline Logger::~Logger() noexcept {
   log_file.close();
@@ -20,8 +23,6 @@ inline Logger::~Logger() noexcept {
   delete instance;
   instance = nullptr;
 }
-
-Logger *Logger::instance = nullptr;
 
 auto Logger::get_instance() noexcept -> Logger * {
   if (instance == nullptr) {
@@ -35,9 +36,6 @@ auto Logger::get_instance() noexcept -> Logger * {
 
   return instance;
 }
-
-constexpr const char *format_str =
-    "[{:8s}] /_\\ {:50s} /_\\ {:20s} /_\\ {:5d} /_\\ {}\n";
 
 void Logger::log(const char *log_level, fmt::string_view msg,
                  const char *filename, int line, const char *func_name,
