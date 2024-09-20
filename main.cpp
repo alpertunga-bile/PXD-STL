@@ -50,8 +50,22 @@ void do_test() {
   test_manager.save_results();
 }
 
+#include "includes/random_gen.hpp"
+
 auto main() -> int {
   // do_test();
+
+  std::array<int, 10> arr;
+
+  for (int i = 0; i < 10; ++i) {
+    arr[i] = i + 1;
+  }
+
+  pxd::random::shuffle<int, 10>(arr);
+
+  for (int i = 0; i < 10; ++i) {
+    fmt::println("Val : {}", arr[i]);
+  }
 
   return 0;
 }

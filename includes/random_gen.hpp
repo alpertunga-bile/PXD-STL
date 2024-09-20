@@ -1,9 +1,11 @@
 #pragma once
 
 #include "absl/random.hpp"
+#include <array>
 #include <cstdint>
 #include <limits>
 #include <type_traits>
+#include <vector>
 
 namespace pxd {
 
@@ -52,6 +54,51 @@ auto random_value(T min, T max,
   default:
     return {};
     break;
+  }
+}
+
+/*
+ * ------------------------------------------------------------------------------
+ * -- Shuffle Array
+ */
+
+template <typename T> inline void shuffle(T *ptr, size_t size) {
+  if (nullptr == ptr) {
+    return;
+  }
+
+  const int loop_time = size - 1;
+
+  for (int i = 0; i < loop_time; ++i) {
+    int j = random_value<int>(i, loop_time, ClosureTypes::CLOSED_CLOSED);
+
+    auto temp = ptr[i];
+    ptr[i] = ptr[j];
+    ptr[j] = temp;
+  }
+}
+
+template <typename T, size_t N> inline void shuffle(std::array<T, N> &array) {
+  const int loop_time = N - 1;
+
+  for (int i = 0; i < loop_time; ++i) {
+    int j = random_value<int>(i, loop_time, ClosureTypes::CLOSED_CLOSED);
+
+    auto temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+}
+
+template <typename T> inline void shuffle(std::vector<T> &vec) {
+  const int loop_time = vec.size() - 1;
+
+  for (int i = 0; i < loop_time; ++i) {
+    int j = random_value<int>(i, loop_time, ClosureTypes::CLOSED_CLOSED);
+
+    auto temp = vec[i];
+    vec[i] = vec[j];
+    vec[j] = temp;
   }
 }
 
