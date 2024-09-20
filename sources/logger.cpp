@@ -28,6 +28,7 @@ auto Logger::get_instance() noexcept -> Logger * {
     try {
       instance = new Logger();
     } catch (const std::exception &e) {
+      fmt::println("::Logger::Error::{}", e.what());
       return nullptr;
     }
   }

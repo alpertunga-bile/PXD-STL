@@ -129,7 +129,6 @@ set(COMMON_STD_HEADERS
     <utility>
     <cstring>
     <sstream>
-    # Logger is using these headers
     <filesystem>
     <fstream>
 )

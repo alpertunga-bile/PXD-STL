@@ -221,9 +221,9 @@ private:
     }
 
     if (node.key < key) {
-      return search(node.left, key);
+      return search_node(node.left, key);
     } else {
-      return search(node.right, key);
+      return search_node(node.right, key);
     }
   }
 
