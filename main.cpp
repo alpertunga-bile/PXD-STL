@@ -50,19 +50,19 @@ void do_test() {
   test_manager.save_results();
 }
 
-#include "includes/ds/bloom_filter.hpp"
+#include "includes/ds/lru.hpp"
 
 auto main() -> int {
   // do_test();
 
-  pxd::BloomFilter bloom;
+  pxd::LRUCache<char, int> lru;
 
-  bloom.add(10);
-  bloom.add(5453);
-  bloom.add(23.5);
+  {
+    lru.insert('1', 1);
+    lru.insert('9', 9);
+  }
 
-  if (bloom.contains(23.5) && bloom.contains(5453) && bloom.contains(10))
-    &&!bloom.contains(123456) { PXD_LOG_INFO("Contains is succeeded"); }
+  int val = lru.get('9');
 
   return 0;
 }

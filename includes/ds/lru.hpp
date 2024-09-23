@@ -3,27 +3,17 @@
 #include "checks.hpp"
 #include "logger.hpp"
 
-#include "../absl/flat_hash_map.hpp"
 #include "double_linked_list.hpp"
+
+#include "../absl/flat_hash_map.hpp"
 
 namespace pxd {
 
-const size_t LRU_CACHE_MAX_SIZE = 32;
+constexpr size_t PXD_LRU_CACHE_MAX_SIZE = 32;
 
 template <typename Key, typename Val> class LRUCache {
-private:
-  struct LRUNode {
-    Key key;
-    Val value;
-
-    auto operator==(const LRUNode &other) { return key == other.key; }
-    auto operator==(LRUNode &&other) {
-      return key == std::forward<LRUNode>(other).key;
-    }
-  };
-
 public:
-  LRUCache(size_t max_size = LRU_CACHE_MAX_SIZE) : max_size(max_size) {};
+  LRUCache(size_t max_size = PXD_LRU_CACHE_MAX_SIZE) : max_size(max_size) {};
   LRUCache(const LRUCache &other) = default;
   auto operator=(const LRUCache &other) -> LRUCache & = default;
   LRUCache(LRUCache &&other) = default;
@@ -35,18 +25,15 @@ public:
       lru_map.erase(key);
     }
 
-    LRUNode node;
-    node.key = key;
-    node.value = value;
-
-    lru_list.add(node);
-    lru_map.insert({key, node});
+    lru_list.add(value);
+    lru_map.insert(
+        {key, std::make_unique<Val>(lru_list.get_end_node()->value)});
 
     if (lru_map.size() <= max_size) {
       return;
     }
 
-    lru_list.remove(node);
+    lru_list.remove(value);
     lru_map.erase(key);
   }
 
@@ -56,16 +43,16 @@ public:
       return {};
     }
 
-    LRUNode node = lru_map[key];
-    lru_list.remove(node);
-    lru_list.add(node);
+    Val value = *(lru_map[key]);
+    lru_list.remove(value);
+    lru_list.add(value);
 
-    return node.value;
+    return value;
   }
 
 private:
   size_t max_size;
-  absl::flat_hash_map<Key, LRUNode> lru_map;
-  DoubleLinkedList<LRUNode> lru_list;
+  DoubleLinkedList<Val> lru_list;
+  absl::flat_hash_map<Key, std::unique_ptr<Val>> lru_map;
 };
 } // namespace pxd

@@ -6,14 +6,14 @@
 
 #include <array>
 #include <bitset>
-#include <math.h>
+#include <cmath>
 #include <string>
 
 namespace pxd {
 
-constexpr int BLOOM_FILTER_MAX_BIT_SIZE = 1028;
+constexpr int PXD_BLOOM_FILTER_MAX_BIT_SIZE = 1024; // 128 bytes
 
-template <int N = BLOOM_FILTER_MAX_BIT_SIZE> class BloomFilter {
+template <int N = PXD_BLOOM_FILTER_MAX_BIT_SIZE> class BloomFilter {
 public:
   BloomFilter() = default;
   BloomFilter(const BloomFilter &other) = default;
@@ -58,7 +58,8 @@ private:
 
     size_t blake_hash_value = 0;
     for (int i = 0; i < 32; ++i) {
-      blake_hash_value += blake_comp_hashes[i] * std::pow(2, i);
+      blake_hash_value +=
+          (size_t)(blake_comp_hashes[i]) * (size_t)(std::pow(2, i));
     }
 
     indices[0] = absl_hash_value % N;
