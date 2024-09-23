@@ -12,6 +12,17 @@ namespace pxd {
 constexpr size_t PXD_LRU_CACHE_MAX_SIZE = 32;
 
 template <typename Key, typename Val> class LRUCache {
+private:
+  struct LRUNode {
+    Key key;
+    Val value;
+
+    auto operator==(const LRUNode &other) { return key == other.key; }
+    auto operator==(LRUNode &&other) { return key == other.key; }
+    auto operator!=(const LRUNode &other) { return key != other.key; }
+    auto operator!=(LRUNode &&other) { return key != other.key; }
+  };
+
 public:
   LRUCache(size_t max_size = PXD_LRU_CACHE_MAX_SIZE) : max_size(max_size) {};
   LRUCache(const LRUCache &other) = default;
@@ -25,16 +36,22 @@ public:
       lru_map.erase(key);
     }
 
-    lru_list.add(value);
+    LRUNode node;
+    node.key = key;
+    node.value = value;
+
+    lru_list.add(node);
     lru_map.insert(
-        {key, std::make_unique<Val>(lru_list.get_end_node()->value)});
+        {key, std::make_unique<LRUNode>(lru_list.get_end_node()->value)});
 
     if (lru_map.size() <= max_size) {
       return;
     }
 
-    lru_list.remove(value);
-    lru_map.erase(key);
+    auto head_node_value = lru_list.get_head_node()->value;
+
+    lru_list.remove(head_node_value);
+    lru_map.erase(head_node_value.key);
   }
 
   auto get(Key key) -> Val {
@@ -43,16 +60,16 @@ public:
       return {};
     }
 
-    Val value = *(lru_map[key]);
-    lru_list.remove(value);
-    lru_list.add(value);
+    LRUNode node = *(lru_map[key]);
+    lru_list.remove(node);
+    lru_list.add(node);
 
-    return value;
+    return node.value;
   }
 
 private:
   size_t max_size;
-  DoubleLinkedList<Val> lru_list;
-  absl::flat_hash_map<Key, std::unique_ptr<Val>> lru_map;
+  DoubleLinkedList<LRUNode> lru_list;
+  absl::flat_hash_map<Key, std::unique_ptr<LRUNode>> lru_map;
 };
 } // namespace pxd
