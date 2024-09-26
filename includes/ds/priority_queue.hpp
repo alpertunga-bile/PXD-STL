@@ -4,35 +4,28 @@
 
 namespace pxd {
 
-template<typename T, int D = 4, bool is_max_heap = true>
-class PriorityQueue
-{
+template <typename T, int D = 4, bool is_max_heap = true> class PriorityQueue {
 private:
-  struct Node
-  {
+  struct Node {
     T value;
     int priority = is_max_heap ? std::numeric_limits<int>::min()
                                : std::numeric_limits<int>::max();
 
-    inline bool operator<(const Node& other)
-    {
+    auto operator<(const Node &other) -> bool {
       return priority < other.priority;
     }
-    inline bool operator>(const Node& other)
-    {
+    auto operator>(const Node &other) -> bool {
       return priority > other.priority;
     }
-    inline bool operator==(const Node& other)
-    {
+    auto operator==(const Node &other) -> bool {
       return value == other.value && priority == other.priority;
     }
   };
 
 public:
-  inline void release() noexcept { nodes.release(); }
+  void release() noexcept { nodes.release(); }
 
-  void insert(T& element, int priority)
-  {
+  void insert(T &element, int priority) {
     Node new_node;
     new_node.value = element;
     new_node.priority = is_max_heap ? priority : -1 * priority;
@@ -40,10 +33,11 @@ public:
     nodes.insert(new_node);
   }
 
-  inline void insert(T&& element, int priority) { insert(element, priority); }
+  constexpr void insert(T &&element, int priority) {
+    insert(element, priority);
+  }
 
-  void remove(T& value)
-  {
+  void remove(T &value) {
     int index = find_index(value);
 
     if (index < 0) {
@@ -53,25 +47,22 @@ public:
     nodes.remove_at(index);
   }
 
-  inline void remove(T&& value) { remove(value); }
+  constexpr void remove(T &&value) { remove(value); }
 
-  T top()
-  {
+  auto top() -> T {
     PXD_ASSERT(nodes.get_size() > 0);
 
     Node last_element = nodes.top();
     return last_element.value;
   }
 
-  inline T peek()
-  {
+  auto peek() -> T {
     PXD_ASSERT(nodes.get_size() > 0);
 
     return nodes.peek().value;
   }
 
-  void update_priority(T& value, int new_priority)
-  {
+  void update_priority(T &value, int new_priority) {
     int index = find_index(value);
 
     if (index < 0) {
@@ -85,8 +76,11 @@ public:
     nodes.update_at(index, new_node);
   }
 
-  void to_array(T* array)
-  {
+  void update_priority(T &&value, int new_priority) {
+    update_priority(value, new_priority);
+  }
+
+  void to_array(T *array) {
     const int size = nodes.get_size();
 
     for (int i = 0; i < size; i++) {
@@ -94,17 +88,11 @@ public:
     }
   }
 
-  inline void update_priority(T&& value, int new_priority)
-  {
-    update_priority(value, new_priority);
-  }
-
-  inline void shrink() { nodes.shrink(); }
-  inline int get_size() const { return nodes.get_size(); }
+  void shrink() { nodes.shrink(); }
+  constexpr auto get_size() -> size_t const { return nodes.get_size(); }
 
 private:
-  int find_index(T& value)
-  {
+  auto find_index(T &value) -> int {
     const size_t size = nodes.get_size();
 
     for (int i = 0; i < size; i++) {

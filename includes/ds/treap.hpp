@@ -40,7 +40,7 @@ public:
   auto operator=(Treap<T> &&other) -> Treap & = default;
   ~Treap() noexcept {}
 
-  void insert(T &key, double priority) {
+  constexpr void insert(T &key, double priority) {
     TreapNode<T> *node = root;
     TreapNode<T> *parent = nullptr;
     TreapNode<T> *new_node = new TreapNode<T>(key, priority);

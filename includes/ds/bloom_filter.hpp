@@ -53,7 +53,7 @@ private:
     auto std_hash_value = std::hash<T>{}(value);
 
     auto temp_str = std::to_string(absl_hash_value);
-    uint8_t blake_comp_hashes[32];
+    uint8_t blake_comp_hashes[32] = {0};
     comp_hash(temp_str.c_str(), temp_str.length(), blake_comp_hashes);
 
     size_t blake_hash_value = 0;
