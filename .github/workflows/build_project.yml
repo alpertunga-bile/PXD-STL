@@ -24,16 +24,16 @@ jobs:
 
                 include:
                     - toolchain: linux-clang
-                        os: ubuntu-latest
-                        compiler: clang
+                      os: ubuntu-latest
+                      compiler: clang
 
                     - toolchain: macos-clang
-                        os: macos-latest
-                        compiler: clang
+                      os: macos-latest
+                      compiler: clang
 
                     - toolchain: windows-msvc
-                        os: windows-latest
-                        compiler: msvc
+                      os: windows-latest
+                      compiler: msvc
 
         steps:
             - name: Pull repository
@@ -42,7 +42,7 @@ jobs:
                         submodules: recursive
 
             - name: Configure (${{ matrix.configuration }})
-                run: cmake -S . -Bbuild -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
+              run: cmake -S . -Bbuild -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
 
             - name: Build with ${{ matrix.compiler }}
-                run: cmake --build build --config ${{ matrix.configuration }}
+              run: cmake --build build --config ${{ matrix.configuration }}
