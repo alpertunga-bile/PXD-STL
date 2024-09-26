@@ -57,6 +57,7 @@ set(HEADER_FILES
     ${PXD_STL_INCLUDE_DIR}/ds/randomized_treap.hpp
     ${PXD_STL_INCLUDE_DIR}/ds/lru.hpp
     ${PXD_STL_INCLUDE_DIR}/ds/bloom_filter.hpp
+    ${PXD_STL_INCLUDE_DIR}/ds/ring_buffer.hpp
     
     ${PXD_STL_INCLUDE_DIR}/regex.hpp
     ${PXD_STL_INCLUDE_DIR}/json.hpp
@@ -95,6 +96,7 @@ set(LIB_SOURCE_FILES
     ${PXD_SOURCE_DIR}/ds/randomized_treap.cpp
     ${PXD_SOURCE_DIR}/ds/lru.cpp
     ${PXD_SOURCE_DIR}/ds/bloom_filter.cpp
+    ${PXD_SOURCE_DIR}/ds/ring_buffer.cpp
 
     ${PXD_SOURCE_DIR}/checks.cpp
     ${PXD_SOURCE_DIR}/logger.cpp

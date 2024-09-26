@@ -1,0 +1,48 @@
+name: PXD-STL cpp project build
+
+on:
+    workflow_dispatch:
+    pull_request:
+    push:
+        branches:
+            - master
+
+jobs:
+    build:
+        name: ${{matrix.toolchain}}
+        runs-on: ${{matrix.os}}
+
+        strategy:
+            matrix:
+                toolchain:
+                    - linux-clang
+                    - macos-clang
+                    - windows-msvc
+
+                configuration:
+                    - Release
+
+                include:
+                    - toolchain: linux-clang
+                        os: ubuntu-latest
+                        compiler: clang
+
+                    - toolchain: macos-clang
+                        os: macos-latest
+                        compiler: clang
+
+                    - toolchain: windows-msvc
+                        os: windows-latest
+                        compiler: msvc
+
+        steps:
+            - name: Pull repository
+                uses: actions/checkout@v4
+                    with:
+                        submodules: recursive
+
+            - name: Configure (${{ matrix.configuration }})
+                run: cmake -S . -Bbuild -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
+
+            - name: Build with ${{ matrix.compiler }}
+                run: cmake --build build --config ${{ matrix.configuration }}
