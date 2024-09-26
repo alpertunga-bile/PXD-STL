@@ -1,8 +1,8 @@
 #pragma once
 
+#include "../third-party/fmt/include/fmt/format.h"
 #include "checks.hpp"
 
-#include "../third-party/fmt/include/fmt/format.h"
 
 namespace pxd {
 class Logger {

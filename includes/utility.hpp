@@ -102,7 +102,7 @@ template <typename T> inline int find(LinkedList<T> &&ll, T &&value) {
 }
 
 template <typename T> inline int find(DoubleLinkedList<T> &&dll, T &&value) {
-  auto &&current_node = dll.get_head_node();
+  auto current_node = dll.get_head_node();
   const int length = dll.get_length();
 
   for (int i = 0; i < length; i++) {
@@ -118,7 +118,7 @@ template <typename T> inline int find(DoubleLinkedList<T> &&dll, T &&value) {
 
 template <typename T, int D = 4, bool is_max_heap = true>
 inline int find(DHeap<T, D, is_max_heap> &&dheap, T &&value) {
-  return find<T>(dheap.get_values(), value);
+  return find<T>(dheap.get_values(), std::forward<T>(value));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -126,7 +126,7 @@ inline int find(DHeap<T, D, is_max_heap> &&dheap, T &&value) {
 
 // append raw array to the end of the vector
 template <typename T>
-inline void append(std::vector<T> &&vec, T *array, int arr_size) {
+inline void append(std::vector<T> &vec, T *array, int arr_size) {
   std::vector<T> temp_vec(array, arr_size);
 
   vec.reserve(vec.size() + arr_size);
@@ -134,7 +134,7 @@ inline void append(std::vector<T> &&vec, T *array, int arr_size) {
 }
 
 template <typename T>
-inline void append(std::vector<T> &&vec, const std::vector<T> &&given_vector) {
+inline void append(std::vector<T> &vec, const std::vector<T> &given_vector) {
   vec.reserve(vec.size() + given_vector.size());
   vec.insert(vec.end(), given_vector.begin(), given_vector.end());
 }

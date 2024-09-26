@@ -37,9 +37,9 @@ jobs:
 
         steps:
             - name: Pull repository
-                uses: actions/checkout@v4
-                    with:
-                        submodules: recursive
+                  uses: actions/checkout@v4
+                      with:
+                          submodules: recursive
 
             - name: Configure (${{ matrix.configuration }})
               run: cmake -S . -Bbuild -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
